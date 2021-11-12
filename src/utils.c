@@ -211,7 +211,7 @@ BOOL util_get_lowest_resolution(
     DWORD max_height)
 {
     BOOL result = FALSE;
-    int org_ratio = (int)((ratio + 0.005f) * 100);
+    int org_ratio = (int)((ratio + 0.005f) * 10);
     SIZE lowest = { .cx = max_width + 1, .cy = max_height + 1 };
     DWORD i = 0;
     DEVMODE m;
@@ -227,7 +227,7 @@ BOOL util_get_lowest_resolution(
             m.dmPelsWidth < lowest.cx &&
             m.dmPelsHeight < lowest.cy)
         {
-            int res_ratio = (int)((((float)m.dmPelsWidth / m.dmPelsHeight) + 0.005f) * 100);
+            int res_ratio = (int)((((float)m.dmPelsWidth / m.dmPelsHeight) + 0.005f) * 10);
 
             if (res_ratio == org_ratio)
             {
