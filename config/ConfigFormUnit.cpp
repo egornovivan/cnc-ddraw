@@ -353,6 +353,56 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"25 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"15 tics par seconde", NULL);
 	}
+	else if (lang == "italian" || (lang == "auto" && priID == LANG_ITALIAN)) {
+		LanguageImg->Visible = true;
+
+		/* -Italian - made by Kappa971 @ github */
+
+		ConfigForm->Caption = L"Configurazione di cnc-ddraw";
+		DisplayBtn->Caption = L"Impostazioni dello schermo";
+		AdvancedBtn->Caption = L"Impostazioni avanzate";
+		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
+		PresentationLbl->Caption = L"Presentazione";
+		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
+		VsyncLbl->Caption = L"Abilita VSync";
+		AdjmouseLbl->Caption = L"Regola la sensibilità del mouse";
+		DevmodeLbl->Caption = L"Cattura il cursore nella finestra / schermo";
+		RendererLbl->Caption = L"Renderer";
+		BorderLbl->Caption = L"Mostra i bordi della finestra in modalità finestra";
+		SavesettingsLbl->Caption = L"Ricorda la posizione e le dimensioni della finestra";
+		ShaderLbl->Caption = L"Shader OpenGL";
+		MaxfpsLbl->Caption = L"Limita la frequenza dei fotogrammi (FPS)";
+		BoxingLbl->Caption = L"Abilita ridimensionamento dei numeri interi";
+		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
+		NoactivateappLbl->Caption = L"Risolvi il problema con Alt+Tab";
+		HookLbl->Caption = L"Risolvi i problemi con la modalità finestra o il ridimensionamento";
+		MinfpsLbl->Caption = L"Forza FPS elevati / Risolvi i problemi di balbuzie su Freesync/G-Sync";
+		FixpitchLbl->Caption = L"Risolvi i problemi di visualizzazione mostrati in diagonale";
+		NonexclusiveLbl->Caption = L"Correggi video / elementi dell'interfaccia utente invisibili";
+
+		RendererCbx->Items->Clear();
+		RendererCbx->AddItem(L"Automatico", NULL);
+		RendererCbx->AddItem(L"Direct3D 9", NULL);
+		RendererCbx->AddItem(L"OpenGL", NULL);
+		RendererCbx->AddItem(L"GDI", NULL);
+
+		PresentationCbx->Items->Clear();
+		PresentationCbx->AddItem(L"Schermo Intero", NULL);
+		PresentationCbx->AddItem(L"Schermo Intero Ridimensionato", NULL);
+		PresentationCbx->AddItem(L"Senza Bordi", NULL);
+		PresentationCbx->AddItem(L"In Finestra", NULL);
+
+		MaxgameticksCbx->Items->Clear();
+		MaxgameticksCbx->AddItem(L"Senza Limiti", NULL);
+		MaxgameticksCbx->AddItem(L"Sincronizza con la frequenza di aggiornamento dello schermo", NULL);
+		MaxgameticksCbx->AddItem(L"Emula uno schermo a 60Hz", NULL);
+		MaxgameticksCbx->AddItem(L"1000 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"500 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"60 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"30 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"25 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"15 tick al secondo", NULL);
+	}
 	else {
 		IsEnglish = true;
 
@@ -390,6 +440,12 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 			else if (priID == LANG_FRENCH) {
 				TPngImage *png = new TPngImage();
 				png->LoadFromResourceName((int)HInstance, "PngImage_FR");
+				LanguageImg->Picture->Graphic = png;
+				LanguageImg->Visible = true;
+			}
+			else if (priID == LANG_ITALIAN) {
+				TPngImage *png = new TPngImage();
+				png->LoadFromResourceName((int)HInstance, "PngImage_IT");
 				LanguageImg->Picture->Graphic = png;
 				LanguageImg->Visible = true;
 			}
