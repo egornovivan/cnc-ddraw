@@ -364,7 +364,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
 		PresentationLbl->Caption = L"Presentazione";
 		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
-		VsyncLbl->Caption = L"Abilita VSync";
+		VsyncLbl->Caption = L"Abilita la sincronizzazione verticale (VSync)";
 		AdjmouseLbl->Caption = L"Regola la sensibilità del mouse";
 		DevmodeLbl->Caption = L"Cattura il cursore nella finestra / schermo";
 		RendererLbl->Caption = L"Renderer";
@@ -372,12 +372,12 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		SavesettingsLbl->Caption = L"Ricorda la posizione e le dimensioni della finestra";
 		ShaderLbl->Caption = L"Shader OpenGL";
 		MaxfpsLbl->Caption = L"Limita la frequenza dei fotogrammi (FPS)";
-		BoxingLbl->Caption = L"Abilita ridimensionamento dei numeri interi";
+		BoxingLbl->Caption = L"Abilita il ridimensionamento dei numeri interi";
 		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
-		NoactivateappLbl->Caption = L"Risolvi il problema con Alt+Tab";
+		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
 		HookLbl->Caption = L"Risolvi i problemi con la modalità finestra o il ridimensionamento";
-		MinfpsLbl->Caption = L"Forza FPS elevati / Risolvi i problemi di balbuzie su Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Risolvi i problemi di visualizzazione mostrati in diagonale";
+		MinfpsLbl->Caption = L"Forza FPS elevati / Correggi balbuzie su Freesync/G-Sync";
+		FixpitchLbl->Caption = L"Correggi artefatti mostrati in diagonale";
 		NonexclusiveLbl->Caption = L"Correggi video / elementi dell'interfaccia utente invisibili";
 
 		RendererCbx->Items->Clear();
@@ -394,7 +394,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 
 		MaxgameticksCbx->Items->Clear();
 		MaxgameticksCbx->AddItem(L"Senza Limiti", NULL);
-		MaxgameticksCbx->AddItem(L"Sincronizza con la frequenza di aggiornamento dello schermo", NULL);
+		MaxgameticksCbx->AddItem(L"Sincronizza con la frequenza dello schermo", NULL);
 		MaxgameticksCbx->AddItem(L"Emula uno schermo a 60Hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tick al secondo", NULL);
 		MaxgameticksCbx->AddItem(L"500 tick al secondo", NULL);
