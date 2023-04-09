@@ -558,6 +558,16 @@ HWND WINAPI fake_GetForegroundWindow()
     return real_GetForegroundWindow();
 }
 
+BOOL WINAPI fake_SetForegroundWindow(HWND hWnd)
+{
+    if (g_ddraw && g_ddraw->bnet_active)
+    {
+        return TRUE;
+    }
+
+    return real_SetForegroundWindow(hWnd);
+}
+
 HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId)
 {
     if (idHook == WH_KEYBOARD_LL && hmod && GetModuleHandle("AcGenral") == hmod)

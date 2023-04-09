@@ -45,6 +45,7 @@ GETFOREGROUNDWINDOWPROC real_GetForegroundWindow = GetForegroundWindow;
 STRETCHBLTPROC real_StretchBlt = StretchBlt;
 SETDIBITSTODEVICEPROC real_SetDIBitsToDevice = SetDIBitsToDevice;
 STRETCHDIBITSPROC real_StretchDIBits = StretchDIBits;
+SETFOREGROUNDWINDOWPROC real_SetForegroundWindow = SetForegroundWindow;
 SETWINDOWSHOOKEXAPROC real_SetWindowsHookExA = SetWindowsHookExA;
 PEEKMESSAGEAPROC real_PeekMessageA = PeekMessageA;
 GETDEVICECAPSPROC real_GetDeviceCaps = GetDeviceCaps;
@@ -87,6 +88,7 @@ static HOOKLIST g_hooks[] =
             { "GetTopWindow", (PROC)fake_GetTopWindow, (PROC*)&real_GetTopWindow, 0 },
             { "GetForegroundWindow", (PROC)fake_GetForegroundWindow, (PROC*)&real_GetForegroundWindow, 0 },
             { "PeekMessageA", (PROC)fake_PeekMessageA, (PROC*)&real_PeekMessageA, 0 },
+            { "SetForegroundWindow", (PROC)fake_SetForegroundWindow, (PROC*)&real_SetForegroundWindow, 0 },
             { "", NULL, NULL, 0 }
         }
     },
