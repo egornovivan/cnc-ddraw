@@ -108,6 +108,16 @@ BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
 
         return TRUE;
     }
+    else if (lpPoint && g_ddraw->bnet_active && real_ScreenToClient(g_ddraw->hwnd, &pt))
+    {
+        if (pt.x > 0 && pt.x < g_ddraw->width && pt.y > 0 && pt.y < g_ddraw->height)
+        {
+            lpPoint->x = pt.x;
+            lpPoint->y = pt.y;
+
+            return TRUE;
+        }
+    }
 
     if (lpPoint)
     {
