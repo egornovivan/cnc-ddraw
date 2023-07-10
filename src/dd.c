@@ -766,6 +766,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
         LONG exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
 
+        g_ddraw->invisible = !(style & WS_VISIBLE);
+
         AdjustWindowRectEx(&dst, style, GetMenu(g_ddraw->hwnd) != NULL, exstyle);
 
         real_SetWindowPos(
@@ -801,6 +803,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             SetMenu(g_ddraw->hwnd, NULL);
 
         LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
+
+        g_ddraw->invisible = !(style & WS_VISIBLE);
 
         DWORD swp_flags = SWP_SHOWWINDOW;
 
