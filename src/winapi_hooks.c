@@ -515,26 +515,6 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow)
 {
     if (g_ddraw && g_ddraw->hwnd == hWnd)
     {
-        if (g_ddraw->invisible && 
-            (nCmdShow == SW_SHOWDEFAULT || nCmdShow == SW_SHOWNORMAL) && 
-            (g_hook_method != 2 && g_hook_method != 3))
-        {
-            g_ddraw->invisible = FALSE;
-
-            BOOL result = real_ShowWindow(hWnd, nCmdShow);
-
-            if (result)
-            {
-                //real_SendMessageA(g_ddraw->hwnd, WM_SHOWWINDOW, 1, 0);
-                real_SendMessageA(g_ddraw->hwnd, WM_SIZE_DDRAW, 0, MAKELPARAM(g_ddraw->width, g_ddraw->height));
-                //real_SendMessageA(g_ddraw->hwnd, WM_MOVE_DDRAW, 0, MAKELPARAM(0, 0));
-
-                return 0;
-            }
-                
-            return result;
-        }
-
         if (nCmdShow == SW_SHOWMAXIMIZED)
             nCmdShow = SW_SHOWNORMAL;
 

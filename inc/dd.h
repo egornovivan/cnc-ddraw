@@ -168,7 +168,6 @@ typedef struct CNCDDRAW
     int maxgameticks;
     BOOL alt_key_down;
     BOOL releasealt;
-    BOOL invisible;
     BOOL bnet_active;
     BOOL bnet_was_fullscreen;
     BOOL bnet_was_upscaled;
