@@ -357,8 +357,16 @@ BOOL WINAPI fake_MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, BO
     {
         if (g_ddraw->hwnd == hWnd)
         {
-            //real_SendMessageA(g_ddraw->hwnd, WM_MOVE_DDRAW, 0, MAKELPARAM(X, Y));
-            real_SendMessageA(g_ddraw->hwnd, WM_SIZE_DDRAW, 0, MAKELPARAM(nWidth, nHeight));
+            if (g_ddraw->width && g_ddraw->height && (nWidth != g_ddraw->width || nHeight != g_ddraw->height))
+            {
+                //real_SendMessageA(g_ddraw->hwnd, WM_MOVE_DDRAW, 0, MAKELPARAM(X, Y));
+
+                real_SendMessageA(
+                    g_ddraw->hwnd,
+                    WM_SIZE_DDRAW,
+                    0,
+                    MAKELPARAM(min(nWidth, g_ddraw->width), min(nHeight, g_ddraw->height)));
+            }
 
             return TRUE;
         }
