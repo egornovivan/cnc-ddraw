@@ -1333,6 +1333,12 @@ HRESULT dd_CreateSurface(
         }
     }
 
+    if (dst_surface->caps & DDSCAPS_FLIP)
+    {
+        /* may or may not be needed by some games, keep commented out for now */
+        //dst_surface->caps |= DDSCAPS_FRONTBUFFER;
+    }
+
     if (dst_surface->caps & DDSCAPS_PRIMARYSURFACE)
     {
         dst_surface->width = g_ddraw->width;
@@ -1480,7 +1486,8 @@ HRESULT dd_CreateSurface(
             desc.dwFlags |= DDSD_BACKBUFFERCOUNT;
         }
 
-        desc.ddsCaps.dwCaps |= DDSCAPS_BACKBUFFER;
+        /* setting DDSCAPS_FLIP enables flip for Nox, keep commented out for now */
+        desc.ddsCaps.dwCaps |= DDSCAPS_BACKBUFFER;// | DDSCAPS_FLIP;
 
         desc.dwWidth = dst_surface->width;
         desc.dwHeight = dst_surface->height;
