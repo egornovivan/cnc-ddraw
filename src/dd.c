@@ -716,7 +716,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         if (!g_ddraw->wine)
         {
             MSG msg; /* workaround for "Not Responding" window problem in cnc games */
-            real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE);
+            real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE | PM_QS_INPUT);
         }
 
         if (!border)

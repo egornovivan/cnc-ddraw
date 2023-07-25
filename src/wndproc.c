@@ -412,7 +412,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 util_update_bnet_pos(x, y);
             }
 
-            if (in_size_move || (g_ddraw->wine && !g_ddraw->fullscreen))
+            if (in_size_move || (g_ddraw->wine && !g_ddraw->fullscreen && g_ddraw->render.thread))
             {
                 if (x != -32000)
                     g_config.window_rect.left = x; /* -32000 = Exit/Minimize */
