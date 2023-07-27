@@ -1487,7 +1487,7 @@ HRESULT dd_CreateSurface(
         DDSURFACEDESC desc;
         memset(&desc, 0, sizeof(desc));
 
-        desc.dwFlags |= DDSD_CAPS | DDSD_ALL;
+        desc.dwFlags |= DDSD_CAPS;
 
         if (lpDDSurfaceDesc->dwBackBufferCount > 1)
         {
