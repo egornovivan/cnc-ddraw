@@ -40,7 +40,6 @@ void cfg_load()
     g_ddraw->fixchilds = cfg_get_int("fixchilds", FIX_CHILDS_DETECT_PAINT);
     g_ddraw->fixwndprochook = cfg_get_bool("fixwndprochook", FALSE);
     g_ddraw->flipclear = cfg_get_bool("flipclear", FALSE);
-    g_ddraw->novidmem = cfg_get_bool("novidmem", FALSE);
     g_ddraw->fixnotresponding = cfg_get_bool("fixnotresponding", FALSE);
     g_ddraw->locktopleft = cfg_get_bool("locktopleft", FALSE);
     g_ddraw->lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
@@ -370,7 +369,6 @@ static void cfg_create_ini()
             "accuratetimers=false\n"
             "fixpitch=true\n"
             "fixwndprochook=false\n"
-            "novidmem=false\n"
             "fixnotresponding=false\n"
             "locktopleft=false\n"
             "lock_surfaces=false\n"
@@ -849,7 +847,6 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
-            "novidmem=true\n"
             "\n"
             "; Jagged Alliance 2: Wildfire\n"
             "[WF6]\n"
@@ -857,7 +854,6 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
-            "novidmem=true\n"
             "\n"
             "; Jagged Alliance 2 - UC mod\n"
             "[JA2_UC]\n"
@@ -865,7 +861,6 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
-            "novidmem=true\n"
             "\n"
             "; Jagged Alliance 2 - Vengeance Reloaded mod\n"
             "[JA2_Vengeance]\n"
@@ -873,7 +868,6 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
-            "novidmem=true\n"
             "\n"
             "; Kings Quest 8\n"
             "[Mask]\n"

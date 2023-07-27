@@ -140,7 +140,6 @@ typedef struct CNCDDRAW
     BOOL wine;
     HCURSOR old_cursor;
     int show_cursor_count;
-    BOOL novidmem;
     BOOL fpupreserve;
     BOOL allow_wmactivate;
     int d3d9_adapter;

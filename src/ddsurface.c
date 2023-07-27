@@ -689,11 +689,6 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         lpDDSurfaceDesc->ddsCaps.dwCaps = This->caps;
         lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
 
-        if (g_ddraw && !g_ddraw->novidmem)
-        {
-            lpDDSurfaceDesc->ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY;
-        }
-
         if (This->bpp == 8)
         {
             lpDDSurfaceDesc->ddpfPixelFormat.dwFlags |= DDPF_PALETTEINDEXED8;
@@ -1353,6 +1348,11 @@ HRESULT dd_CreateSurface(
     }
     else
     {
+        if (!(dst_surface->caps & DDSCAPS_SYSTEMMEMORY))
+        {
+            dst_surface->caps |= DDSCAPS_VIDEOMEMORY;
+        }
+
         dst_surface->width = lpDDSurfaceDesc->dwWidth;
         dst_surface->height = lpDDSurfaceDesc->dwHeight;
     }
