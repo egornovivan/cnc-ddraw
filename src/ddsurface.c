@@ -20,7 +20,13 @@ HRESULT dds_AddAttachedSurface(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceI
 
         if (!This->backbuffer)
         {
-            lpDDSurface->caps |= DDSCAPS_BACKBUFFER;
+            if (This->caps & DDSCAPS_FRONTBUFFER)
+            {
+                lpDDSurface->caps |= DDSCAPS_BACKBUFFER;
+            }
+
+            lpDDSurface->caps |= DDSCAPS_FLIP;
+
             This->backbuffer = lpDDSurface;
         }
     }
@@ -683,7 +689,7 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         lpDDSurfaceDesc->ddsCaps.dwCaps = This->caps;
         lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
 
-        if ((g_ddraw && !g_ddraw->novidmem) || (This->caps & (DDSCAPS_PRIMARYSURFACE | DDSCAPS_BACKBUFFER)))
+        if (g_ddraw && !g_ddraw->novidmem)
         {
             lpDDSurfaceDesc->ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY;
         }
@@ -864,7 +870,7 @@ HRESULT dds_GetDC(IDirectDrawSurfaceImpl* This, HDC FAR* lpHDC)
 
     HDC dc = This->hdc;
 
-    if (This->backbuffer || (This->caps & DDSCAPS_BACKBUFFER))
+    if (This->backbuffer || (This->caps & DDSCAPS_FLIP))
         dc = (HDC)InterlockedExchangeAdd((LONG*)&This->hdc, 0);
 
     if (This->bpp == 8 && data)
@@ -1260,7 +1266,7 @@ void* dds_GetBuffer(IDirectDrawSurfaceImpl* This)
     if (!This)
         return NULL;
 
-    if (This->backbuffer || (This->caps & DDSCAPS_BACKBUFFER))
+    if (This->backbuffer || (This->caps & DDSCAPS_FLIP))
         return (void*)InterlockedExchangeAdd((LONG*)&This->surface, 0);
 
     return This->surface;
@@ -1333,16 +1339,17 @@ HRESULT dd_CreateSurface(
         }
     }
 
-    if (dst_surface->caps & DDSCAPS_FLIP)
-    {
-        /* may or may not be needed by some games, keep commented out for now */
-        //dst_surface->caps |= DDSCAPS_FRONTBUFFER;
-    }
-
     if (dst_surface->caps & DDSCAPS_PRIMARYSURFACE)
     {
+        if (dst_surface->caps & DDSCAPS_FLIP)
+        {
+            dst_surface->caps |= DDSCAPS_FRONTBUFFER;
+        }
+
         dst_surface->width = g_ddraw->width;
         dst_surface->height = g_ddraw->height;
+
+        dst_surface->caps |= DDSCAPS_VIDEOMEMORY;
     }
     else
     {
@@ -1483,11 +1490,23 @@ HRESULT dd_CreateSurface(
         if (lpDDSurfaceDesc->dwBackBufferCount > 1)
         {
             desc.dwBackBufferCount = lpDDSurfaceDesc->dwBackBufferCount - 1;
-            desc.dwFlags |= DDSD_BACKBUFFERCOUNT;
+            desc.dwFlags |= DDSD_BACKBUFFERCOUNT | DDSD_CAPS | DDSD_ALL;
         }
 
-        /* setting DDSCAPS_FLIP enables flip for Nox, keep commented out for now */
-        desc.ddsCaps.dwCaps |= DDSCAPS_BACKBUFFER;// | DDSCAPS_FLIP;
+        if (dst_surface->caps & DDSCAPS_FRONTBUFFER)
+        {
+            desc.ddsCaps.dwCaps |= DDSCAPS_BACKBUFFER;
+        }
+
+        if (dst_surface->caps & DDSCAPS_FLIP)
+        {
+            desc.ddsCaps.dwCaps |= DDSCAPS_FLIP;
+        }
+
+        if (dst_surface->caps & DDSCAPS_VIDEOMEMORY)
+        {
+            desc.ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY;
+        }
 
         desc.dwWidth = dst_surface->width;
         desc.dwHeight = dst_surface->height;
