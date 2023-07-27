@@ -366,9 +366,9 @@ HRESULT __stdcall IDirectDrawSurface__Initialize(
 
 HRESULT __stdcall IDirectDrawSurface__IsLost(IDirectDrawSurfaceImpl* This)
 {
-    TRACE_EXT("-> %s(This=%p)\n", __FUNCTION__, This);
+    //TRACE_EXT("-> %s(This=%p)\n", __FUNCTION__, This);
     HRESULT ret = DD_OK;
-    TRACE_EXT("<- %s\n", __FUNCTION__);
+    //TRACE_EXT("<- %s\n", __FUNCTION__);
     return ret;
 }
 
