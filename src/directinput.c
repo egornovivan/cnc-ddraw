@@ -38,7 +38,7 @@ static PROC hook_func(PROC* org_func, PROC new_func)
 
 static HRESULT WINAPI fake_did_SetCooperativeLevel(IDirectInputDeviceA* This, HWND hwnd, DWORD dwFlags)
 {
-    TRACE("DirectInput SetCooperativeLevel\n");
+    TRACE("DirectInput SetCooperativeLevel(This=%p, hwnd=%p, dwFlags=0x%08X)\n", This, hwnd, dwFlags);
 
     if (This == g_mouse_device && g_ddraw && (dwFlags & DISCL_EXCLUSIVE))
     {
