@@ -1055,6 +1055,7 @@ static void cfg_create_ini()
             "; RollerCoaster Tycoon\n"
             "[rct]\n"
             "singlecpu=false\n"
+            "maxfps=0\n"
             "\n"
             "; Twisted Metal\n"
             "[TWISTED]\n"
