@@ -1059,6 +1059,7 @@ static void cfg_create_ini()
             "dinput_show_cursor=true\n"
             "singlecpu=false\n"
             "maxfps=0\n"
+            "adjmouse=true\n"
             "\n"
             "; Twisted Metal\n"
             "[TWISTED]\n"
