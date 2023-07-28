@@ -141,6 +141,7 @@ typedef struct CNCDDRAW
     HCURSOR old_cursor;
     int show_cursor_count;
     BOOL fpupreserve;
+    BOOL dinput_show_cursor;
     BOOL allow_wmactivate;
     int d3d9_adapter;
     BOOL opengl_core;
