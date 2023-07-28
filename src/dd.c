@@ -1131,7 +1131,10 @@ ULONG dd_Release()
         DeleteCriticalSection(&g_ddraw->cs);
 
         /* restore old wndproc, subsequent ddraw creation will otherwise fail */
-        real_SetWindowLongA(g_ddraw->hwnd, GWL_WNDPROC, (LONG)g_ddraw->wndproc);
+        if (g_ddraw->hwnd)
+        {
+            real_SetWindowLongA(g_ddraw->hwnd, GWL_WNDPROC, (LONG)g_ddraw->wndproc);
+        }
 
         HeapFree(GetProcessHeap(), 0, g_ddraw);
         g_ddraw = NULL;

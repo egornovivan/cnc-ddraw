@@ -969,6 +969,13 @@ BOOL WINAPI fake_DestroyWindow(HWND hWnd)
 {
     BOOL result = real_DestroyWindow(hWnd);
 
+    if (result && g_ddraw && hWnd == g_ddraw->hwnd)
+    {
+        g_ddraw->hwnd = NULL;
+        g_ddraw->wndproc = NULL;
+        g_ddraw->render.hdc = NULL;
+    }
+
     if (g_ddraw && g_ddraw->hwnd != hWnd && g_ddraw->bnet_active)
     {
         RedrawWindow(NULL, NULL, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_ALLCHILDREN);
