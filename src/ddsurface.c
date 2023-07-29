@@ -1431,52 +1431,58 @@ HRESULT dd_CreateSurface(
             ((DWORD*)dst_surface->bmi->bmiColors)[2] = 0x0000FF;
         }
 
-        dst_surface->hdc = CreateCompatibleDC(g_ddraw->render.hdc);
 
-        dst_surface->mapping =
-            CreateFileMappingA(
-                INVALID_HANDLE_VALUE,
-                NULL,
-                PAGE_READWRITE | SEC_COMMIT,
-                0,
-                bmp_size + 256,
-                NULL);
-
-        DWORD map_offset = 0;
-
-        if (dst_surface->mapping)
+        if (!g_ddraw->dont_emulate_dc)
         {
-            LPVOID data = MapViewOfFile(dst_surface->mapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-            if (data)
+            dst_surface->hdc = CreateCompatibleDC(g_ddraw->render.hdc);
+
+            dst_surface->mapping =
+                CreateFileMappingA(
+                    INVALID_HANDLE_VALUE,
+                    NULL,
+                    PAGE_READWRITE | SEC_COMMIT,
+                    0,
+                    bmp_size + 256,
+                    NULL);
+
+            DWORD map_offset = 0;
+
+            if (dst_surface->mapping)
             {
-                while (((DWORD)data + map_offset) % 128) map_offset++;
-                UnmapViewOfFile(data);
+                LPVOID data = MapViewOfFile(dst_surface->mapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+                if (data)
+                {
+                    while (((DWORD)data + map_offset) % 128) map_offset++;
+                    UnmapViewOfFile(data);
+                }
+
+                if (!data || (map_offset % sizeof(DWORD)))
+                {
+                    map_offset = 0;
+                    CloseHandle(dst_surface->mapping);
+                    dst_surface->mapping = NULL;
+                }
             }
 
-            if (!data || (map_offset % sizeof(DWORD)))
-            {
-                map_offset = 0;
-                CloseHandle(dst_surface->mapping);
-                dst_surface->mapping = NULL;
-            }
+            dst_surface->bitmap =
+                CreateDIBSection(
+                    dst_surface->hdc,
+                    dst_surface->bmi,
+                    DIB_RGB_COLORS,
+                    (void**)&dst_surface->surface,
+                    dst_surface->mapping,
+                    map_offset);
         }
-
-        dst_surface->bitmap =
-            CreateDIBSection(
-                dst_surface->hdc,
-                dst_surface->bmi,
-                DIB_RGB_COLORS,
-                (void**)&dst_surface->surface,
-                dst_surface->mapping,
-                map_offset);
-
-        SelectObject(dst_surface->hdc, dst_surface->bitmap);
 
         dst_surface->bmi->bmiHeader.biHeight = -((int)dst_surface->height);
 
         if (!dst_surface->bitmap)
         {
             dst_surface->surface = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, bmp_size);
+        }
+        else
+        {
+            SelectObject(dst_surface->hdc, dst_surface->bitmap);
         }
 
         if (dst_surface->caps & DDSCAPS_PRIMARYSURFACE)

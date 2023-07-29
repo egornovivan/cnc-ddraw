@@ -58,6 +58,7 @@ void cfg_load()
     g_ddraw->opengl_core = cfg_get_bool("opengl_core", FALSE);
     g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
+    g_ddraw->dont_emulate_dc = cfg_get_bool("dont_emulate_dc", FALSE);
     cfg_get_string("screenshotdir", ".\\Screenshots\\", g_ddraw->screenshot_dir, sizeof(g_ddraw->screenshot_dir));
 
     if (g_ddraw->locktopleft)
@@ -385,6 +386,7 @@ static void cfg_create_ini()
             "fpupreserve=true\n"
             "dinput_show_cursor=false\n"      
             "no_dinput_hook=false\n"
+            "dont_emulate_dc=false\n"
             "\n"
             "\n"
             "\n"
@@ -825,6 +827,10 @@ static void cfg_create_ini()
             "maxgameticks=25\n"
             "renderer=opengl\n"
             "noactivateapp=true\n"
+            "\n"
+            "; Hooligans: Storm over Europe\n"
+            "[Hooligans]\n"
+            "dont_emulate_dc=true\n"
             "\n"
             "; Invictus\n"
             "[Invictus]\n"
