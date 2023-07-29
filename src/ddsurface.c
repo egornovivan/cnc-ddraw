@@ -678,7 +678,15 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         memset(lpDDSurfaceDesc, 0, size);
 
         lpDDSurfaceDesc->dwSize = size;
-        lpDDSurfaceDesc->dwFlags = DDSD_WIDTH | DDSD_HEIGHT | DDSD_PITCH | DDSD_PIXELFORMAT | DDSD_LPSURFACE | DDSD_BACKBUFFERCOUNT;
+        lpDDSurfaceDesc->dwFlags = 
+            DDSD_CAPS | 
+            DDSD_WIDTH | 
+            DDSD_HEIGHT | 
+            DDSD_PITCH | 
+            DDSD_PIXELFORMAT | 
+            DDSD_LPSURFACE | 
+            DDSD_BACKBUFFERCOUNT;
+
         lpDDSurfaceDesc->dwWidth = This->width;
         lpDDSurfaceDesc->dwHeight = This->height;
         lpDDSurfaceDesc->lPitch = This->pitch;
