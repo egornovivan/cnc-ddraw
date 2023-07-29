@@ -755,6 +755,13 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                 (real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE) | WS_OVERLAPPEDWINDOW) & ~WS_MAXIMIZE);
         }
 
+        LONG exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
+
+        if ((exstyle & WS_EX_TOOLWINDOW))
+        {
+            real_SetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE, exstyle & ~(WS_EX_TOOLWINDOW));
+        }
+
         if (g_ddraw->wine)
         {
             real_SetWindowLongA(
@@ -780,7 +787,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         RECT dst = { x, y, g_ddraw->render.width + x, g_ddraw->render.height + y };
 
         LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
-        LONG exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
+        exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
 
         AdjustWindowRectEx(&dst, style, GetMenu(g_ddraw->hwnd) != NULL, exstyle);
 
@@ -828,6 +835,13 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                 g_ddraw->hwnd,
                 GWL_STYLE,
                 style & ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU));
+        }
+
+        LONG exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
+
+        if ((exstyle & WS_EX_TOOLWINDOW))
+        {
+            real_SetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE, exstyle & ~(WS_EX_TOOLWINDOW));
         }
 
         BOOL d3d9_active = FALSE;
