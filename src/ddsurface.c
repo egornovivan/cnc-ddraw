@@ -1470,6 +1470,8 @@ HRESULT dd_CreateSurface(
                 dst_surface->mapping,
                 map_offset);
 
+        SelectObject(dst_surface->hdc, dst_surface->bitmap);
+
         dst_surface->bmi->bmiHeader.biHeight = -((int)dst_surface->height);
 
         if (!dst_surface->bitmap)
@@ -1481,9 +1483,7 @@ HRESULT dd_CreateSurface(
         {
             g_ddraw->primary = dst_surface;
             FakePrimarySurface = dst_surface->surface;
-        }
-
-        SelectObject(dst_surface->hdc, dst_surface->bitmap);
+        }        
     }
 
     if (dst_surface->flags & DDSD_BACKBUFFERCOUNT)
@@ -1525,11 +1525,12 @@ HRESULT dd_CreateSurface(
     }
 
     TRACE(
-        "     surface = %p (%ux%u@%u)\n",
+        "     surface = %p (%ux%u@%u), buf = %p\n",
         dst_surface,
         dst_surface->width,
         dst_surface->height,
-        dst_surface->bpp);
+        dst_surface->bpp,
+        dst_surface->surface);
 
     *lpDDSurface = dst_surface;
 
