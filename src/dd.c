@@ -332,9 +332,25 @@ HRESULT dd_GetCaps(LPDDCAPS_DX1 lpDDDriverCaps, LPDDCAPS_DX1 lpDDEmulCaps)
             DDCAPS_BLTCOLORFILL | 
             DDCAPS_BLTSTRETCH | 
             DDCAPS_CANCLIP | 
-            DDCAPS_CANBLTSYSMEM;
+            DDCAPS_CANBLTSYSMEM |
+            DDCAPS_CANCLIPSTRETCHED;
 
-        lpDDDriverCaps->dwPalCaps = DDPCAPS_8BIT | DDPCAPS_PRIMARYSURFACE;
+        lpDDDriverCaps->dwCaps2 =
+            DDCAPS2_NOPAGELOCKREQUIRED |
+            DDCAPS2_WIDESURFACES;
+
+        lpDDDriverCaps->dwCKeyCaps = 
+            DDCKEYCAPS_SRCBLT | 
+            DDCKEYCAPS_SRCBLTCLRSPACE;
+        
+        lpDDDriverCaps->dwFXCaps =
+            DDFXCAPS_BLTMIRRORLEFTRIGHT |
+            DDFXCAPS_BLTMIRRORUPDOWN;
+
+        lpDDDriverCaps->dwPalCaps = 
+            DDPCAPS_8BIT | 
+            DDPCAPS_PRIMARYSURFACE;
+
         lpDDDriverCaps->dwVidMemTotal = 16777216;
         lpDDDriverCaps->dwVidMemFree = 16777216;
         lpDDDriverCaps->ddsCaps.dwCaps = DDSCAPS_FLIP;
