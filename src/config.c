@@ -1111,7 +1111,6 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
-            "novidmem=true\n"
             "\n"
             "; Worms Armageddon\n"
             "[WA]\n"
