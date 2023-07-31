@@ -150,7 +150,6 @@ typedef struct CNCDDRAW
     BOOL toggle_borderless;
     BOOL nonexclusive;
     int fixchilds;
-    BOOL fixwndprochook;
     BOOL fixnotresponding;
     BOOL flipclear;
     BOOL locktopleft;
