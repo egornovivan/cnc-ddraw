@@ -44,7 +44,6 @@ void cfg_load()
     g_ddraw->lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
     g_ddraw->releasealt = cfg_get_bool("releasealt", FALSE);
     g_ddraw->d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
-    g_ddraw->gdilinear = cfg_get_bool("gdilinear", FALSE);
     g_ddraw->d3d9on12 = cfg_get_bool("d3d9on12", FALSE);
     g_ddraw->resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
     g_ddraw->dinput_show_cursor = cfg_get_bool("dinput_show_cursor", FALSE);
@@ -369,7 +368,6 @@ static void cfg_create_ini()
             "locktopleft=false\n"
             "lock_surfaces=false\n"
             "releasealt=false\n"
-            "gdilinear=false\n"
             "allow_wmactivate=false\n"
             "dinputhook=false\n"
             "flipclear=false\n"

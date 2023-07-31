@@ -97,12 +97,6 @@ DWORD WINAPI gdi_render_main(void)
                 FillRect(g_ddraw->render.hdc, &rc, (HBRUSH)GetStockObject(BLACK_BRUSH));
             }
 
-            if (g_ddraw->gdilinear)
-            {
-                SetStretchBltMode(g_ddraw->render.hdc, HALFTONE);
-                SetBrushOrgEx(g_ddraw->render.hdc, 0, 0, NULL);
-            }
-
             if (g_ddraw->bnet_active)
             {
                 RECT rc = { 0, 0, g_ddraw->render.width, g_ddraw->render.height };

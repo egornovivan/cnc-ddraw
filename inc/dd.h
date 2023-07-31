@@ -153,7 +153,6 @@ typedef struct CNCDDRAW
     BOOL locktopleft;
     BOOL lock_surfaces;
     int d3d9_filter;
-    BOOL gdilinear;
     BOOL d3d9on12;
     int guard_lines;
     int resolutions;
