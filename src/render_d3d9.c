@@ -148,7 +148,7 @@ BOOL d3d9_create()
                         D3DADAPTER_DEFAULT,
                         D3DDEVTYPE_HAL,
                         g_ddraw->hwnd,
-                        behavior_flags[i] | (g_ddraw->fpupreserve ? D3DCREATE_FPU_PRESERVE : 0),
+                        behavior_flags[i],
                         &g_d3d9.params,
                         &g_d3d9.device)))
                     return g_d3d9.device && d3d9_create_resources() && d3d9_set_states();
