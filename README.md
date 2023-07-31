@@ -68,7 +68,7 @@ Some games may require additional steps before they can be used with cnc-ddraw, 
 * [Alt] + [Enter]                  = Switch between windowed and fullscreen mode
 * [Ctrl] + [Tab]                    = Unlock cursor
 * [Right Alt] + [Right Ctrl]  = Unlock cursor
-* [Alt] + [Page Down]        = Maximize window (Window borders must be disabled in config)
+* [Alt] + [Page Down]        = Maximize window
 
 &nbsp;
 
