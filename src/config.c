@@ -386,7 +386,7 @@ static void cfg_create_ini()
             "; Switch between windowed and fullscreen mode = [Alt] + ???\n"
             "keytogglefullscreen=0x0D\n"
             "\n"
-            "; Maximize window without frame = [Alt] + ???\n"
+            "; Maximize window = [Alt] + ???\n"
             "keytogglemaximize=0x22\n"
             "\n"
             "; Unlock cursor 1 = [Ctrl] + ???\n"
