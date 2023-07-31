@@ -92,6 +92,7 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         if (This->bitmap)
         {
             DeleteObject(This->bitmap);
+            InterlockedDecrement(&g_dds_gdi_handles);
         }
         else if (This->surface && !This->custom_buf)
         {
@@ -99,7 +100,10 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         }
 
         if (This->hdc)
+        {
             DeleteDC(This->hdc);
+            InterlockedDecrement(&g_dds_gdi_handles);
+        }
 
         if (This->bmi)
             HeapFree(GetProcessHeap(), 0, This->bmi);

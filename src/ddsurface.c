@@ -12,6 +12,8 @@
 #include "blt.h"
 
 
+LONG g_dds_gdi_handles;
+
 HRESULT dds_AddAttachedSurface(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurface)
 {
     if (lpDDSurface)
@@ -1205,6 +1207,7 @@ HRESULT dds_SetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC2 lpDDSD
     if (This->bitmap)
     {
         DeleteObject(This->bitmap);
+        InterlockedDecrement(&g_dds_gdi_handles);
         This->bitmap = NULL;
     }
     else if (This->surface && !This->custom_buf)
@@ -1216,6 +1219,7 @@ HRESULT dds_SetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC2 lpDDSD
     if (This->hdc)
     {
         DeleteDC(This->hdc);
+        InterlockedDecrement(&g_dds_gdi_handles);
         This->hdc = NULL;
     }
 
@@ -1432,9 +1436,12 @@ HRESULT dd_CreateSurface(
         }
 
 
-        if (!g_ddraw->dont_emulate_dc)
+        if (InterlockedExchangeAdd(&g_dds_gdi_handles, 0) < 4000 || (dst_surface->caps & DDSCAPS_PRIMARYSURFACE))
         {
             dst_surface->hdc = CreateCompatibleDC(g_ddraw->render.hdc);
+
+            if (dst_surface->hdc)
+                InterlockedIncrement(&g_dds_gdi_handles);
 
             dst_surface->mapping =
                 CreateFileMappingA(
@@ -1472,6 +1479,9 @@ HRESULT dd_CreateSurface(
                     (void**)&dst_surface->surface,
                     dst_surface->mapping,
                     map_offset);
+
+            if (dst_surface->bitmap)
+                InterlockedIncrement(&g_dds_gdi_handles);
         }
 
         dst_surface->bmi->bmiHeader.biHeight = -((int)dst_surface->height);
@@ -1489,7 +1499,7 @@ HRESULT dd_CreateSurface(
         {
             g_ddraw->primary = dst_surface;
             FakePrimarySurface = dst_surface->surface;
-        }        
+        }
     }
 
     if (dst_surface->flags & DDSD_BACKBUFFERCOUNT)

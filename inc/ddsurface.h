@@ -37,5 +37,6 @@ HRESULT dds_SetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC2 lpDDSD
 void* dds_GetBuffer(IDirectDrawSurfaceImpl* This);
 HRESULT dd_CreateSurface(IDirectDrawImpl* This, LPDDSURFACEDESC lpDDSurfaceDesc, IDirectDrawSurfaceImpl** lpDDSurface, IUnknown FAR* unkOuter);
 
+extern LONG g_dds_gdi_handles;
 
 #endif

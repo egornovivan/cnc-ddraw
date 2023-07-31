@@ -180,7 +180,6 @@ typedef struct CNCDDRAW
     DWORD gui_thread_id;
     BOOL rgb555;
     BOOL hook_peekmessage;
-    BOOL dont_emulate_dc;
 
 } CNCDDRAW;
 
