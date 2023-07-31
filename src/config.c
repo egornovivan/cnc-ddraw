@@ -50,7 +50,6 @@ void cfg_load()
     g_ddraw->fpupreserve = cfg_get_bool("fpupreserve", TRUE);
     g_ddraw->dinput_show_cursor = cfg_get_bool("dinput_show_cursor", FALSE);
     g_ddraw->allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
-    g_ddraw->d3d9_adapter = cfg_get_int("d3d9_adapter", 0);
     g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
     g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
     g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
@@ -360,7 +359,6 @@ static void cfg_create_ini()
             "\n"
             "\n"
             "; Undocumented settings\n"
-            "d3d9_adapter=0\n"
             "opengl_core=false\n"
             "d3d9on12=false\n"
             "guard_lines=200\n"
