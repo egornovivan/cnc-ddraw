@@ -40,7 +40,7 @@ static HRESULT WINAPI fake_did_SetCooperativeLevel(IDirectInputDeviceA* This, HW
 {
     TRACE("DirectInput SetCooperativeLevel(This=%p, hwnd=%p, dwFlags=0x%08X)\n", This, hwnd, dwFlags);
 
-    if (This == g_mouse_device && g_ddraw && (dwFlags & DISCL_EXCLUSIVE) && !g_ddraw->dinput_show_cursor)
+    if (This == g_mouse_device && g_ddraw && (dwFlags & DISCL_EXCLUSIVE))
     {
         if (g_mouse_locked || g_ddraw->devmode)
         {

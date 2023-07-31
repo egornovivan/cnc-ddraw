@@ -140,7 +140,6 @@ typedef struct CNCDDRAW
     BOOL wine;
     HCURSOR old_cursor;
     int show_cursor_count;
-    BOOL dinput_show_cursor;
     BOOL allow_wmactivate;
     BOOL opengl_core;
     BOOL accurate_timers;

@@ -46,7 +46,6 @@ void cfg_load()
     g_ddraw->d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
     g_ddraw->d3d9on12 = cfg_get_bool("d3d9on12", FALSE);
     g_ddraw->resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
-    g_ddraw->dinput_show_cursor = cfg_get_bool("dinput_show_cursor", FALSE);
     g_ddraw->allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
     g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
     g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
@@ -374,8 +373,7 @@ static void cfg_create_ini()
             "fixmousehook=false\n"
             "bpp=0\n"
             "rgb555=false\n"
-            "hook_peekmessage=false\n"
-            "dinput_show_cursor=false\n"      
+            "hook_peekmessage=false\n" 
             "no_dinput_hook=false\n"
             "\n"
             "\n"
@@ -1027,7 +1025,6 @@ static void cfg_create_ini()
             "; RollerCoaster Tycoon\n"
             "[rct]\n"
             "no_dinput_hook=true\n"
-            "dinput_show_cursor=true\n"
             "singlecpu=false\n"
             "maxfps=0\n"
             "adjmouse=true\n"
