@@ -33,7 +33,6 @@ void cfg_load()
     g_ddraw->vsync = cfg_get_bool("vsync", FALSE);
     g_ddraw->noactivateapp = cfg_get_bool("noactivateapp", FALSE);
     g_ddraw->vhack = cfg_get_bool("vhack", FALSE);
-    g_ddraw->accurate_timers = cfg_get_bool("accuratetimers", FALSE);
     g_ddraw->resizable = cfg_get_bool("resizable", TRUE);
     g_ddraw->toggle_borderless = cfg_get_bool("toggle_borderless", FALSE);
     g_ddraw->nonexclusive = cfg_get_bool("nonexclusive", FALSE);
@@ -94,15 +93,13 @@ void cfg_load()
     }
 
     /* can't fully set it up here due to missing g_ddraw->mode.dmDisplayFrequency  */
-    if (g_ddraw->accurate_timers || g_ddraw->vsync)
-        g_fpsl.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+    g_fpsl.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
 
     g_ddraw->maxgameticks = cfg_get_int("maxgameticks", 0);
 
     if (g_ddraw->maxgameticks > 0 && g_ddraw->maxgameticks <= 1000)
     {
-        if (g_ddraw->accurate_timers)
-            g_ddraw->ticks_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+        g_ddraw->ticks_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
 
         float len = 1000.0f / g_ddraw->maxgameticks;
         g_ddraw->ticks_limiter.tick_length_ns = (LONGLONG)(len * 10000);
@@ -112,8 +109,7 @@ void cfg_load()
     if (g_ddraw->maxgameticks >= 0 || g_ddraw->maxgameticks == -2)
     {
         /* always using 60 fps for flip...  */
-        if (g_ddraw->accurate_timers)
-            g_ddraw->flip_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+        g_ddraw->flip_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
 
         float flip_len = 1000.0f / 60;
         g_ddraw->flip_limiter.tick_length_ns = (LONGLONG)(flip_len * 10000);
@@ -351,7 +347,6 @@ static void cfg_create_ini()
             "max_resolutions=0\n"
             "limit_bltfast=false\n"
             "game_handles_close=false\n"
-            "accuratetimers=false\n"
             "fixpitch=true\n"
             "fixnotresponding=false\n"
             "lock_surfaces=false\n"

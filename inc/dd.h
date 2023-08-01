@@ -141,7 +141,6 @@ typedef struct CNCDDRAW
     int show_cursor_count;
     BOOL allow_wmactivate;
     BOOL opengl_core;
-    BOOL accurate_timers;
     BOOL resizable;
     BOOL toggle_borderless;
     BOOL nonexclusive;

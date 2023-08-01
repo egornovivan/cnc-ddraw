@@ -1030,21 +1030,20 @@ HRESULT dd_WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
 
     if (g_ddraw->flip_limiter.htimer)
     {
-        FILETIME last_flip_ft = { 0 };
-        GetSystemTimeAsFileTime(&last_flip_ft);
+        FILETIME ft = { 0 };
+        GetSystemTimeAsFileTime(&ft);
 
-        if (!g_ddraw->flip_limiter.due_time.QuadPart)
+        if (CompareFileTime((FILETIME*)&g_ddraw->flip_limiter.due_time, &ft) == -1)
         {
-            memcpy(&g_ddraw->flip_limiter.due_time, &last_flip_ft, sizeof(LARGE_INTEGER));
+            memcpy(&g_ddraw->flip_limiter.due_time, &ft, sizeof(LARGE_INTEGER));
         }
         else
         {
-            while (CompareFileTime((FILETIME*)&g_ddraw->flip_limiter.due_time, &last_flip_ft) == -1)
-                g_ddraw->flip_limiter.due_time.QuadPart += g_ddraw->flip_limiter.tick_length_ns;
-
-            SetWaitableTimer(g_ddraw->flip_limiter.htimer, &g_ddraw->flip_limiter.due_time, 0, NULL, NULL, FALSE);
             WaitForSingleObject(g_ddraw->flip_limiter.htimer, g_ddraw->flip_limiter.tick_length * 2);
         }
+
+        g_ddraw->flip_limiter.due_time.QuadPart += g_ddraw->flip_limiter.tick_length_ns;
+        SetWaitableTimer(g_ddraw->flip_limiter.htimer, &g_ddraw->flip_limiter.due_time, 0, NULL, NULL, FALSE);
     }
     else
     {
