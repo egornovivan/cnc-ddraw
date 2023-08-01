@@ -778,7 +778,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
         ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
         SwitchToThread();
 
-        if (g_ddraw->maxgameticks < 60 && ((dwFlags & DDFLIP_WAIT) || g_ddraw->maxgameticks == -2))
+        if ((g_ddraw->maxgameticks == 0 && (dwFlags & DDFLIP_WAIT)) || g_ddraw->maxgameticks == -2)
         {
             dd_WaitForVerticalBlank(DDWAITVB_BLOCKEND, NULL);
         }
