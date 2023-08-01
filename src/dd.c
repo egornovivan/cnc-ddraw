@@ -693,12 +693,9 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.scale_h = ((float)g_ddraw->render.viewport.height / g_ddraw->height);
     g_ddraw->render.unscale_w = ((float)g_ddraw->width / g_ddraw->render.viewport.width);
     g_ddraw->render.unscale_h = ((float)g_ddraw->height / g_ddraw->render.viewport.height);
-
-    if (!g_ddraw->locktopleft)
-    {
-        g_ddraw->mouse.x_adjust = g_ddraw->render.viewport.x;
-        g_ddraw->mouse.y_adjust = g_ddraw->render.viewport.y;
-    }
+{
+    g_ddraw->mouse.x_adjust = g_ddraw->render.viewport.x;
+    g_ddraw->mouse.y_adjust = g_ddraw->render.viewport.y;
 
     g_ddraw->mouse.rc.left = g_ddraw->mouse.x_adjust;;
     g_ddraw->mouse.rc.top = g_ddraw->mouse.y_adjust;;

@@ -40,7 +40,6 @@ void cfg_load()
     g_ddraw->fixchilds = cfg_get_int("fixchilds", FIX_CHILDS_DETECT_PAINT);
     g_ddraw->flipclear = cfg_get_bool("flipclear", FALSE);
     g_ddraw->fixnotresponding = cfg_get_bool("fixnotresponding", FALSE);
-    g_ddraw->locktopleft = cfg_get_bool("locktopleft", FALSE);
     g_ddraw->lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
     g_ddraw->releasealt = cfg_get_bool("releasealt", FALSE);
     g_ddraw->d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
@@ -55,8 +54,6 @@ void cfg_load()
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
     cfg_get_string("screenshotdir", ".\\Screenshots\\", g_ddraw->screenshot_dir, sizeof(g_ddraw->screenshot_dir));
 
-    if (g_ddraw->locktopleft)
-        g_ddraw->adjmouse = FALSE;
 
     g_ddraw->armadahack = cfg_get_bool("armadahack", FALSE);
     g_ddraw->tshack = cfg_get_bool("tshack", FALSE);
@@ -357,7 +354,6 @@ static void cfg_create_ini()
             "accuratetimers=false\n"
             "fixpitch=true\n"
             "fixnotresponding=false\n"
-            "locktopleft=false\n"
             "lock_surfaces=false\n"
             "releasealt=false\n"
             "allow_wmactivate=false\n"

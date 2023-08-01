@@ -148,7 +148,6 @@ typedef struct CNCDDRAW
     int fixchilds;
     BOOL fixnotresponding;
     BOOL flipclear;
-    BOOL locktopleft;
     BOOL lock_surfaces;
     int d3d9_filter;
     BOOL d3d9on12;
