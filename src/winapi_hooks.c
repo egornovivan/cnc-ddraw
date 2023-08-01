@@ -427,12 +427,6 @@ LRESULT WINAPI fake_SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
     return result;
 }
 
-static WNDPROC g_compat_wndproc;
-LRESULT CALLBACK compat_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    return CallWindowProcA(g_compat_wndproc, hWnd, uMsg, wParam, lParam);
-}
-
 LONG WINAPI fake_SetWindowLongA(HWND hWnd, int nIndex, LONG dwNewLong)
 {
     if (g_ddraw && g_ddraw->hwnd == hWnd)
