@@ -483,7 +483,7 @@ static void cfg_create_ini()
             "\n"
             "; Blade & Sword\n"
             "[comeon]\n"
-            "maxgameticks=62\n"
+            "maxgameticks=60\n"
             "fixchilds=3\n"
             "\n"
             "; Blood II - The Chosen / Shogo - Mobile Armor Division\n"
