@@ -13,7 +13,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
 {
     TRACE("-> %s(This=%p, riid=%08X, ppvObj=%p)\n", __FUNCTION__, This, (unsigned int)riid, ppvObj);
 
-    HRESULT ret = DDERR_UNSUPPORTED;
+    HRESULT ret = E_NOINTERFACE;
 
     if (riid)
     {
@@ -104,12 +104,14 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
             *ppvObj = d3d;
 
             ret = S_OK;
-        }
-        /*
-        else if (
-            !g_ddraw->passthrough &&
-            (IsEqualGUID(&IID_IMediaStream, riid) || IsEqualGUID(&IID_IAMMediaStream, riid)))
+        } 
+        else if (IsEqualGUID(&IID_IMediaStream, riid) || IsEqualGUID(&IID_IAMMediaStream, riid))
         {
+            TRACE("NOT_IMPLEMENTED     GUID = %08X (IID_IXXMediaStream)\n", ((GUID*)riid)->Data1);
+
+            ret = E_NOINTERFACE;
+
+            /*
             IAMMediaStreamImpl* ms =
                 (IAMMediaStreamImpl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IAMMediaStreamImpl));
 
@@ -118,11 +120,11 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
             ms->lpVtbl = &g_ms_vtbl;
             ms->lpVtbl->AddRef(ms);
 
-            *obj = ms;
+            *ppvObj = ms;
 
             ret = S_OK;
+            */
         }
-        */
         else
         {
             TRACE("NOT_IMPLEMENTED     GUID = %08X\n", ((GUID*)riid)->Data1);
@@ -144,9 +146,10 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
             else
                 ret = E_NOINTERFACE;
         }
+       
     }
 
-    TRACE("<- %s\n", __FUNCTION__);
+    TRACE("<- %s(result=%08X)\n", __FUNCTION__, ret);
     return ret;
 }
 
