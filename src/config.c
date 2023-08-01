@@ -870,7 +870,7 @@ static void cfg_create_ini()
             "\n"
             "; Lionheart\n"
             "[Lionheart]\n"
-            "locktopleft=true\n"
+            "hook_peekmessage=true\n"
             "\n"
             "; Majesty Gold\n"
             "[Majesty]\n"
