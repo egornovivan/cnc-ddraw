@@ -364,7 +364,6 @@ static void cfg_create_ini()
             "dinputhook=false\n"
             "flipclear=false\n"
             "fixmousehook=false\n"
-            "bpp=0\n"
             "rgb555=false\n"
             "hook_peekmessage=false\n" 
             "no_dinput_hook=false\n"
