@@ -972,7 +972,7 @@ static void cfg_create_ini()
             "\n"
             "; Space Rangers\n"
             "[Rangers]\n"
-            "locktopleft=true\n"
+            "hook_peekmessage=true\n"
             "\n"
             "; Stronghold Crusader Extreme HD\n"
             "[Stronghold_Crusader_Extreme]\n"
