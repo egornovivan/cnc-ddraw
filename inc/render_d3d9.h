@@ -23,7 +23,6 @@ typedef struct D3D9RENDERER
     IDirect3DPixelShader9* pixel_shader_upscale;
     float scale_w;
     float scale_h;
-    int bits_per_pixel;
     int tex_width;
     int tex_height;
 } D3D9RENDERER;

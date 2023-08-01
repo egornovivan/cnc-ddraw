@@ -139,13 +139,6 @@ void cfg_load()
             SetProcessAffinityMask(proc, system_affinity);
     }
 
-    g_ddraw->render.bpp = cfg_get_int("bpp", 0);
-
-    if (g_ddraw->render.bpp != 16 && g_ddraw->render.bpp != 24 && g_ddraw->render.bpp != 32)
-    {
-        g_ddraw->render.bpp = 0;
-    }
-
     /* to do: read .glslp config file instead of the shader and apply the correct settings  */
     cfg_get_string("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_ddraw->shader, sizeof(g_ddraw->shader));
 

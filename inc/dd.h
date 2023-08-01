@@ -81,7 +81,6 @@ typedef struct CNCDDRAW
         DWORD minfps_tick_len;
         int width;
         int height;
-        int bpp;
         int opengl_y_align;
 
         HDC hdc;

@@ -567,12 +567,6 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
     g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
-    if (g_ddraw->render.bpp)
-    {
-        g_ddraw->render.mode.dmFields |= DM_BITSPERPEL;
-        g_ddraw->render.mode.dmBitsPerPel = g_ddraw->render.bpp;
-    }
-
     if (!g_ddraw->windowed)
     {
         /* Making sure the chosen resolution is valid */
@@ -951,7 +945,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
                 PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER | (g_ddraw->renderer == ogl_render_main ? PFD_SUPPORT_OPENGL : 0);
 
             pfd.iPixelType = PFD_TYPE_RGBA;
-            pfd.cColorBits = g_ddraw->render.bpp ? g_ddraw->render.bpp : g_ddraw->mode.dmBitsPerPel;
+            pfd.cColorBits = g_ddraw->mode.dmBitsPerPel;
             pfd.iLayerType = PFD_MAIN_PLANE;
 
             SetPixelFormat(g_ddraw->render.hdc, ChoosePixelFormat(g_ddraw->render.hdc, &pfd), &pfd);

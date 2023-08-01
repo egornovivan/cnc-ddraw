@@ -117,8 +117,6 @@ BOOL d3d9_create()
                 TRACE("+------------------------------------------------\n");
             }
 #endif
-
-            g_d3d9.bits_per_pixel = g_ddraw->render.bpp ? g_ddraw->render.bpp : g_ddraw->mode.dmBitsPerPel;
             g_d3d9.hwnd = g_ddraw->hwnd;
 
             memset(&g_d3d9.params, 0, sizeof(g_d3d9.params));
@@ -129,7 +127,7 @@ BOOL d3d9_create()
             g_d3d9.params.PresentationInterval = g_ddraw->vsync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
             g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
             g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
-            g_d3d9.params.BackBufferFormat = g_d3d9.bits_per_pixel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
+            g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
             g_d3d9.params.BackBufferCount = 1;
 
             DWORD behavior_flags[] = {
@@ -174,7 +172,7 @@ BOOL d3d9_reset(BOOL windowed)
     g_d3d9.params.Windowed = windowed;
     g_d3d9.params.BackBufferWidth = windowed ? 0 : g_ddraw->render.width;
     g_d3d9.params.BackBufferHeight = windowed ? 0 : g_ddraw->render.height;
-    g_d3d9.params.BackBufferFormat = g_d3d9.bits_per_pixel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
+    g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
 
     if (g_d3d9.device && SUCCEEDED(IDirect3DDevice9_Reset(g_d3d9.device, &g_d3d9.params)))
     {
