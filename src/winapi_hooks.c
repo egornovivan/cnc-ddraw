@@ -11,7 +11,9 @@
 #include "mouse.h"
 #include "wndproc.h"
 #include "render_gdi.h"
+#include "directinput.h"
 #include "ddsurface.h"
+#include "dllmain.h"
 
 
 BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
@@ -911,7 +913,14 @@ HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
     }
 #endif
 
-    hook_init();
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
+    hook_init(FALSE);
 
     return hmod;
 }
@@ -928,7 +937,14 @@ HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName)
     }
 #endif
 
-    hook_init();
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
+    hook_init(FALSE);
 
     return hmod;
 }
@@ -945,7 +961,14 @@ HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwF
     }
 #endif
 
-    hook_init();
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
+    hook_init(FALSE);
 
     return hmod;
 }
@@ -962,7 +985,14 @@ HMODULE WINAPI fake_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dw
     }
 #endif
 
-    hook_init();
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
+    hook_init(FALSE);
 
     return hmod;
 }

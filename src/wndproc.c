@@ -9,6 +9,7 @@
 #include "config.h"
 #include "screenshot.h"
 #include "winapi_hooks.h"
+#include "directinput.h"
 #include "wndproc.h"
 #include "utils.h"
 #include "debug.h"
@@ -560,7 +561,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             ip.ki.dwFlags = KEYEVENTF_KEYUP;
             SendInput(1, &ip, sizeof(ip));
 
-            if (g_hook_dinput)
+            if (g_dinput_hook_active)
             {
                 ip.type = INPUT_KEYBOARD;
                 ip.ki.wScan = 56; // LeftAlt

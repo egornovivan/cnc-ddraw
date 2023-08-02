@@ -1,4 +1,3 @@
-
 #include <windows.h>
 #include <initguid.h>
 #include "directinput.h"
@@ -7,6 +6,11 @@
 #include "dd.h"
 #include "mouse.h"
 
+#ifdef _MSC_VER
+#include "detours.h"
+#endif
+
+BOOL g_dinput_hook_active;
 
 DIRECTINPUTCREATEAPROC real_DirectInputCreateA;
 DIRECTINPUTCREATEWPROC real_DirectInputCreateW;
@@ -316,4 +320,96 @@ HRESULT WINAPI fake_DirectInput8Create(
     }
 
     return result;
+}
+
+void dinput_hook_init()
+{
+#ifdef _MSC_VER
+    if (!g_dinput_hook_active)
+    {
+        g_dinput_hook_active = TRUE;
+
+        real_DirectInputCreateA = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateA");
+
+        if (real_DirectInputCreateA && real_DirectInputCreateA != fake_DirectInputCreateA)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
+            DetourTransactionCommit();
+        }
+
+        real_DirectInputCreateW = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateW");
+
+        if (real_DirectInputCreateW && real_DirectInputCreateW != fake_DirectInputCreateW)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
+            DetourTransactionCommit();
+        }
+
+        real_DirectInputCreateEx = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateEx");
+
+        if (real_DirectInputCreateEx && real_DirectInputCreateEx != fake_DirectInputCreateEx)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_DirectInputCreateEx, (PVOID)fake_DirectInputCreateEx);
+            DetourTransactionCommit();
+        }
+
+        real_DirectInput8Create = (void*)GetProcAddress(LoadLibraryA("dinput8.dll"), "DirectInput8Create");
+
+        if (real_DirectInput8Create && real_DirectInput8Create != fake_DirectInput8Create)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_DirectInput8Create, (PVOID)fake_DirectInput8Create);
+            DetourTransactionCommit();
+        }
+    }
+#endif
+}
+
+void dinput_hook_exit()
+{
+#ifdef _MSC_VER
+    if (g_dinput_hook_active)
+    {
+        if (real_DirectInputCreateA)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourDetach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
+            DetourTransactionCommit();
+        }
+
+        if (real_DirectInputCreateW)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourDetach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
+            DetourTransactionCommit();
+        }
+
+        if (real_DirectInputCreateEx)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourDetach((PVOID*)&real_DirectInputCreateEx, (PVOID)fake_DirectInputCreateEx);
+            DetourTransactionCommit();
+        }
+
+        if (real_DirectInput8Create)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourDetach((PVOID*)&real_DirectInput8Create, (PVOID)fake_DirectInput8Create);
+            DetourTransactionCommit();
+        }
+
+        g_dinput_hook_active = FALSE;
+    }
+#endif
 }

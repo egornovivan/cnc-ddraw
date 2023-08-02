@@ -924,7 +924,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
     if (!g_ddraw->wndproc)
     {
-        hook_init();
+        hook_init(FALSE);
 
         g_ddraw->wndproc = (WNDPROC)real_SetWindowLongA(g_ddraw->hwnd, GWL_WNDPROC, (LONG)fake_WndProc);
         g_ddraw->gui_thread_id = GetWindowThreadProcessId(g_ddraw->hwnd, NULL);

@@ -14,6 +14,8 @@ typedef HRESULT(WINAPI* DIDSETCOOPERATIVELEVELPROC)(IDirectInputDeviceA*, HWND, 
 typedef HRESULT(WINAPI* DIDGETDEVICEDATAPROC)(IDirectInputDeviceA*, DWORD, LPDIDEVICEOBJECTDATA, LPDWORD, DWORD);
 typedef HRESULT(WINAPI* DIDGETDEVICESTATEPROC)(IDirectInputDeviceA*, DWORD, LPVOID);
 
+extern BOOL g_dinput_hook_active;
+
 extern DIRECTINPUTCREATEAPROC real_DirectInputCreateA;
 extern DIRECTINPUTCREATEWPROC real_DirectInputCreateW;
 extern DIRECTINPUTCREATEEXPROC real_DirectInputCreateEx;
@@ -23,5 +25,8 @@ HRESULT WINAPI fake_DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPDIREC
 HRESULT WINAPI fake_DirectInputCreateW(HINSTANCE hinst, DWORD dwVersion, LPDIRECTINPUTW* lplpDirectInput, LPUNKNOWN punkOuter);
 HRESULT WINAPI fake_DirectInputCreateEx(HINSTANCE hinst, DWORD dwVersion, REFIID riidltf, LPDIRECTINPUT7A* ppvOut, LPUNKNOWN punkOuter);
 HRESULT WINAPI fake_DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, REFIID riidltf, LPDIRECTINPUT8* ppvOut, LPUNKNOWN punkOuter);
+
+void dinput_hook_init();
+void dinput_hook_exit();
 
 #endif

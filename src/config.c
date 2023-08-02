@@ -76,8 +76,6 @@ void cfg_load()
 
     g_config.save_settings = cfg_get_int("savesettings", 1);
 
-    g_hook_dinput = cfg_get_bool("dinputhook", FALSE);
-
     g_ddraw->render.maxfps = cfg_get_int("maxfps", -1);
     g_ddraw->render.minfps = cfg_get_int("minfps", 0);
 
@@ -351,7 +349,6 @@ static void cfg_create_ini()
             "lock_surfaces=false\n"
             "releasealt=false\n"
             "allow_wmactivate=false\n"
-            "dinputhook=false\n"
             "flipclear=false\n"
             "fixmousehook=false\n"
             "rgb555=false\n"
@@ -735,14 +732,6 @@ static void cfg_create_ini()
             "maxgameticks=60\n"
             "fixnotresponding=true\n"
             "\n"
-            "; Fallout\n"
-            "[falloutw]\n"
-            "dinputhook=true\n"
-            "\n"
-            "; Fallout 2\n"
-            "[FALLOUT2]\n"
-            "dinputhook=true\n"
-            "\n"
             "; Fairy Tale About Father Frost, Ivan and Nastya\n"
             "[mrazik]\n"
             "guard_lines=0\n"
@@ -878,13 +867,8 @@ static void cfg_create_ini()
             "[Mech3]\n"
             "nonexclusive=true\n"
             "\n"
-            "; Moorhuhn\n"
-            "[Moorhuhn]\n"
-            "dinputhook=true\n"
-            "\n"
             "; Moorhuhn 2\n"
             "[Moorhuhn2]\n"
-            "dinputhook=true\n"
             "releasealt=true\n"
             "\n"
             "; New Robinson\n"

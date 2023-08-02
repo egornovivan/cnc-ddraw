@@ -15,7 +15,6 @@
 #endif
 
 BOOL g_hook_active;
-BOOL g_hook_dinput;
 int g_hook_method = 1;
 
 GETCURSORPOSPROC real_GetCursorPos = GetCursorPos;
@@ -536,66 +535,13 @@ void hook_revert(HOOKLIST* hooks)
     }
 }
 
-void hook_init()
+void hook_init(BOOL initial_hook)
 {
     if (!g_hook_active || g_hook_method == 3 || g_hook_method == 4)
     {
-        BOOL initial_hook = !g_hook_active;
-
-#ifdef _MSC_VER
-        if (initial_hook && cfg_get_bool("dinputhook", FALSE))
-        {
-            real_DirectInputCreateA =
-                (DIRECTINPUTCREATEAPROC)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateA");
-
-            if (real_DirectInputCreateA)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourAttach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
-                DetourTransactionCommit();
-            }
-
-            real_DirectInputCreateW =
-                (DIRECTINPUTCREATEWPROC)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateW");
-
-            if (real_DirectInputCreateW)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourAttach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
-                DetourTransactionCommit();
-            }
-
-            real_DirectInputCreateEx =
-                (DIRECTINPUTCREATEEXPROC)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateEx");
-
-            if (real_DirectInputCreateEx)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourAttach((PVOID*)&real_DirectInputCreateEx, (PVOID)fake_DirectInputCreateEx);
-                DetourTransactionCommit();
-            }
-
-            real_DirectInput8Create =
-                (DIRECTINPUT8CREATEPROC)GetProcAddress(LoadLibraryA("dinput8.dll"), "DirectInput8Create");
-
-            if (real_DirectInput8Create)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourAttach((PVOID*)&real_DirectInput8Create, (PVOID)fake_DirectInput8Create);
-                DetourTransactionCommit();
-            }
-        }
-#endif
-
 #if defined(_DEBUG) && defined(_MSC_VER)
         if (initial_hook)
         {
-            hook_patch_iat(GetModuleHandle(NULL), FALSE, "kernel32.dll", "SetUnhandledExceptionFilter", (PROC)fake_SetUnhandledExceptionFilter);
-
             DetourTransactionBegin();
             DetourUpdateThread(GetCurrentThread());
             DetourAttach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
@@ -608,9 +554,9 @@ void hook_init()
             hook_patch_iat(GetModuleHandle("AcGenral"), FALSE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
         }
 
-        g_hook_active = TRUE;
-
         hook_create((HOOKLIST*)&g_hooks, initial_hook);
+
+        g_hook_active = TRUE;
     }
 }
 
@@ -620,43 +566,6 @@ void hook_exit()
     {
         g_hook_active = FALSE;
 
-#ifdef _MSC_VER
-        if (cfg_get_bool("dinputhook", FALSE))
-        {
-            if (real_DirectInputCreateA)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourDetach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
-                DetourTransactionCommit();
-            }
-
-            if (real_DirectInputCreateW)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourDetach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
-                DetourTransactionCommit();
-            }
-
-            if (real_DirectInputCreateEx)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourDetach((PVOID*)&real_DirectInputCreateEx, (PVOID)fake_DirectInputCreateEx);
-                DetourTransactionCommit();
-            }
-
-            if (real_DirectInput8Create)
-            {
-                DetourTransactionBegin();
-                DetourUpdateThread(GetCurrentThread());
-                DetourDetach((PVOID*)&real_DirectInput8Create, (PVOID)fake_DirectInput8Create);
-                DetourTransactionCommit();
-            }
-        }
-#endif
-
         hook_revert((HOOKLIST*)&g_hooks);
     }
 
@@ -665,8 +574,6 @@ void hook_exit()
     DetourUpdateThread(GetCurrentThread());
     DetourDetach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
     DetourTransactionCommit();
-
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "kernel32.dll", "SetUnhandledExceptionFilter", (PROC)fake_SetUnhandledExceptionFilter);
 
     real_SetUnhandledExceptionFilter(g_dbg_exception_filter);
 #endif

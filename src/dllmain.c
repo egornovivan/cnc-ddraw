@@ -2,6 +2,7 @@
 #include "ddraw.h"
 #include <stdio.h>
 #include "dllmain.h"
+#include "directinput.h"
 #include "IDirectDraw.h"
 #include "dd.h"
 #include "ddclipper.h"
@@ -102,7 +103,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 
         timeBeginPeriod(1);
         g_hook_method = cfg_get_int("hook", 4);
-        hook_init();
+        hook_init(TRUE);
         break;
     }
     case DLL_PROCESS_DETACH:
@@ -112,6 +113,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         cfg_save();
 
         timeEndPeriod(1);
+        dinput_hook_exit();
         hook_exit();
         break;
     }

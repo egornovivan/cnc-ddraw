@@ -99,10 +99,9 @@ extern COCREATEINSTANCEPROC real_CoCreateInstance;
 extern SETUNHANDLEDEXCEPTIONFILTERPROC real_SetUnhandledExceptionFilter;
 
 extern int g_hook_method;
-extern BOOL g_hook_dinput;
 extern BOOL g_hook_active;
 
-void hook_init();
+void hook_init(BOOL initial_hook);
 void hook_exit();
 void hook_patch_iat(HMODULE hmod, BOOL unhook, char* module_name, char* function_name, PROC new_function);
 void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks);
