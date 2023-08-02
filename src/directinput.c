@@ -338,7 +338,7 @@ void dinput_hook_init()
             DetourAttach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
             DetourTransactionCommit();
         }
-
+        /*
         real_DirectInputCreateW = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateW");
 
         if (real_DirectInputCreateW && real_DirectInputCreateW != fake_DirectInputCreateW)
@@ -348,7 +348,7 @@ void dinput_hook_init()
             DetourAttach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
             DetourTransactionCommit();
         }
-
+        */
         real_DirectInputCreateEx = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateEx");
 
         if (real_DirectInputCreateEx && real_DirectInputCreateEx != fake_DirectInputCreateEx)
@@ -384,7 +384,7 @@ void dinput_hook_exit()
             DetourDetach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
             DetourTransactionCommit();
         }
-
+        /* Being called from winmm for some reason
         if (real_DirectInputCreateW)
         {
             DetourTransactionBegin();
@@ -392,7 +392,7 @@ void dinput_hook_exit()
             DetourDetach((PVOID*)&real_DirectInputCreateW, (PVOID)fake_DirectInputCreateW);
             DetourTransactionCommit();
         }
-
+        */
         if (real_DirectInputCreateEx)
         {
             DetourTransactionBegin();
