@@ -966,6 +966,12 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
             while (real_ShowCursor(TRUE) < 0);
         }
 
+        /* Starcraft locks the cursor before ddraw.dll was loaded */
+        if (g_ddraw->windowed && (!g_ddraw->fullscreen || real_GetForegroundWindow() != g_ddraw->hwnd))
+        {
+            real_ClipCursor(NULL);
+        }
+
         GetWindowText(g_ddraw->hwnd, (LPTSTR)&g_ddraw->title, sizeof(g_ddraw->title));
 
         g_ddraw->isredalert = strcmp(g_ddraw->title, "Red Alert") == 0;
