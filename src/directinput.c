@@ -338,7 +338,7 @@ void dinput_hook_init()
             DetourAttach((PVOID*)&real_DirectInputCreateA, (PVOID)fake_DirectInputCreateA);
             DetourTransactionCommit();
         }
-        /*
+        /* Being called from winmm for some reason
         real_DirectInputCreateW = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateW");
 
         if (real_DirectInputCreateW && real_DirectInputCreateW != fake_DirectInputCreateW)
