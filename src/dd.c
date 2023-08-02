@@ -970,7 +970,6 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         if (g_ddraw->windowed)
         {
             real_ClipCursor(NULL);
-            mouse_unlock();
         }
 
         GetWindowText(g_ddraw->hwnd, (LPTSTR)&g_ddraw->title, sizeof(g_ddraw->title));
