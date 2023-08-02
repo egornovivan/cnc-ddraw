@@ -90,6 +90,30 @@ static HOOKLIST g_hooks[] =
             { "GetForegroundWindow", (PROC)fake_GetForegroundWindow, (PROC*)&real_GetForegroundWindow, 0 },
             { "PeekMessageA", (PROC)fake_PeekMessageA, (PROC*)&real_PeekMessageA, 0 },
             { "SetForegroundWindow", (PROC)fake_SetForegroundWindow, (PROC*)&real_SetForegroundWindow, 0 },
+            { "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA, (PROC*)&real_SetWindowsHookExA, 0 },
+            { "", NULL, NULL, 0 }
+        }
+    },
+    {
+        "ole32.dll",
+        {
+            { "CoCreateInstance", (PROC)fake_CoCreateInstance, (PROC*)&real_CoCreateInstance, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "", NULL, NULL, 0 }
+        }
+    },
+    {
+        "dinput.dll",
+        {
+            { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "", NULL, NULL, 0 }
+        }
+    },
+    {
+        "dinput8.dll",
+        {
+            { "DirectInput8Create", (PROC)fake_DirectInput8Create, (PROC*)&real_DirectInput8Create, SKIP_HOOK2 | SKIP_HOOK3 },
             { "", NULL, NULL, 0 }
         }
     },
@@ -110,6 +134,7 @@ static HOOKLIST g_hooks[] =
             { "LoadLibraryW", (PROC)fake_LoadLibraryW, (PROC*)&real_LoadLibraryW, SKIP_HOOK2 | SKIP_HOOK3 },
             { "LoadLibraryExA", (PROC)fake_LoadLibraryExA, (PROC*)&real_LoadLibraryExA, SKIP_HOOK2 | SKIP_HOOK3 },
             { "LoadLibraryExW", (PROC)fake_LoadLibraryExW, (PROC*)&real_LoadLibraryExW, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA, (PROC*)&real_GetDiskFreeSpaceA, SKIP_HOOK2 | SKIP_HOOK3 },
             { "", NULL, NULL, 0 }
         }
     },
@@ -400,7 +425,10 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 
                 if (GetModuleFileNameA(hmod, mod_path, MAX_PATH))
                 {
-                    TRACE_EXT("Module %s = %p\n", mod_path, hmod);
+                    if (initial_hook)
+                    {
+                        TRACE_EXT("Module %s = %p\n", mod_path, hmod);
+                    }
 
                     _splitpath(mod_path, NULL, mod_dir, mod_filename, NULL);
 
@@ -515,7 +543,7 @@ void hook_init()
         BOOL initial_hook = !g_hook_active;
 
 #ifdef _MSC_VER
-        if (initial_hook && g_hook_dinput)
+        if (initial_hook && cfg_get_bool("dinputhook", FALSE))
         {
             real_DirectInputCreateA =
                 (DIRECTINPUTCREATEAPROC)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateA");
@@ -563,38 +591,26 @@ void hook_init()
         }
 #endif
 
+#if defined(_DEBUG) && defined(_MSC_VER)
+        if (initial_hook)
+        {
+            hook_patch_iat(GetModuleHandle(NULL), FALSE, "kernel32.dll", "SetUnhandledExceptionFilter", (PROC)fake_SetUnhandledExceptionFilter);
+
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
+            DetourTransactionCommit();
+        }
+#endif
+
+        if (initial_hook)
+        {
+            hook_patch_iat(GetModuleHandle("AcGenral"), FALSE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
+        }
+
         g_hook_active = TRUE;
 
         hook_create((HOOKLIST*)&g_hooks, initial_hook);
-    }
-}
-
-void hook_early_init()
-{
-#if defined(_DEBUG) && defined(_MSC_VER)
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "kernel32.dll", "SetUnhandledExceptionFilter", (PROC)fake_SetUnhandledExceptionFilter);
-
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
-    DetourAttach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
-    DetourTransactionCommit();
-#endif
-
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "ole32.dll", "CoCreateInstance", (PROC)fake_CoCreateInstance);
-    hook_patch_iat(GetModuleHandle("XIIIGame.dll"), FALSE, "ole32.dll", "CoCreateInstance", (PROC)fake_CoCreateInstance); //Hooligans
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "user32.dll", "GetClientRect", (PROC)fake_GetClientRect); //anno 1602
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "user32.dll", "ClipCursor", (PROC)fake_ClipCursor); //NexusTK
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "user32.dll", "SetWindowLongA", (PROC)fake_SetWindowLongA); //BALDR FORCE EXE
-    hook_patch_iat(GetModuleHandle("AcGenral"), FALSE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
-    hook_patch_iat(GetModuleHandle(NULL), FALSE, "kernel32.dll", "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA);
-
-    if (!cfg_get_bool("no_dinput_hook", FALSE))
-    {
-        hook_patch_iat(GetModuleHandle(NULL), FALSE, "dinput.dll", "DirectInputCreateA", (PROC)fake_DirectInputCreateA);
-        hook_patch_iat(GetModuleHandle(NULL), FALSE, "dinput.dll", "DirectInputCreateW", (PROC)fake_DirectInputCreateW);
-        hook_patch_iat(GetModuleHandle(NULL), FALSE, "dinput.dll", "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx);
-        hook_patch_iat(GetModuleHandle(NULL), FALSE, "dinput8.dll", "DirectInput8Create", (PROC)fake_DirectInput8Create);
     }
 }
 
@@ -605,7 +621,7 @@ void hook_exit()
         g_hook_active = FALSE;
 
 #ifdef _MSC_VER
-        if (g_hook_dinput)
+        if (cfg_get_bool("dinputhook", FALSE))
         {
             if (real_DirectInputCreateA)
             {
@@ -655,20 +671,5 @@ void hook_exit()
     real_SetUnhandledExceptionFilter(g_dbg_exception_filter);
 #endif
 
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "ole32.dll", "CoCreateInstance", (PROC)fake_CoCreateInstance);
-    hook_patch_iat(GetModuleHandle("XIIIGame.dll"), TRUE, "ole32.dll", "CoCreateInstance", (PROC)fake_CoCreateInstance); //Hooligans
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "user32.dll", "GetClientRect", (PROC)fake_GetClientRect); //anno 1602
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "user32.dll", "ClipCursor", (PROC)fake_ClipCursor); //NexusTK
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "user32.dll", "SetWindowLongA", (PROC)fake_SetWindowLongA); //BALDR FORCE EXE
     hook_patch_iat(GetModuleHandle("AcGenral"), TRUE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
-    hook_patch_iat(GetModuleHandle(NULL), TRUE, "kernel32.dll", "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA);
-
-    if (!cfg_get_bool("no_dinput_hook", FALSE))
-    {
-        hook_patch_iat(GetModuleHandle(NULL), TRUE, "dinput.dll", "DirectInputCreateA", (PROC)fake_DirectInputCreateA);
-        hook_patch_iat(GetModuleHandle(NULL), TRUE, "dinput.dll", "DirectInputCreateW", (PROC)fake_DirectInputCreateW);
-        hook_patch_iat(GetModuleHandle(NULL), TRUE, "dinput.dll", "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx);
-        hook_patch_iat(GetModuleHandle(NULL), TRUE, "dinput8.dll", "DirectInput8Create", (PROC)fake_DirectInput8Create);
-    }
 }

@@ -76,7 +76,6 @@ void cfg_load()
 
     g_config.save_settings = cfg_get_int("savesettings", 1);
 
-    g_hook_method = cfg_get_int("hook", 4);
     g_hook_dinput = cfg_get_bool("dinputhook", FALSE);
 
     g_ddraw->render.maxfps = cfg_get_int("maxfps", -1);

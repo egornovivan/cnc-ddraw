@@ -9,7 +9,7 @@
 #define SKIP_HOOK3 0x00000002l
 
 typedef struct HOOKLISTDATA { char function_name[32]; PROC new_function; PROC* function; DWORD flags; } HOOKLISTDATA;
-typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[28]; } HOOKLIST;
+typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[30]; } HOOKLIST;
 
 typedef BOOL(WINAPI* GETCURSORPOSPROC)(LPPOINT);
 typedef BOOL(WINAPI* CLIPCURSORPROC)(const RECT*);
@@ -103,7 +103,6 @@ extern BOOL g_hook_dinput;
 extern BOOL g_hook_active;
 
 void hook_init();
-void hook_early_init();
 void hook_exit();
 void hook_patch_iat(HMODULE hmod, BOOL unhook, char* module_name, char* function_name, PROC new_function);
 void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks);

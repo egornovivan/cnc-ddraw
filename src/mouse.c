@@ -11,7 +11,7 @@ HOOKPROC g_mouse_proc;
 
 void mouse_lock()
 {
-    if (g_ddraw->devmode || g_ddraw->bnet_active)
+    if (g_ddraw->devmode || g_ddraw->bnet_active || !g_ddraw->hwnd)
         return;
 
     if (g_hook_active && !g_mouse_locked && !IsIconic(g_ddraw->hwnd))
@@ -53,7 +53,7 @@ void mouse_lock()
 
 void mouse_unlock()
 {
-    if (g_ddraw->devmode || !g_hook_active)
+    if (g_ddraw->devmode || !g_hook_active || !g_ddraw->hwnd)
         return;
 
     if (g_mouse_locked)
