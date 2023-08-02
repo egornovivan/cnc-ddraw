@@ -967,9 +967,10 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         }
 
         /* Starcraft locks the cursor before ddraw.dll was loaded */
-        if (g_ddraw->windowed && (!g_ddraw->fullscreen || real_GetForegroundWindow() != g_ddraw->hwnd))
+        if (g_ddraw->windowed)
         {
             real_ClipCursor(NULL);
+            mouse_unlock();
         }
 
         GetWindowText(g_ddraw->hwnd, (LPTSTR)&g_ddraw->title, sizeof(g_ddraw->title));
