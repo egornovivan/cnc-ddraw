@@ -896,6 +896,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
 
         g_ddraw->render.thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)g_ddraw->renderer, NULL, 0, NULL);
+        SetThreadPriority(g_ddraw->render.thread, THREAD_PRIORITY_ABOVE_NORMAL);
     }
 
     if ((dwFlags & SDM_MODE_SET_BY_GAME) && !g_ddraw->infantryhack)
