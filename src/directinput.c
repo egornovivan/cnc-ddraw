@@ -5,6 +5,7 @@
 #include "hook.h"
 #include "dd.h"
 #include "mouse.h"
+#include "config.h"
 
 #ifdef _MSC_VER
 #include "detours.h"
