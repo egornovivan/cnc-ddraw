@@ -2678,6 +2678,7 @@ object ConfigForm: TConfigForm
     BBBF4CD8CBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCB
     B88CB18EFF1FA2974C1C31AF16A40000000049454E44AE426082}
   Position = poDesktopCenter
+  OnActivate = FormActivate
   OnCreate = FormCreate
   TextHeight = 13
   object AdvancedPnl: TPanel

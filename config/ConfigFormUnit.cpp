@@ -7,6 +7,7 @@
 #include <StrUtils.hpp>
 #include <IOUtils.hpp>
 #include <SysUtils.hpp>
+#include <Registry.hpp>
 #include "ConfigFormUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -856,6 +857,46 @@ void TConfigForm::SaveSettings()
 	delete ini;
 }
 
+
+void __fastcall TConfigForm::FormActivate(TObject *Sender)
+{
+   if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
+		return;
+
+	TRegistry* reg = new TRegistry(KEY_READ);
+	reg->RootKey = HKEY_CURRENT_USER;
+
+	if(reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
+
+		if (!reg->ValueExists("ddraw")) {
+
+			reg->CloseKey();
+
+			if (Application->MessageBox(
+				L"cnc-ddraw requires a dll override in winecfg, "
+					"would you like to add it now?",
+				L"cnc-ddraw",
+				MB_YESNO) == IDNO) {
+
+				reg->Free();
+				return;
+			}
+
+			reg->Access = KEY_WRITE;
+
+			if (reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
+
+				reg->WriteString("ddraw", "native,builtin");
+				reg->CloseKey();
+			}
+		}
+		else
+			reg->CloseKey();
+	}
+
+	reg->Free();
+}
+
 bool TConfigForm::GetBool(TIniFile *ini, System::UnicodeString key, bool defValue)
 {
 	auto s = LowerCase(ini->ReadString("ddraw", key, defValue ? "true" : "false"));
@@ -953,4 +994,6 @@ void __fastcall TConfigForm::PboxPaint(TObject *Sender)
 	TPaintBox *pbox = static_cast<TPaintBox*>(Sender);
 	//pbox->Canvas->Rectangle(pbox->ClientRect);
 }
+
+//---------------------------------------------------------------------------
 

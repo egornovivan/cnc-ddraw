@@ -85,6 +85,7 @@ __published:	// Von der IDE verwaltete Komponenten
 	void __fastcall NonexclusiveChkClick(TObject *Sender);
 	void __fastcall PboxPaint(TObject *Sender);
 	void __fastcall LanguageImgClick(TObject *Sender);
+	void __fastcall FormActivate(TObject *Sender);
 private:	// Benutzer-Deklarationen
 	void SaveSettings();
 	bool GetBool(TIniFile *ini, System::UnicodeString key, bool defValue);
