@@ -3176,7 +3176,7 @@ object ConfigForm: TConfigForm
       BevelInner = bvNone
       BevelOuter = bvSpace
       Style = csDropDownList
-      DropDownCount = 10
+      DropDownCount = 12
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -3191,6 +3191,8 @@ object ConfigForm: TConfigForm
         'Emulate 60hz refresh rate monitor'
         '1000 ticks per second'
         '500 ticks per second'
+        '250 ticks per second'
+        '125 ticks per second'
         '60 ticks per second'
         '30 ticks per second'
         '25 ticks per second'

@@ -94,6 +94,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"模拟60hz刷新率显示器", NULL);
 		MaxgameticksCbx->AddItem(L"1000tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"500tick每秒", NULL);
+		MaxgameticksCbx->AddItem(L"250tick每秒", NULL);
+		MaxgameticksCbx->AddItem(L"125tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"60tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"30tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"25tick每秒", NULL);
@@ -144,6 +146,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emular monitor con tasa de refresco de 60hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"500 tics por segundo", NULL);
+		MaxgameticksCbx->AddItem(L"250 tics por segundo", NULL);
+		MaxgameticksCbx->AddItem(L"125 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"60 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"30 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"25 tics por segundo", NULL);
@@ -194,6 +198,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emuliere 60hz Bildschirmaktualisierungsrate", NULL);
 		MaxgameticksCbx->AddItem(L"1000 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"500 Ticks pro Sekunde", NULL);
+		MaxgameticksCbx->AddItem(L"250 Ticks pro Sekunde", NULL);
+		MaxgameticksCbx->AddItem(L"125 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"60 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"30 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"25 Ticks pro Sekunde", NULL);
@@ -248,6 +254,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Эмуляция частоты обновления монитора 60 Гц", NULL);
 		MaxgameticksCbx->AddItem(L"1000 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"500 тиков в секунду", NULL);
+		MaxgameticksCbx->AddItem(L"250 тиков в секунду", NULL);
+		MaxgameticksCbx->AddItem(L"125 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"60 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"30 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"25 тиков в секунду", NULL);
@@ -298,6 +306,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"60hz képfrissítésű kijelző emulálása", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"500 tick másodpercenként", NULL);
+		MaxgameticksCbx->AddItem(L"250 tick másodpercenként", NULL);
+		MaxgameticksCbx->AddItem(L"125 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"60 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"30 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"25 tick másodpercenként", NULL);
@@ -348,6 +358,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Émuler un écran à 60Hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"500 tics par seconde", NULL);
+		MaxgameticksCbx->AddItem(L"250 tics par seconde", NULL);
+		MaxgameticksCbx->AddItem(L"125 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"60 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"30 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"25 tics par seconde", NULL);
@@ -398,6 +410,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emula uno schermo a 60Hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tick al secondo", NULL);
 		MaxgameticksCbx->AddItem(L"500 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"250 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"125 tick al secondo", NULL);
 		MaxgameticksCbx->AddItem(L"60 tick al secondo", NULL);
 		MaxgameticksCbx->AddItem(L"30 tick al secondo", NULL);
 		MaxgameticksCbx->AddItem(L"25 tick al secondo", NULL);
@@ -493,6 +507,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emulate 60hz refresh rate monitor", NULL);
 		MaxgameticksCbx->AddItem(L"1000 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"500 ticks per second", NULL);
+		MaxgameticksCbx->AddItem(L"250 ticks per second", NULL);
+		MaxgameticksCbx->AddItem(L"125 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"60 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"30 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"25 ticks per second", NULL);
@@ -614,21 +630,27 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	case 500:
 		MaxgameticksCbx->ItemIndex = 4;
 		break;
-	case 60:
+	case 250:
 		MaxgameticksCbx->ItemIndex = 5;
 		break;
-	case 30:
+	case 125:
 		MaxgameticksCbx->ItemIndex = 6;
 		break;
-	case 25:
+	case 60:
 		MaxgameticksCbx->ItemIndex = 7;
 		break;
-	case 15:
+	case 30:
 		MaxgameticksCbx->ItemIndex = 8;
+		break;
+	case 25:
+		MaxgameticksCbx->ItemIndex = 9;
+		break;
+	case 15:
+		MaxgameticksCbx->ItemIndex = 10;
 		break;
 	default:
 		MaxgameticksCbx->AddItem(IntToStr(maxgameticks), NULL);
-		MaxgameticksCbx->ItemIndex = 9;
+		MaxgameticksCbx->ItemIndex = 11;
 		break;
 	}
 
@@ -769,18 +791,24 @@ void TConfigForm::SaveSettings()
 		ini->WriteInteger("ddraw", "maxgameticks", 500);
 		break;
 	case 5:
-		ini->WriteInteger("ddraw", "maxgameticks", 60);
+		ini->WriteInteger("ddraw", "maxgameticks", 250);
 		break;
 	case 6:
-		ini->WriteInteger("ddraw", "maxgameticks", 30);
+		ini->WriteInteger("ddraw", "maxgameticks", 125);
 		break;
 	case 7:
-		ini->WriteInteger("ddraw", "maxgameticks", 25);
+		ini->WriteInteger("ddraw", "maxgameticks", 60);
 		break;
 	case 8:
-		ini->WriteInteger("ddraw", "maxgameticks", 15);
+		ini->WriteInteger("ddraw", "maxgameticks", 30);
 		break;
 	case 9:
+		ini->WriteInteger("ddraw", "maxgameticks", 25);
+		break;
+	case 10:
+		ini->WriteInteger("ddraw", "maxgameticks", 15);
+		break;
+	case 11:
 		ini->WriteString("ddraw", "maxgameticks", MaxgameticksCbx->Text);
 		break;
 	default:
