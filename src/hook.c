@@ -418,7 +418,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
                 {
                     if (initial_hook)
                     {
-                        TRACE_EXT("Module %s = %p\n", mod_path, hmod);
+                        TRACE("Module %s = %p\n", mod_path, hmod);
                     }
 
                     _splitpath(mod_path, NULL, mod_dir, mod_filename, NULL);
