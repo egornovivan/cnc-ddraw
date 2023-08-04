@@ -4,8 +4,8 @@ object ConfigForm: TConfigForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
-  ClientHeight = 481
-  ClientWidth = 704
+  ClientHeight = 477
+  ClientWidth = 731
   Color = clHotLight
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2681,7 +2681,7 @@ object ConfigForm: TConfigForm
   OnCreate = FormCreate
   TextHeight = 13
   object AdvancedPnl: TPanel
-    Left = 201
+    Left = 233
     Top = 8
     Width = 499
     Height = 465
@@ -2875,7 +2875,7 @@ object ConfigForm: TConfigForm
     end
   end
   object DisplayPnl: TPanel
-    Left = 201
+    Left = 233
     Top = 8
     Width = 499
     Height = 465
@@ -3060,7 +3060,7 @@ object ConfigForm: TConfigForm
     end
   end
   object CompatibilityPnl: TPanel
-    Left = 201
+    Left = 233
     Top = 8
     Width = 499
     Height = 465
@@ -3245,19 +3245,19 @@ object ConfigForm: TConfigForm
   object MenuPnl: TPanel
     Left = 0
     Top = 8
-    Width = 201
+    Width = 227
     Height = 465
     BevelOuter = bvNone
     Color = clHotLight
     ParentBackground = False
     TabOrder = 0
     DesignSize = (
-      201
+      227
       465)
     object DisplayBtn: TSpeedButton
       Left = 5
       Top = 8
-      Width = 190
+      Width = 216
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Display Settings'
@@ -3269,11 +3269,12 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = DisplayBtnClick
+      ExplicitWidth = 190
     end
     object AdvancedBtn: TSpeedButton
       Left = 5
       Top = 55
-      Width = 190
+      Width = 216
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Advanced Settings'
@@ -3285,11 +3286,12 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = AdvancedBtnClick
+      ExplicitWidth = 190
     end
     object CompatibilityBtn: TSpeedButton
       Left = 5
       Top = 102
-      Width = 190
+      Width = 216
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Compatibility Settings'
@@ -3301,6 +3303,7 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = CompatibilityBtnClick
+      ExplicitWidth = 190
     end
   end
 end
