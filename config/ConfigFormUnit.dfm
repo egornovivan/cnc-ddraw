@@ -5,7 +5,7 @@ object ConfigForm: TConfigForm
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
   ClientHeight = 477
-  ClientWidth = 731
+  ClientWidth = 741
   Color = clHotLight
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
