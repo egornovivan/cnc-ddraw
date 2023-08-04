@@ -2678,7 +2678,6 @@ object ConfigForm: TConfigForm
     BBBF4CD8CBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCB
     B88CB18EFF1FA2974C1C31AF16A40000000049454E44AE426082}
   Position = poDesktopCenter
-  StyleElements = [seFont, seBorder]
   OnCreate = FormCreate
   TextHeight = 13
   object AdvancedPnl: TPanel
@@ -3252,7 +3251,6 @@ object ConfigForm: TConfigForm
     Color = clHotLight
     ParentBackground = False
     TabOrder = 0
-    StyleElements = [seFont, seBorder]
     DesignSize = (
       201
       465)
@@ -3266,11 +3264,10 @@ object ConfigForm: TConfigForm
       Flat = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
       OnClick = DisplayBtnClick
     end
     object AdvancedBtn: TSpeedButton
@@ -3283,11 +3280,10 @@ object ConfigForm: TConfigForm
       Flat = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
       OnClick = AdvancedBtnClick
     end
     object CompatibilityBtn: TSpeedButton
@@ -3300,11 +3296,10 @@ object ConfigForm: TConfigForm
       Flat = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
       OnClick = CompatibilityBtnClick
     end
   end
