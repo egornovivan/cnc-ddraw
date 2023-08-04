@@ -559,16 +559,16 @@ void hook_exit()
         g_hook_active = FALSE;
 
         hook_revert((HOOKLIST*)&g_hooks);
-    }
 
 #if defined(_DEBUG) && defined(_MSC_VER)
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
-    DetourDetach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
-    DetourTransactionCommit();
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        DetourDetach((PVOID*)&real_SetUnhandledExceptionFilter, (PVOID)fake_SetUnhandledExceptionFilter);
+        DetourTransactionCommit();
 
-    real_SetUnhandledExceptionFilter(g_dbg_exception_filter);
+        real_SetUnhandledExceptionFilter(g_dbg_exception_filter);
 #endif
 
-    hook_patch_iat(GetModuleHandle("AcGenral"), TRUE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
+        hook_patch_iat(GetModuleHandle("AcGenral"), TRUE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
+    }
 }
