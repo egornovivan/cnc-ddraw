@@ -183,6 +183,10 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>PngImage_HU</ResourceId>
         </RcItem>
+        <RcItem Include="Resources\IT.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>PngImage_IT</ResourceId>
+        </RcItem>
         <RcItem Include="Resources\RU.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>PngImage_RU</ResourceId>
@@ -269,6 +273,12 @@
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
+                <DeployFile LocalName="Resources\IT.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 </DeployFile>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32c260.dll" Class="DependencyModule"/>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32c260mt.dll" Class="DependencyModule"/>
