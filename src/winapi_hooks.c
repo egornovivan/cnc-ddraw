@@ -575,6 +575,8 @@ BOOL WINAPI fake_SetForegroundWindow(HWND hWnd)
 
 HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId)
 {
+    TRACE("SetWindowsHookExA(idHook=%d, lpfn=%p, hmod=%p, dwThreadId=%d)\n", idHook, lpfn, hmod, dwThreadId);
+
     if (idHook == WH_KEYBOARD_LL && hmod && GetModuleHandle("AcGenral") == hmod)
     {
         return NULL;
