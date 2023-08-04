@@ -3130,13 +3130,13 @@ object ConfigForm: TConfigForm
       ParentFont = False
       StyleElements = [seClient, seBorder]
     end
-    object FixpitchLbl: TLabel
+    object SinglecpuLbl: TLabel
       Left = 40
       Top = 309
-      Width = 272
+      Width = 265
       Height = 21
       Margins.Top = 18
-      Caption = 'Fix diagonally displayed drawing issues'
+      Caption = 'Fix bad performance and sound issues'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -3223,14 +3223,14 @@ object ConfigForm: TConfigForm
       TabOrder = 3
       OnClick = MinfpsChkClick
     end
-    object FixpitchChk: TToggleSwitch
+    object SinglecpuChk: TToggleSwitch
       Left = 40
       Top = 336
       Width = 50
       Height = 20
       ShowStateCaption = False
       TabOrder = 4
-      OnClick = FixpitchChkClick
+      OnClick = SinglecpuChkClick
     end
     object NonexclusiveChk: TToggleSwitch
       Left = 40

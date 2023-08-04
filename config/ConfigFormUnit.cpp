@@ -73,7 +73,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"修复损坏的Alt+Tab功能";
 		HookLbl->Caption = L"修复损坏的窗口模式或拉伸";
 		MinfpsLbl->Caption = L"强制高FPS / 修复使用Freesync/G-Sync的卡顿问题";
-		FixpitchLbl->Caption = L"修复倾斜撕裂显示的问题";
+		SinglecpuLbl->Caption = L"修复性能不佳和声音问题";
 		NonexclusiveLbl->Caption = L"修复不显示的视频/UI元素";
 
 		RendererCbx->Items->Clear();
@@ -123,7 +123,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Corregir Alt+Tab roto";
 		HookLbl->Caption = L"Corregir modo ventana o ampliación de escala";
 		MinfpsLbl->Caption = L"Forzar un alto FPS / Corregir retrasos en Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Corregir problemas de visualización de dibujos en diagonal";
+		SinglecpuLbl->Caption = L"Solucione el mal rendimiento y los problemas de sonido";
 		NonexclusiveLbl->Caption = L"Corregir vídeos / elementos de interfaz invisibles";
 
 		RendererCbx->Items->Clear();
@@ -173,7 +173,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Fehlerhaftes Alt+Tab reparieren"; //The first word can be ignored if its to long (eng word "Fix"
 		HookLbl->Caption = L"Fehlerhafter Fenstermodus oder Hochskalierung reparieren"; //The first word can be ignored if its to long (eng word "Fix")
 		MinfpsLbl->Caption = L"Erzwinge Hohe FPS / Repariere Stottern bei Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Diagonal dargestellte Zeichnungsfehler reparieren";
+		SinglecpuLbl->Caption = L"Schlechte Leistung und Soundprobleme reparieren";
 		NonexclusiveLbl->Caption = L"Unsichtbare Videos / UI Elemente reparieren";
 
 		RendererCbx->Items->Clear();
@@ -227,7 +227,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Исправить сломанный Alt+Tab";
 		HookLbl->Caption = L"Исправить сломанный оконный режим или масштабированние";
 		MinfpsLbl->Caption = L"Принудительно высокий FPS / Исправить заикание при Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Исправить проблемы с отображением отрисовки по диагонали";
+		SinglecpuLbl->Caption = L"Исправление проблем с производительностью и звуком";
 		NonexclusiveLbl->Caption = L"Исправить невидимые видео / элементы пользовательского интерфейса";
 
 		RendererCbx->Items->Clear();
@@ -277,7 +277,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Alt+Tab hiba kiküszöbölése";
 		HookLbl->Caption = L"Hibás ablakos mód, vagy felskálázás javítása";
 		MinfpsLbl->Caption = L"Magas FPS kényszerítés / Akadozásjavítás Freesync/G-Sync esetén";
-		FixpitchLbl->Caption = L"Átlós rajzolási gondok kiküszöbölése";
+		SinglecpuLbl->Caption = L"Javítsa ki a rossz teljesítmény- és hangproblémákat";
 		NonexclusiveLbl->Caption = L"Láthatatlan videók / kezelőfelületi elemek javítása";
 
 		RendererCbx->Items->Clear();
@@ -327,7 +327,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Corriger Alt+Tab défaillant";
 		HookLbl->Caption = L"Corriger mode fenêtré ou mise à l'échelle défaillant";
 		MinfpsLbl->Caption = L"Forcer FPS élevé / Corriger saccades en Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Corriger défauts d'affichage diagonaux";
+		SinglecpuLbl->Caption = L"Résoudre les problèmes de mauvaise performance et de son";
 		NonexclusiveLbl->Caption = L"Corriger vidéos et éléments d'interface invisibles";
 
 		RendererCbx->Items->Clear();
@@ -377,7 +377,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
 		HookLbl->Caption = L"Risolvi i problemi con la modalità finestra o il ridimensionamento";
 		MinfpsLbl->Caption = L"Forza FPS elevati / Correggi balbuzie su Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Correggi artefatti mostrati in diagonale";
+		SinglecpuLbl->Caption = L"Risolvi problemi di prestazioni e audio scadenti";
 		NonexclusiveLbl->Caption = L"Correggi video / elementi dell'interfaccia utente invisibili";
 
 		RendererCbx->Items->Clear();
@@ -472,7 +472,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		NoactivateappLbl->Caption = L"Fix broken Alt+Tab";
 		HookLbl->Caption = L"Fix broken windowed mode or upscaling";
 		MinfpsLbl->Caption = L"Force high FPS / Fix stuttering on Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Fix diagonally displayed drawing issues";
+		SinglecpuLbl->Caption = L"Fix bad performance and sound issues";
 		NonexclusiveLbl->Caption = L"Fix invisible videos / UI elements";
 
 		RendererCbx->Items->Clear();
@@ -640,7 +640,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	Minfps = ini->ReadInteger("ddraw", "minfps", 0);
 	MinfpsChk->State = Minfps != 0 ? tssOn : tssOff;
 
-	FixpitchChk->State = GetBool(ini, "fixpitch", false) ? tssOn : tssOff;
+	SinglecpuChk->State = GetBool(ini, "singlecpu", true) ? tssOff : tssOn;
 	NonexclusiveChk->State = GetBool(ini, "nonexclusive", false) ? tssOn : tssOff;
 
 	delete ini;
@@ -811,8 +811,8 @@ void TConfigForm::SaveSettings()
 
 	ini->WriteString(
 		"ddraw",
-		"fixpitch",
-		FixpitchChk->State == tssOn ? "true" : "false");
+		"singlecpu",
+		SinglecpuChk->State == tssOn ? "false" : "true");
 
 	ini->WriteString(
 		"ddraw",
@@ -904,7 +904,7 @@ void __fastcall TConfigForm::MinfpsChkClick(TObject *Sender)
 	SaveSettings();
 }
 
-void __fastcall TConfigForm::FixpitchChkClick(TObject *Sender)
+void __fastcall TConfigForm::SinglecpuChkClick(TObject *Sender)
 {
 	SaveSettings();
 }

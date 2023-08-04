@@ -53,8 +53,8 @@ __published:	// Von der IDE verwaltete Komponenten
 	TToggleSwitch *HookChk;
 	TLabel *MinfpsLbl;
 	TToggleSwitch *MinfpsChk;
-	TToggleSwitch *FixpitchChk;
-	TLabel *FixpitchLbl;
+	TToggleSwitch *SinglecpuChk;
+	TLabel *SinglecpuLbl;
 	TLabel *NonexclusiveLbl;
 	TToggleSwitch *NonexclusiveChk;
 	TPaintBox *PresentationPbox;
@@ -81,7 +81,7 @@ __published:	// Von der IDE verwaltete Komponenten
 	void __fastcall NoactivateappChkClick(TObject *Sender);
 	void __fastcall HookChkClick(TObject *Sender);
 	void __fastcall MinfpsChkClick(TObject *Sender);
-	void __fastcall FixpitchChkClick(TObject *Sender);
+	void __fastcall SinglecpuChkClick(TObject *Sender);
 	void __fastcall NonexclusiveChkClick(TObject *Sender);
 	void __fastcall PboxPaint(TObject *Sender);
 	void __fastcall LanguageImgClick(TObject *Sender);
