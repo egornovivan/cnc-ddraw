@@ -15,7 +15,7 @@
 #endif
 
 BOOL g_hook_active;
-int g_hook_method = 1;
+int g_hook_method = 4;
 
 GETCURSORPOSPROC real_GetCursorPos = GetCursorPos;
 CLIPCURSORPROC real_ClipCursor = ClipCursor;
