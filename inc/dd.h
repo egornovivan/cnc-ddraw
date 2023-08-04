@@ -5,6 +5,10 @@
 #include <windows.h>
 #include "ddraw.h"
 
+#ifdef __GNUC__
+#define __try
+#define __except(x) if (0)
+#endif
 
 typedef HRESULT(WINAPI* DIRECTDRAWCREATEPROC)(GUID FAR*, LPDIRECTDRAW FAR*, IUnknown FAR*);
 

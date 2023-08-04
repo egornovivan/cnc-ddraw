@@ -24,38 +24,32 @@ BOOL util_is_avx_supported()
 
     BOOL result = FALSE;
 
-#ifdef _MSC_VER
     __try
     {
-#endif
+        int info[4] = { 0 };
+        __cpuid(info, 0);
 
-    int info[4] = { 0 };
-    __cpuid(info, 0);
-
-    if (info[0] >= 1) 
-    {
-        __cpuid(info, 1);
-
-        if ((info[2] & CPU_AVX_BITS) == CPU_AVX_BITS)
+        if (info[0] >= 1)
         {
-            unsigned int xcr0 = 0;
+            __cpuid(info, 1);
+
+            if ((info[2] & CPU_AVX_BITS) == CPU_AVX_BITS)
+            {
+                unsigned int xcr0 = 0;
 
 #ifdef _MSC_VER
-            xcr0 = (unsigned int)_xgetbv(_XCR_XFEATURE_ENABLED_MASK);
+                xcr0 = (unsigned int)_xgetbv(_XCR_XFEATURE_ENABLED_MASK);
 #elif __AVX__
-            __asm__("xgetbv" : "=a" (xcr0) : "c" (0) : "%edx");
+                __asm__("xgetbv" : "=a" (xcr0) : "c" (0) : "%edx");
 #endif
 
-            result = (xcr0 & OS_AVX_BITS) == OS_AVX_BITS;
+                result = (xcr0 & OS_AVX_BITS) == OS_AVX_BITS;
+            }
         }
-    }
-
-#ifdef _MSC_VER
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
     }
-#endif
 
     return result;
 }

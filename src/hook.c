@@ -163,10 +163,8 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
     if (!hmod || hmod == INVALID_HANDLE_VALUE || !hooks)
         return;
 
-#ifdef _MSC_VER
     __try
     {
-#endif
         PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)hmod;
         if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
             return;
@@ -259,12 +257,10 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
 
             import_desc++;
         }
-#ifdef _MSC_VER
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
     }
-#endif
 }
 
 void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
@@ -274,10 +270,8 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
     if (!hmod || hmod == INVALID_HANDLE_VALUE || !hooks)
         return;
 
-#ifdef _MSC_VER
     __try
     {
-#endif
         PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)hmod;
         if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
             return;
@@ -362,12 +356,10 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
 
             import_desc++;
         }
-#ifdef _MSC_VER
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
     }
-#endif
 }
 
 void hook_create(HOOKLIST* hooks, BOOL initial_hook)
