@@ -503,6 +503,7 @@ static void cfg_create_ini()
             "\n"
             "; Captain Claw\n"
             "[claw]\n"
+            "adjmouse=true\n"
             "noactivateapp=true\n"
             "renderer=opengl\n"
             "nonexclusive=true\n"
