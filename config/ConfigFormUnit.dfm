@@ -4,9 +4,9 @@ object ConfigForm: TConfigForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
-  ClientHeight = 475
-  ClientWidth = 708
-  Color = clBlack
+  ClientHeight = 481
+  ClientWidth = 704
+  Color = clHotLight
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -2677,10 +2677,9 @@ object ConfigForm: TConfigForm
     61C0650530766087F0B9DE67A1EF3B173173597F3B695CC608E0B202F8FC22D7
     BBBF4CD8CBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCB
     B88CB18EFF1FA2974C1C31AF16A40000000049454E44AE426082}
-  OldCreateOrder = False
   Position = poDesktopCenter
+  StyleElements = [seFont, seBorder]
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object AdvancedPnl: TPanel
     Left = 201
@@ -3250,16 +3249,17 @@ object ConfigForm: TConfigForm
     Width = 201
     Height = 465
     BevelOuter = bvNone
-    Color = clBlack
+    Color = clHotLight
     ParentBackground = False
     TabOrder = 0
+    StyleElements = [seFont, seBorder]
     DesignSize = (
       201
       465)
     object DisplayBtn: TSpeedButton
       Left = 5
       Top = 8
-      Width = 187
+      Width = 190
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Display Settings'
@@ -3270,13 +3270,13 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       ParentFont = False
-      StyleElements = [seFont, seBorder]
+      StyleElements = [seClient, seBorder]
       OnClick = DisplayBtnClick
     end
     object AdvancedBtn: TSpeedButton
       Left = 5
       Top = 55
-      Width = 187
+      Width = 190
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Advanced Settings'
@@ -3287,12 +3287,13 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       ParentFont = False
+      StyleElements = [seClient, seBorder]
       OnClick = AdvancedBtnClick
     end
     object CompatibilityBtn: TSpeedButton
       Left = 5
       Top = 102
-      Width = 187
+      Width = 190
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Compatibility Settings'
@@ -3303,6 +3304,7 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       ParentFont = False
+      StyleElements = [seClient, seBorder]
       OnClick = CompatibilityBtnClick
     end
   end

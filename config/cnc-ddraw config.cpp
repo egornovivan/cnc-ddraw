@@ -14,7 +14,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	{
 		Application->Initialize();
 		Application->MainFormOnTaskBar = true;
-		TStyleManager::TrySetStyle("Windows10 Blue");
+		TStyleManager::TrySetStyle("Windows10");
 		Application->CreateForm(__classid(TConfigForm), &ConfigForm);
 		Application->Run();
 	}

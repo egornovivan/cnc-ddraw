@@ -344,7 +344,7 @@ static void cfg_create_ini()
             "max_resolutions=0\n"
             "limit_bltfast=false\n"
             "game_handles_close=false\n"
-            "fixpitch=true\n"
+            "fixpitch=false\n"
             "fixnotresponding=false\n"
             "lock_surfaces=false\n"
             "releasealt=false\n"
