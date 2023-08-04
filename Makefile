@@ -39,6 +39,12 @@ FILES = src/IDirect3D/IDirect3D.c \
         src/opengl_utils.c
 
 all:
+	$(info  )
+	$(info **********************************************************************************************)
+	$(info WARNING: This build is outdated and does not support all cnc-ddraw features [Detours/SEH])
+	$(info WARNING: Some games that require hooks may crash or glitch, please use the msvc build instead)
+	$(info **********************************************************************************************)
+	$(info  )
 	$(WINDRES) -J rc ddraw.rc ddraw.rc.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o ddraw.dll $(FILES) ddraw.def ddraw.rc.o $(LIBS)
 #	$(CC) $(CFLAGS) $(LDFLAGS) -nostdlib -shared -o ddraw.dll $(FILES) ddraw.def ddraw.rc.o $(LIBS) -lkernel32 -luser32 -lmsvcrt
