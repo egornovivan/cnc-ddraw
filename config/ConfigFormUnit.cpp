@@ -861,6 +861,6 @@ void __fastcall TConfigForm::NonexclusiveChkClick(TObject *Sender)
 void __fastcall TConfigForm::PboxPaint(TObject *Sender)
 {
 	TPaintBox *pbox = static_cast<TPaintBox*>(Sender);
-	pbox->Canvas->Rectangle(pbox->ClientRect);
+	//pbox->Canvas->Rectangle(pbox->ClientRect);
 }
 
