@@ -1054,7 +1054,7 @@ static void cfg_create_ini()
     }
 }
 
-void cfg_init()
+static void cfg_init()
 {
     /* get process filename and directory */
     if (GetModuleFileNameA(NULL, g_config.game_path, sizeof(g_config.game_path) - 1) > 0)
