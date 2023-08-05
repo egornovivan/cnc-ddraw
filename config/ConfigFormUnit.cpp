@@ -886,7 +886,7 @@ void TConfigForm::SaveSettings()
 void __fastcall TConfigForm::FormActivate(TObject *Sender)
 {
 	/* Detect wine (Linux/macOS) and create the needed dll override */
-   if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
+	if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
 		return;
 
 	TRegistry* reg = new TRegistry(KEY_READ);
