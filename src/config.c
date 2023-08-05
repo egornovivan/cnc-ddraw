@@ -901,10 +901,6 @@ static void cfg_create_ini()
             "adjmouse=true\n"
             "fixchilds=1\n"
             "\n"
-            "; Septerra Core\n"
-            "[septerra]\n"
-            "hook=2\n"
-            "\n"
             "; Sim Copter\n"
             "[SimCopter]\n"
             "renderer=opengl\n"
@@ -1058,7 +1054,7 @@ static void cfg_create_ini()
     }
 }
 
-static void cfg_init()
+void cfg_init()
 {
     /* get process filename and directory */
     if (GetModuleFileNameA(NULL, g_config.game_path, sizeof(g_config.game_path) - 1) > 0)

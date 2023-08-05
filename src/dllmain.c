@@ -22,6 +22,9 @@ HMODULE g_ddraw_module;
 
 BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 {
+    if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
+        return TRUE;
+
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:

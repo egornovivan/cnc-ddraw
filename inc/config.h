@@ -20,6 +20,7 @@ typedef struct CNCDDRAWCONFIG
 
 extern CNCDDRAWCONFIG g_config;
 
+void cfg_init();
 void cfg_load();
 void cfg_save();
 

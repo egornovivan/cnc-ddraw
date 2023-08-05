@@ -541,6 +541,31 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
 {
+	/* Let cnc-ddraw create a new ddraw.ini if it doesn't exist */
+	if (!FileExists(".\\ddraw.ini")) {
+
+		SetEnvironmentVariableW(L"cnc_ddraw_config_init", L"1");
+
+		HMODULE ddraw = LoadLibraryW(L".\\ddraw.dll");
+
+		if (ddraw) {
+
+			void (WINAPI* dd_create)(void*, void**, void*);
+
+			dd_create =
+				(void (WINAPI*)(void*, void**, void*))
+					GetProcAddress(ddraw, "DirectDrawCreate");
+
+			if (dd_create) {
+
+				void *buf;
+				dd_create(NULL, &buf, NULL);
+			}
+
+			FreeLibrary(ddraw);
+		}
+	}
+
 	auto *ini = new TIniFile(".\\ddraw.ini");
 
 	ApplyTranslation(ini);
@@ -860,6 +885,7 @@ void TConfigForm::SaveSettings()
 
 void __fastcall TConfigForm::FormActivate(TObject *Sender)
 {
+	/* Detect wine (Linux/macOS) and create the needed dll override */
    if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
 		return;
 
