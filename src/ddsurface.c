@@ -1360,7 +1360,7 @@ HRESULT dd_CreateSurface(
     }
     else
     {
-        if (!(dst_surface->caps & DDSCAPS_SYSTEMMEMORY))
+        if (!(dst_surface->caps & DDSCAPS_SYSTEMMEMORY) || g_ddraw->tshack)
         {
             dst_surface->caps |= DDSCAPS_VIDEOMEMORY;
         }
