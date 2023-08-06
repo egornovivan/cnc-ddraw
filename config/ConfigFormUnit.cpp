@@ -683,7 +683,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	NoactivateappChk->State = GetBool(ini, "noactivateapp", false) ? tssOn : tssOff;
 
 	Hook = ini->ReadInteger("ddraw", "hook", 4);
-	HookChk->State = Hook == 2 ? tssOn : tssOff;
+	HookChk->State = Hook == 3 ? tssOn : tssOff;
 
 	Minfps = ini->ReadInteger("ddraw", "minfps", 0);
 	MinfpsChk->State = Minfps != 0 ? tssOn : tssOff;
@@ -852,15 +852,12 @@ void TConfigForm::SaveSettings()
 		"noactivateapp",
 		NoactivateappChk->State == tssOn ? "true" : "false");
 
-	int hook = Hook != 2 ? Hook : 4;
+	int hook = Hook != 3 ? Hook : 4;
 
 	ini->WriteInteger(
 		"ddraw",
 		"hook",
-		HookChk->State == tssOn ? 2 : hook);
-
-	if (HookChk->State == tssOn && Hook != 2)
-		ini->WriteString("ddraw", "renderer", "gdi");
+		HookChk->State == tssOn ? 3 : hook);
 
 	int minfps = Minfps == 0 ? -1 : Minfps;
 
