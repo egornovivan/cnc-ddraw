@@ -74,7 +74,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         if (user32_dll)
         {
             SETPROCESSDPIAWARENESSCONTEXTPROC set_awareness_context =
-                (SETPROCESSDPIAWARENESSCONTEXTPROC)GetProcAddress(user32_dll, "SetProcessDpiAwarenessContext");
+                (SETPROCESSDPIAWARENESSCONTEXTPROC)real_GetProcAddress(user32_dll, "SetProcessDpiAwarenessContext");
 
             if (set_awareness_context)
             {
@@ -85,7 +85,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         if (!set_dpi_aware && shcore_dll)
         {
             SETPROCESSDPIAWERENESSPROC set_awareness =
-                (SETPROCESSDPIAWERENESSPROC)GetProcAddress(shcore_dll, "SetProcessDpiAwareness");
+                (SETPROCESSDPIAWERENESSPROC)real_GetProcAddress(shcore_dll, "SetProcessDpiAwareness");
 
             if (set_awareness)
             {
@@ -98,7 +98,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         if (!set_dpi_aware && user32_dll)
         {
             SETPROCESSDPIAWAREPROC set_aware =
-                (SETPROCESSDPIAWAREPROC)GetProcAddress(user32_dll, "SetProcessDPIAware");
+                (SETPROCESSDPIAWAREPROC)real_GetProcAddress(user32_dll, "SetProcessDPIAware");
 
             if (set_aware)
                 set_aware();

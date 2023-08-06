@@ -186,12 +186,14 @@ HRESULT WINAPI fake_DirectInputCreateA(
     if (!real_DirectInputCreateA)
     {
         real_DirectInputCreateA =
-            (DIRECTINPUTCREATEAPROC)GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateA");
+            (DIRECTINPUTCREATEAPROC)real_GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateA");
 
         if (real_DirectInputCreateA == fake_DirectInputCreateA)
         {
             real_DirectInputCreateA =
-                (DIRECTINPUTCREATEAPROC)GetProcAddress(LoadLibraryA("system32\\dinput.dll"), "DirectInputCreateA");
+                (DIRECTINPUTCREATEAPROC)real_GetProcAddress(
+                    real_LoadLibraryA("system32\\dinput.dll"), 
+                    "DirectInputCreateA");
         }
     }
 
@@ -220,12 +222,14 @@ HRESULT WINAPI fake_DirectInputCreateW(
     if (!real_DirectInputCreateW)
     {
         real_DirectInputCreateW =
-            (DIRECTINPUTCREATEWPROC)GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateW");
+            (DIRECTINPUTCREATEWPROC)real_GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateW");
 
         if (real_DirectInputCreateW == fake_DirectInputCreateW)
         {
             real_DirectInputCreateW =
-                (DIRECTINPUTCREATEWPROC)GetProcAddress(LoadLibraryA("system32\\dinput.dll"), "DirectInputCreateW");
+                (DIRECTINPUTCREATEWPROC)real_GetProcAddress(
+                    real_LoadLibraryA("system32\\dinput.dll"),
+                    "DirectInputCreateW");
         }
     }
 
@@ -255,12 +259,14 @@ HRESULT WINAPI fake_DirectInputCreateEx(
     if (!real_DirectInputCreateEx)
     {
         real_DirectInputCreateEx =
-            (DIRECTINPUTCREATEEXPROC)GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateEx");
+            (DIRECTINPUTCREATEEXPROC)real_GetProcAddress(GetModuleHandle("dinput.dll"), "DirectInputCreateEx");
 
         if (real_DirectInputCreateEx == fake_DirectInputCreateEx)
         {
             real_DirectInputCreateEx =
-                (DIRECTINPUTCREATEEXPROC)GetProcAddress(LoadLibraryA("system32\\dinput.dll"), "DirectInputCreateEx");
+                (DIRECTINPUTCREATEEXPROC)real_GetProcAddress(
+                    real_LoadLibraryA("system32\\dinput.dll"),
+                    "DirectInputCreateEx");
         }
     }
 
@@ -300,12 +306,14 @@ HRESULT WINAPI fake_DirectInput8Create(
     if (!real_DirectInput8Create)
     {
         real_DirectInput8Create =
-            (DIRECTINPUT8CREATEPROC)GetProcAddress(GetModuleHandle("dinput8.dll"), "DirectInput8Create");
+            (DIRECTINPUT8CREATEPROC)real_GetProcAddress(GetModuleHandle("dinput8.dll"), "DirectInput8Create");
 
         if (real_DirectInput8Create == fake_DirectInput8Create)
         {
             real_DirectInput8Create =
-                (DIRECTINPUT8CREATEPROC)GetProcAddress(LoadLibraryA("system32\\dinput8.dll"), "DirectInput8Create");
+                (DIRECTINPUT8CREATEPROC)real_GetProcAddress(
+                    real_LoadLibraryA("system32\\dinput8.dll"), 
+                    "DirectInput8Create");
         }
     }
 
@@ -330,7 +338,7 @@ void dinput_hook_init()
     {
         g_dinput_hook_active = TRUE;
 
-        real_DirectInputCreateA = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateA");
+        real_DirectInputCreateA = (void*)real_GetProcAddress(real_LoadLibraryA("dinput.dll"), "DirectInputCreateA");
 
         if (real_DirectInputCreateA && real_DirectInputCreateA != fake_DirectInputCreateA)
         {
@@ -340,7 +348,7 @@ void dinput_hook_init()
             DetourTransactionCommit();
         }
         /* Being called from winmm for some reason
-        real_DirectInputCreateW = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateW");
+        real_DirectInputCreateW = (void*)real_GetProcAddress(real_LoadLibraryA("dinput.dll"), "DirectInputCreateW");
 
         if (real_DirectInputCreateW && real_DirectInputCreateW != fake_DirectInputCreateW)
         {
@@ -350,7 +358,7 @@ void dinput_hook_init()
             DetourTransactionCommit();
         }
         */
-        real_DirectInputCreateEx = (void*)GetProcAddress(LoadLibraryA("dinput.dll"), "DirectInputCreateEx");
+        real_DirectInputCreateEx = (void*)real_GetProcAddress(real_LoadLibraryA("dinput.dll"), "DirectInputCreateEx");
 
         if (real_DirectInputCreateEx && real_DirectInputCreateEx != fake_DirectInputCreateEx)
         {
@@ -360,7 +368,7 @@ void dinput_hook_init()
             DetourTransactionCommit();
         }
 
-        real_DirectInput8Create = (void*)GetProcAddress(LoadLibraryA("dinput8.dll"), "DirectInput8Create");
+        real_DirectInput8Create = (void*)real_GetProcAddress(real_LoadLibraryA("dinput8.dll"), "DirectInput8Create");
 
         if (real_DirectInput8Create && real_DirectInput8Create != fake_DirectInput8Create)
         {

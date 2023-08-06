@@ -35,42 +35,42 @@ void fpsl_init()
 
     if (!g_fpsl.gdi32_dll)
     {
-        g_fpsl.gdi32_dll = LoadLibraryA("gdi32.dll");
+        g_fpsl.gdi32_dll = real_LoadLibraryA("gdi32.dll");
     }
 
     if (!g_fpsl.dwmapi_dll)
     {
-        g_fpsl.dwmapi_dll = LoadLibraryA("dwmapi.dll");
+        g_fpsl.dwmapi_dll = real_LoadLibraryA("dwmapi.dll");
     }
 
     if (!g_fpsl.DwmFlush)
     {
         g_fpsl.DwmFlush =
-            (DWMFLUSHPROC)GetProcAddress(g_fpsl.dwmapi_dll, "DwmFlush");
+            (DWMFLUSHPROC)real_GetProcAddress(g_fpsl.dwmapi_dll, "DwmFlush");
     }
 
     if (!g_fpsl.DwmIsCompositionEnabled)
     {
         g_fpsl.DwmIsCompositionEnabled =
-            (DWMISCOMPOSITIONENABLEDPROC)GetProcAddress(g_fpsl.dwmapi_dll, "DwmIsCompositionEnabled");
+            (DWMISCOMPOSITIONENABLEDPROC)real_GetProcAddress(g_fpsl.dwmapi_dll, "DwmIsCompositionEnabled");
     }
 
     if (!g_fpsl.D3DKMTWaitForVerticalBlankEvent)
     {
         g_fpsl.D3DKMTWaitForVerticalBlankEvent =
-            (D3DKMTWAITFORVERTICALBLANKEVENTPROC)GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTWaitForVerticalBlankEvent");
+            (D3DKMTWAITFORVERTICALBLANKEVENTPROC)real_GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTWaitForVerticalBlankEvent");
     }
 
     if (!g_fpsl.D3DKMTOpenAdapterFromHdc)
     {
         g_fpsl.D3DKMTOpenAdapterFromHdc =
-            (D3DKMTOPENADAPTERFROMHDCPROC)GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTOpenAdapterFromHdc");
+            (D3DKMTOPENADAPTERFROMHDCPROC)real_GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTOpenAdapterFromHdc");
     }
 
     if (!g_fpsl.D3DKMTCloseAdapter)
     {
         g_fpsl.D3DKMTCloseAdapter =
-            (D3DKMTCLOSEADAPTERPROC)GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTCloseAdapter");
+            (D3DKMTCLOSEADAPTERPROC)real_GetProcAddress(g_fpsl.gdi32_dll, "D3DKMTCloseAdapter");
     }
 
     g_fpsl.initialized = TRUE;

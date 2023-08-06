@@ -111,7 +111,7 @@ void dbg_init()
         }
 
         const char* (CDECL * wine_get_version)() =
-            (void*)GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version");
+            (void*)real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version");
 
         if (wine_get_version)
         {
@@ -119,7 +119,7 @@ void dbg_init()
         }
 
         void (CDECL* wine_get_host_version)(const char** sysname, const char** release) =
-            (void*)GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_host_version");
+            (void*)real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_host_version");
 
         if (wine_get_host_version)
         {

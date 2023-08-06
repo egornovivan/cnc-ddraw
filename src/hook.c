@@ -202,7 +202,7 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
                         for (int x = 0; hooks[i].data[x].function_name[0]; x++)
                         {
                             DWORD org_function =
-                                (DWORD)GetProcAddress(
+                                (DWORD)real_GetProcAddress(
                                     cur_mod,
                                     hooks[i].data[x].function_name);
 
@@ -327,7 +327,7 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
                                         if (unhook)
                                         {
                                             DWORD org =
-                                                (DWORD)GetProcAddress(
+                                                (DWORD)real_GetProcAddress(
                                                     GetModuleHandle(hooks[i].module_name),
                                                     hooks[i].data[x].function_name);
 

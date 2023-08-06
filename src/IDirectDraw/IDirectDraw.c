@@ -133,7 +133,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
                 g_ddraw->real_dll = LoadLibrary("system32\\ddraw.dll");
 
             if (g_ddraw->real_dll && !g_ddraw->DirectDrawCreate)
-                g_ddraw->DirectDrawCreate = (void*)GetProcAddress(g_ddraw->real_dll, "DirectDrawCreate");
+                g_ddraw->DirectDrawCreate = (void*)real_GetProcAddress(g_ddraw->real_dll, "DirectDrawCreate");
 
             if (g_ddraw->DirectDrawCreate == DirectDrawCreate)
                 g_ddraw->DirectDrawCreate = NULL;

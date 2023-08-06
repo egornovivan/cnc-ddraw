@@ -98,30 +98,30 @@ BOOL oglu_load_dll()
 
     if (g_oglu_hmodule)
     {
-        xwglCreateContext = (PFNWGLCREATECONTEXTPROC)GetProcAddress(g_oglu_hmodule, "wglCreateContext");
-        xwglDeleteContext = (PFNWGLDELETECONTEXTPROC)GetProcAddress(g_oglu_hmodule, "wglDeleteContext");
-        xwglGetProcAddress = (PFNWGLGETPROCADDRESSPROC)GetProcAddress(g_oglu_hmodule, "wglGetProcAddress");
-        xwglMakeCurrent = (PFNWGLMAKECURRENTPROC)GetProcAddress(g_oglu_hmodule, "wglMakeCurrent");
+        xwglCreateContext = (PFNWGLCREATECONTEXTPROC)real_GetProcAddress(g_oglu_hmodule, "wglCreateContext");
+        xwglDeleteContext = (PFNWGLDELETECONTEXTPROC)real_GetProcAddress(g_oglu_hmodule, "wglDeleteContext");
+        xwglGetProcAddress = (PFNWGLGETPROCADDRESSPROC)real_GetProcAddress(g_oglu_hmodule, "wglGetProcAddress");
+        xwglMakeCurrent = (PFNWGLMAKECURRENTPROC)real_GetProcAddress(g_oglu_hmodule, "wglMakeCurrent");
 
-        glViewport = (PFNGLVIEWPORTPROC)GetProcAddress(g_oglu_hmodule, "glViewport");
-        glBindTexture = (PFNGLBINDTEXTUREPROC)GetProcAddress(g_oglu_hmodule, "glBindTexture");
-        glGenTextures = (PFNGLGENTEXTURESPROC)GetProcAddress(g_oglu_hmodule, "glGenTextures");
-        glTexParameteri = (PFNGLTEXPARAMETERIPROC)GetProcAddress(g_oglu_hmodule, "glTexParameteri");
-        glDeleteTextures = (PFNGLDELETETEXTURESPROC)GetProcAddress(g_oglu_hmodule, "glDeleteTextures");
-        glTexImage2D = (PFNGLTEXIMAGE2DPROC)GetProcAddress(g_oglu_hmodule, "glTexImage2D");
-        glDrawElements = (PFNGLDRAWELEMENTSPROC)GetProcAddress(g_oglu_hmodule, "glDrawElements");
-        glTexSubImage2D = (PFNGLTEXSUBIMAGE2DPROC)GetProcAddress(g_oglu_hmodule, "glTexSubImage2D");
-        glGetError = (PFNGLGETERRORPROC)GetProcAddress(g_oglu_hmodule, "glGetError");
-        glGetString = (PFNGLGETSTRINGPROC)GetProcAddress(g_oglu_hmodule, "glGetString");
-        glGetTexImage = (PFNGLGETTEXIMAGEPROC)GetProcAddress(g_oglu_hmodule, "glGetTexImage");
-        glPixelStorei = (PFNGLPIXELSTOREIPROC)GetProcAddress(g_oglu_hmodule, "glPixelStorei");
-        glEnable = (PFNGLENABLEPROC)GetProcAddress(g_oglu_hmodule, "glEnable");
-        glClear = (PFNGLCLEARPROC)GetProcAddress(g_oglu_hmodule, "glClear");
+        glViewport = (PFNGLVIEWPORTPROC)real_GetProcAddress(g_oglu_hmodule, "glViewport");
+        glBindTexture = (PFNGLBINDTEXTUREPROC)real_GetProcAddress(g_oglu_hmodule, "glBindTexture");
+        glGenTextures = (PFNGLGENTEXTURESPROC)real_GetProcAddress(g_oglu_hmodule, "glGenTextures");
+        glTexParameteri = (PFNGLTEXPARAMETERIPROC)real_GetProcAddress(g_oglu_hmodule, "glTexParameteri");
+        glDeleteTextures = (PFNGLDELETETEXTURESPROC)real_GetProcAddress(g_oglu_hmodule, "glDeleteTextures");
+        glTexImage2D = (PFNGLTEXIMAGE2DPROC)real_GetProcAddress(g_oglu_hmodule, "glTexImage2D");
+        glDrawElements = (PFNGLDRAWELEMENTSPROC)real_GetProcAddress(g_oglu_hmodule, "glDrawElements");
+        glTexSubImage2D = (PFNGLTEXSUBIMAGE2DPROC)real_GetProcAddress(g_oglu_hmodule, "glTexSubImage2D");
+        glGetError = (PFNGLGETERRORPROC)real_GetProcAddress(g_oglu_hmodule, "glGetError");
+        glGetString = (PFNGLGETSTRINGPROC)real_GetProcAddress(g_oglu_hmodule, "glGetString");
+        glGetTexImage = (PFNGLGETTEXIMAGEPROC)real_GetProcAddress(g_oglu_hmodule, "glGetTexImage");
+        glPixelStorei = (PFNGLPIXELSTOREIPROC)real_GetProcAddress(g_oglu_hmodule, "glPixelStorei");
+        glEnable = (PFNGLENABLEPROC)real_GetProcAddress(g_oglu_hmodule, "glEnable");
+        glClear = (PFNGLCLEARPROC)real_GetProcAddress(g_oglu_hmodule, "glClear");
 
-        glBegin = (PFNGLBEGINPROC)GetProcAddress(g_oglu_hmodule, "glBegin");
-        glEnd = (PFNGLENDPROC)GetProcAddress(g_oglu_hmodule, "glEnd");
-        glTexCoord2f = (PFNGLTEXCOORD2FPROC)GetProcAddress(g_oglu_hmodule, "glTexCoord2f");
-        glVertex2f = (PFNGLVERTEX2FPROC)GetProcAddress(g_oglu_hmodule, "glVertex2f");
+        glBegin = (PFNGLBEGINPROC)real_GetProcAddress(g_oglu_hmodule, "glBegin");
+        glEnd = (PFNGLENDPROC)real_GetProcAddress(g_oglu_hmodule, "glEnd");
+        glTexCoord2f = (PFNGLTEXCOORD2FPROC)real_GetProcAddress(g_oglu_hmodule, "glTexCoord2f");
+        glVertex2f = (PFNGLVERTEX2FPROC)real_GetProcAddress(g_oglu_hmodule, "glVertex2f");
     }
 
     return xwglCreateContext && xwglDeleteContext && xwglGetProcAddress && xwglMakeCurrent && glViewport &&

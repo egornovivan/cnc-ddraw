@@ -1218,7 +1218,7 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         InitializeCriticalSection(&g_ddraw->cs);
 
         g_ddraw->render.sem = CreateSemaphore(NULL, 0, 1, NULL);
-        g_ddraw->wine = GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
+        g_ddraw->wine = real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
         g_blt_use_avx = util_is_avx_supported();
 
         cfg_load();

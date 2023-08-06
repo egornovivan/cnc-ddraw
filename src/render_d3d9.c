@@ -26,7 +26,7 @@ BOOL d3d9_is_available()
     if ((g_d3d9.hmodule = LoadLibrary("d3d9.dll")))
     {
         IDirect3D9* (WINAPI * d3d_create9)(UINT) =
-            (IDirect3D9 * (WINAPI*)(UINT))GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
+            (IDirect3D9 * (WINAPI*)(UINT))real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
 
         if (d3d_create9 && (d3d9 = d3d_create9(D3D_SDK_VERSION)))
             IDirect3D9_Release(d3d9);
@@ -52,7 +52,7 @@ BOOL d3d9_create()
         if (g_ddraw->nonexclusive)
         {
             int (WINAPI * d3d9_enable_shim)(BOOL) =
-                (int (WINAPI*)(BOOL))GetProcAddress(g_d3d9.hmodule, "Direct3D9EnableMaximizedWindowedModeShim");
+                (int (WINAPI*)(BOOL))real_GetProcAddress(g_d3d9.hmodule, "Direct3D9EnableMaximizedWindowedModeShim");
 
             if (d3d9_enable_shim)
                 d3d9_enable_shim(TRUE);
@@ -68,11 +68,11 @@ BOOL d3d9_create()
 
         if (g_ddraw->d3d9on12)
         {
-            d3d_create9on12 = (void*)GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9On12");
+            d3d_create9on12 = (void*)real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9On12");
         }
         else
         {
-            d3d_create9 = (void*)GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
+            d3d_create9 = (void*)real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
         }
 
         if ((d3d_create9on12 && (d3d9on12 = g_d3d9.instance = d3d_create9on12(D3D_SDK_VERSION, &args, 1))) ||
