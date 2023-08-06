@@ -11,6 +11,7 @@
 #include "blt.h"
 #include "debug.h"
 #include "D3d9types.h"
+#include "hook.h"
 
 
 static BOOL d3d9_create_resources();

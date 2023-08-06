@@ -3,6 +3,7 @@
 #include "opengl_utils.h"
 #include "dd.h"
 #include "debug.h"
+#include "hook.h"
 
 PFNWGLCREATECONTEXTPROC xwglCreateContext;
 PFNWGLDELETECONTEXTPROC xwglDeleteContext;

@@ -7,6 +7,7 @@
 #include "ddpalette.h"
 #include "ddsurface.h"
 #include "debug.h"
+#include "hook.h"
 
 
 HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid, LPVOID FAR* ppvObj)

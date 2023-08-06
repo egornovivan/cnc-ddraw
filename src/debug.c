@@ -6,6 +6,7 @@
 #include "ddsurface.h"
 #include "wndproc.h"
 #include "debug.h"
+#include "hook.h"
 
 
 double g_dbg_frame_time = 0;
