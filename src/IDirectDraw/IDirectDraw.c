@@ -131,7 +131,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
             TRACE("NOT_IMPLEMENTED     GUID = %08X\n", ((GUID*)riid)->Data1);
 
             if (!g_ddraw->real_dll)
-                g_ddraw->real_dll = LoadLibrary("system32\\ddraw.dll");
+                g_ddraw->real_dll = real_LoadLibraryA("system32\\ddraw.dll");
 
             if (g_ddraw->real_dll && !g_ddraw->DirectDrawCreate)
                 g_ddraw->DirectDrawCreate = (void*)real_GetProcAddress(g_ddraw->real_dll, "DirectDrawCreate");

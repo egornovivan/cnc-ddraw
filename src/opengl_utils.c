@@ -95,7 +95,7 @@ char g_oglu_version[128];
 BOOL oglu_load_dll()
 {
     if (!g_oglu_hmodule)
-        g_oglu_hmodule = LoadLibrary("opengl32.dll");
+        g_oglu_hmodule = real_LoadLibraryA("opengl32.dll");
 
     if (g_oglu_hmodule)
     {
