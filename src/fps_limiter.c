@@ -2,6 +2,7 @@
 #include "fps_limiter.h"
 #include "dd.h"
 #include "debug.h"
+#include "hook.h"
 
 FPSLIMITER g_fpsl;
 
