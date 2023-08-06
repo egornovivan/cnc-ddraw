@@ -14,6 +14,7 @@
 #include "directinput.h"
 #include "ddsurface.h"
 #include "dllmain.h"
+#include "hook.h"
 
 
 BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
@@ -433,7 +434,7 @@ LRESULT WINAPI fake_SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
         lParam = MAKELPARAM(x + g_ddraw->mouse.x_adjust, y + g_ddraw->mouse.y_adjust);
     }
 
-    if (g_ddraw->hwnd == hWnd && Msg == WM_SIZE && (g_hook_method != 2 && g_hook_method != 3))
+    if (g_ddraw->hwnd == hWnd && Msg == WM_SIZE && g_hook_method != 2)
     {
         Msg = WM_SIZE_DDRAW;
     }
@@ -536,7 +537,7 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow)
         if (nCmdShow == SW_MAXIMIZE)
             nCmdShow = SW_NORMAL;
 
-        if (nCmdShow == SW_MINIMIZE && (g_hook_method != 2 && g_hook_method != 3))
+        if (nCmdShow == SW_MINIMIZE && g_hook_method != 2)
             return TRUE;
     }
 
@@ -997,6 +998,40 @@ HMODULE WINAPI fake_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dw
     hook_init(FALSE);
 
     return hmod;
+}
+
+FARPROC WINAPI fake_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
+{
+#ifdef _DEBUG
+    char mod_path[MAX_PATH] = { 0 };
+    if (hModule && GetModuleFileNameA(hModule, mod_path, MAX_PATH))
+    {
+        TRACE("GetProcAddress %s (%s)\n", HIWORD(lpProcName) ? lpProcName : NULL, mod_path);
+    }
+#endif
+
+    FARPROC proc = real_GetProcAddress(hModule, lpProcName);
+
+    if (g_hook_method != 3 || !hModule || !HIWORD(lpProcName))
+        return proc;
+
+    for (int i = 0; g_hook_hooklist[i].module_name[0]; i++)
+    {
+        HMODULE mod = GetModuleHandleA(g_hook_hooklist[i].module_name);
+
+        if (hModule != mod)
+            continue;
+
+        for (int x = 0; g_hook_hooklist[i].data[x].function_name[0]; x++)
+        {
+            if (strcmp(lpProcName, g_hook_hooklist[i].data[x].function_name) == 0)
+            {
+                return (FARPROC)g_hook_hooklist[i].data[x].new_function;
+            }
+        }
+    }
+
+    return proc;
 }
 
 BOOL WINAPI fake_GetDiskFreeSpaceA(

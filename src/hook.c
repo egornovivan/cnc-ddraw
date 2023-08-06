@@ -53,11 +53,12 @@ LOADLIBRARYAPROC real_LoadLibraryA = LoadLibraryA;
 LOADLIBRARYWPROC real_LoadLibraryW = LoadLibraryW;
 LOADLIBRARYEXAPROC real_LoadLibraryExA = LoadLibraryExA;
 LOADLIBRARYEXWPROC real_LoadLibraryExW = LoadLibraryExW;
+GETPROCADDRESSPROC real_GetProcAddress = GetProcAddress;
 GETDISKFREESPACEAPROC real_GetDiskFreeSpaceA = GetDiskFreeSpaceA;
 COCREATEINSTANCEPROC real_CoCreateInstance = CoCreateInstance;
 SETUNHANDLEDEXCEPTIONFILTERPROC real_SetUnhandledExceptionFilter = SetUnhandledExceptionFilter;
 
-static HOOKLIST g_hooks[] =
+HOOKLIST g_hook_hooklist[] =
 {
     {
         "user32.dll",
@@ -66,8 +67,8 @@ static HOOKLIST g_hooks[] =
             { "ClipCursor", (PROC)fake_ClipCursor, (PROC*)&real_ClipCursor, 0 },
             { "ShowCursor", (PROC)fake_ShowCursor, (PROC*)&real_ShowCursor, 0 },
             { "SetCursor", (PROC)fake_SetCursor, (PROC*)&real_SetCursor, 0 },
-            { "GetWindowRect", (PROC)fake_GetWindowRect, (PROC*)&real_GetWindowRect, SKIP_HOOK3 },
-            { "GetClientRect", (PROC)fake_GetClientRect, (PROC*)&real_GetClientRect, SKIP_HOOK3 },
+            { "GetWindowRect", (PROC)fake_GetWindowRect, (PROC*)&real_GetWindowRect, 0 },
+            { "GetClientRect", (PROC)fake_GetClientRect, (PROC*)&real_GetClientRect, 0 },
             { "ClientToScreen", (PROC)fake_ClientToScreen, (PROC*)&real_ClientToScreen, 0 },
             { "ScreenToClient", (PROC)fake_ScreenToClient, (PROC*)&real_ScreenToClient, 0 },
             { "SetCursorPos", (PROC)fake_SetCursorPos, (PROC*)&real_SetCursorPos, 0 },
@@ -96,44 +97,45 @@ static HOOKLIST g_hooks[] =
     {
         "ole32.dll",
         {
-            { "CoCreateInstance", (PROC)fake_CoCreateInstance, (PROC*)&real_CoCreateInstance, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "CoCreateInstance", (PROC)fake_CoCreateInstance, (PROC*)&real_CoCreateInstance, SKIP_HOOK2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "dinput.dll",
         {
-            { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, SKIP_HOOK2 },
+            { "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 },
+            { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, SKIP_HOOK2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "dinput8.dll",
         {
-            { "DirectInput8Create", (PROC)fake_DirectInput8Create, (PROC*)&real_DirectInput8Create, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "DirectInput8Create", (PROC)fake_DirectInput8Create, (PROC*)&real_DirectInput8Create, SKIP_HOOK2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "gdi32.dll",
         {
-            { "StretchBlt", (PROC)fake_StretchBlt, (PROC*)&real_StretchBlt, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, SKIP_HOOK3 },
+            { "StretchBlt", (PROC)fake_StretchBlt, (PROC*)&real_StretchBlt, SKIP_HOOK2 },
+            { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, SKIP_HOOK2 },
+            { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, SKIP_HOOK2 },
+            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "kernel32.dll",
         {
-            { "LoadLibraryA", (PROC)fake_LoadLibraryA, (PROC*)&real_LoadLibraryA, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "LoadLibraryW", (PROC)fake_LoadLibraryW, (PROC*)&real_LoadLibraryW, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "LoadLibraryExA", (PROC)fake_LoadLibraryExA, (PROC*)&real_LoadLibraryExA, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "LoadLibraryExW", (PROC)fake_LoadLibraryExW, (PROC*)&real_LoadLibraryExW, SKIP_HOOK2 | SKIP_HOOK3 },
-            { "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA, (PROC*)&real_GetDiskFreeSpaceA, SKIP_HOOK2 | SKIP_HOOK3 },
+            { "LoadLibraryA", (PROC)fake_LoadLibraryA, (PROC*)&real_LoadLibraryA, SKIP_HOOK2 },
+            { "LoadLibraryW", (PROC)fake_LoadLibraryW, (PROC*)&real_LoadLibraryW, SKIP_HOOK2 },
+            { "LoadLibraryExA", (PROC)fake_LoadLibraryExA, (PROC*)&real_LoadLibraryExA, SKIP_HOOK2 },
+            { "LoadLibraryExW", (PROC)fake_LoadLibraryExW, (PROC*)&real_LoadLibraryExW, SKIP_HOOK2 },
+            { "GetProcAddress", (PROC)fake_GetProcAddress, (PROC*)&real_GetProcAddress, SKIP_HOOK2 },
+            { "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA, (PROC*)&real_GetDiskFreeSpaceA, SKIP_HOOK2 },
             { "", NULL, NULL, 0 }
         }
     },
@@ -365,16 +367,13 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
 void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 {
 #ifdef _MSC_VER
-    if ((g_hook_method == 2 || g_hook_method == 3) && initial_hook)
+    if ((g_hook_method == 2) && initial_hook)
     {
         for (int i = 0; hooks[i].module_name[0]; i++)
         {
             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
             {
-                if (g_hook_method == 2 && (hooks[i].data[x].flags & SKIP_HOOK2))
-                    continue;
-
-                if (g_hook_method == 3 && (hooks[i].data[x].flags & SKIP_HOOK3))
+                if ((hooks[i].data[x].flags & SKIP_HOOK2))
                     continue;
 
                 DetourTransactionBegin();
@@ -453,16 +452,13 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 void hook_revert(HOOKLIST* hooks)
 {
 #ifdef _MSC_VER
-    if (g_hook_method == 2 || g_hook_method == 3)
+    if (g_hook_method == 2)
     {
         for (int i = 0; hooks[i].module_name[0]; i++)
         {
             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
             {
-                if (g_hook_method == 2 && (hooks[i].data[x].flags & SKIP_HOOK2))
-                    continue;
-
-                if (g_hook_method == 3 && (hooks[i].data[x].flags & SKIP_HOOK3))
+                if ((hooks[i].data[x].flags & SKIP_HOOK2))
                     continue;
 
                 DetourTransactionBegin();
@@ -546,7 +542,7 @@ void hook_init(BOOL initial_hook)
             hook_patch_iat(GetModuleHandle("AcGenral"), FALSE, "user32.dll", "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA);
         }
 
-        hook_create((HOOKLIST*)&g_hooks, initial_hook);
+        hook_create((HOOKLIST*)&g_hook_hooklist, initial_hook);
 
         g_hook_active = TRUE;
     }
@@ -558,7 +554,7 @@ void hook_exit()
     {
         g_hook_active = FALSE;
 
-        hook_revert((HOOKLIST*)&g_hooks);
+        hook_revert((HOOKLIST*)&g_hook_hooklist);
 
 #if defined(_DEBUG) && defined(_MSC_VER)
         DetourTransactionBegin();

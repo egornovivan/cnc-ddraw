@@ -47,6 +47,7 @@ HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags);
 HMODULE WINAPI fake_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags);
+FARPROC WINAPI fake_GetProcAddress(HMODULE hModule, LPCSTR lpProcName);
 
 BOOL WINAPI fake_GetDiskFreeSpaceA(
     LPCSTR lpRootPathName,
