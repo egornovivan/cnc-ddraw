@@ -44,6 +44,11 @@ HRESULT dd_EnumDisplayModes(
         max_h = reg_m.dmPelsHeight;
     }
 
+    if (g_ddraw->stronghold_hack && max_w && (max_w % 8))
+    {
+        while (--max_w % 8);
+    }
+
     SIZE resolutions[] =
     {
         { 320, 200 },

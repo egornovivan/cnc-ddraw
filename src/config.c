@@ -57,6 +57,7 @@ void cfg_load()
     g_ddraw->armadahack = cfg_get_bool("armadahack", FALSE);
     g_ddraw->tshack = cfg_get_bool("tshack", FALSE);
     g_ddraw->infantryhack = cfg_get_bool("infantryhack", FALSE);
+    g_ddraw->stronghold_hack = cfg_get_bool("stronghold_hack", FALSE);
 
     if (cfg_get_bool("game_handles_close", FALSE) || g_ddraw->infantryhack)
     {
@@ -935,20 +936,23 @@ static void cfg_create_ini()
             "[StarCraft]\n"
             "game_handles_close=true\n"
             "\n"
-            "; Stronghold Crusader HD\n"
-            "[Stronghold Crusader]\n"
-            "adjmouse=true\n"
-            "\n"
             "; Space Rangers\n"
             "[Rangers]\n"
             "hook_peekmessage=true\n"
             "\n"
+            "; Stronghold Crusader HD\n"
+            "[Stronghold Crusader]\n"
+            "stronghold_hack=true\n"
+            "adjmouse=true\n"
+            "\n"
             "; Stronghold Crusader Extreme HD\n"
             "[Stronghold_Crusader_Extreme]\n"
+            "stronghold_hack=true\n"
             "adjmouse=true\n"
             "\n"
             "; Stronghold HD\n"
             "[Stronghold]\n"
+            "stronghold_hack=true\n"
             "adjmouse=true\n"
             "\n"
             "; Sim City 3000\n"
