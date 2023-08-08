@@ -19,12 +19,11 @@ CNCDDRAWCONFIG g_config =
 
 void cfg_load()
 {
-    char tmp[256];
-
     cfg_init();
 
     /* load settings from ini */
     g_ddraw->windowed = cfg_get_bool("windowed", FALSE);
+    g_ddraw->fullscreen = cfg_get_bool("fullscreen", FALSE);
     g_ddraw->border = cfg_get_bool("border", TRUE);
     g_ddraw->boxing = cfg_get_bool("boxing", FALSE);
     g_ddraw->maintas = cfg_get_bool("maintas", FALSE);
@@ -42,13 +41,11 @@ void cfg_load()
     g_ddraw->lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
     g_ddraw->releasealt = cfg_get_bool("releasealt", FALSE);
     g_ddraw->d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
-    g_ddraw->d3d9on12 = cfg_get_bool("d3d9on12", FALSE);
     g_ddraw->resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
     g_ddraw->allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
     g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
     g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
     g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
-    g_ddraw->opengl_core = cfg_get_bool("opengl_core", FALSE);
     g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
     cfg_get_string("screenshotdir", ".\\Screenshots\\", g_ddraw->screenshot_dir, sizeof(g_ddraw->screenshot_dir));
@@ -114,8 +111,6 @@ void cfg_load()
         g_ddraw->flip_limiter.tick_length = (DWORD)(flip_len + 0.5f);
     }
 
-    g_ddraw->fullscreen = cfg_get_bool("fullscreen", FALSE);
-
     if (cfg_get_bool("singlecpu", TRUE))
     {
         SetProcessAffinityMask(GetCurrentProcess(), 1);
@@ -133,18 +128,29 @@ void cfg_load()
     /* to do: read .glslp config file instead of the shader and apply the correct settings  */
     cfg_get_string("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_ddraw->shader, sizeof(g_ddraw->shader));
 
-    cfg_get_string("renderer", "auto", tmp, sizeof(tmp));
-    TRACE("     Using %s renderer\n", tmp);
+    char renderer[256] = {0};
+    cfg_get_string("renderer", "auto", renderer, sizeof(renderer));
 
-    if (tolower(tmp[0]) == 'd' || g_ddraw->d3d9on12) /* direct3d9 */
+    TRACE("     Using %s renderer\n", renderer);
+
+    if (_strcmpi(renderer, "direct3d9on12") == 0)
+    {
+        g_ddraw->d3d9on12 = TRUE;
+    }
+    else if (_strcmpi(renderer, "openglcore") == 0)
+    {
+        g_ddraw->opengl_core = TRUE;
+    }
+
+    if (tolower(renderer[0]) == 'd') /* direct3d9 or direct3d9on12*/
     {
         g_ddraw->renderer = d3d9_render_main;
     }
-    else if (tolower(tmp[0]) == 's' || tolower(tmp[0]) == 'g') /* gdi */
+    else if (tolower(renderer[0]) == 's' || tolower(renderer[0]) == 'g') /* gdi */
     {
         g_ddraw->renderer = gdi_render_main;
     }
-    else if (tolower(tmp[0]) == 'o') /* opengl */
+    else if (tolower(renderer[0]) == 'o') /* opengl or openglcore */
     {
         if (oglu_load_dll())
         {
@@ -251,7 +257,7 @@ static void cfg_create_ini()
             "; Note: Does not have an impact on the game speed, to limit your game speed use 'maxgameticks='\n"
             "maxfps=-1\n"
             "\n"
-            "; Vertical synchronization, enable if you get tearing - (Requires 'renderer=auto/opengl/direct3d9')\n"
+            "; Vertical synchronization, enable if you get tearing - (Requires 'renderer=auto/opengl*/direct3d9*')\n"
             "; Note: vsync=true can fix tearing but it will cause input lag\n"
             "vsync=false\n"
             "\n"
@@ -259,7 +265,7 @@ static void cfg_create_ini()
             "; Note: Only works if stretching is enabled. Sensitivity will be adjusted according to the size of the window\n"
             "adjmouse=true\n"
             "\n"
-            "; Preliminary libretro shader support - (Requires 'renderer=opengl') https://github.com/libretro/glsl-shaders\n"
+            "; Preliminary libretro shader support - (Requires 'renderer=opengl*') https://github.com/libretro/glsl-shaders\n"
             "; 2x scaling example: https://imgur.com/a/kxsM1oY - 4x scaling example: https://imgur.com/a/wjrhpFV\n"
             "shader=Shaders\\cubic\\catmull-rom-bilinear.glsl\n"
             "\n"
@@ -267,7 +273,7 @@ static void cfg_create_ini()
             "posX=-32000\n"
             "posY=-32000\n"
             "\n"
-            "; Renderer, possible values: auto, opengl, gdi, direct3d9 (auto = try direct3d9/opengl, fallback = gdi)\n"
+            "; Renderer, possible values: auto, opengl, openglcore, gdi, direct3d9, direct3d9on12 (auto = try direct3d9/opengl, fallback = gdi)\n"
             "renderer=auto\n"
             "\n"
             "; Developer mode (don't lock the cursor)\n"
@@ -283,7 +289,7 @@ static void cfg_create_ini()
             "; Should the window be resizable by the user in windowed mode?\n"
             "resizable=true\n"
             "\n"
-            "; Upscaling filter for the direct3d9 renderer\n"
+            "; Upscaling filter for the direct3d9* renderers\n"
             "; Possible values: 0 = nearest-neighbor, 1 = bilinear, 2 = bicubic (16/32bit color depth games only)\n"
             "d3d9_filter=2\n"
             "\n"
@@ -322,7 +328,7 @@ static void cfg_create_ini()
             "; Note: Set this to a low value such as 5 or 10 if some parts of the game are not being displayed (e.g. menus or loading screens)\n"
             "minfps=0\n"
             "\n"
-            "; Disable fullscreen-exclusive mode for the direct3d9/opengl renderers\n"
+            "; Disable fullscreen-exclusive mode for the direct3d9*/opengl* renderers\n"
             "; Note: Can be used in case some GUI elements like buttons/textboxes/videos/etc.. are invisible\n"
             "nonexclusive=false\n"
             "\n"
@@ -339,8 +345,6 @@ static void cfg_create_ini()
             "\n"
             "\n"
             "; Undocumented settings\n"
-            "opengl_core=false\n"
-            "d3d9on12=false\n"
             "guard_lines=200\n"
             "max_resolutions=0\n"
             "limit_bltfast=false\n"

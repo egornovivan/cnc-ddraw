@@ -597,7 +597,15 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	auto renderer = LowerCase(ini->ReadString("ddraw", "renderer", "auto"));
 
-	if (StartsStr("d", renderer)) {
+	if (renderer == "direct3d9on12") {
+		RendererCbx->AddItem(L"Direct3D 12 (9On12)", NULL);
+		RendererCbx->ItemIndex = 4;
+	}
+	else if (renderer == "openglcore") {
+		RendererCbx->AddItem(L"OpenGL Core", NULL);
+		RendererCbx->ItemIndex = 4;
+	}
+	else if (StartsStr("d", renderer)) {
 		RendererCbx->ItemIndex = 1;
 	}
 	else if (StartsStr("o", renderer)) {
@@ -766,6 +774,14 @@ void TConfigForm::SaveSettings()
 		break;
 	case 3:
 		ini->WriteString("ddraw", "renderer", "gdi");
+		break;
+	case 4:
+		if (RendererCbx->Text == "OpenGL Core") {
+			ini->WriteString("ddraw", "renderer", "openglcore");
+		}
+		else {
+			ini->WriteString("ddraw", "renderer", "direct3d9on12");
+		}
 		break;
 	default:
 		break;
