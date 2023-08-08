@@ -905,7 +905,7 @@ void __fastcall TConfigForm::FormActivate(TObject *Sender)
 	TRegistry* reg = new TRegistry(KEY_READ);
 	reg->RootKey = HKEY_CURRENT_USER;
 
-	if(reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
+	if (reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
 
 		if (!reg->ValueExists("ddraw")) {
 
@@ -974,7 +974,10 @@ void __fastcall TConfigForm::RendererCbxChange(TObject *Sender)
 
 void __fastcall TConfigForm::ShaderCbxChange(TObject *Sender)
 {
-	RendererCbx->ItemIndex = 2;
+	if (RendererCbx->Text != "OpenGL Core") {
+		RendererCbx->ItemIndex = 2;
+	}
+
 	SaveSettings();
 }
 
