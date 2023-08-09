@@ -2696,6 +2696,8 @@ object ConfigForm: TConfigForm
     ShowCaption = False
     TabOrder = 1
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     DesignSize = (
       499
       465)
@@ -2883,6 +2885,8 @@ object ConfigForm: TConfigForm
     TabOrder = 3
     Visible = False
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     object MaxgameticksLbl: TLabel
       Left = 40
       Top = 28
@@ -3069,6 +3073,8 @@ object ConfigForm: TConfigForm
     TabOrder = 2
     Visible = False
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     object RendererLbl: TLabel
       Left = 40
       Top = 28
@@ -3256,6 +3262,7 @@ object ConfigForm: TConfigForm
     Top = 8
     Width = 227
     Height = 465
+    Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
     Color = clHotLight
     ParentBackground = False
