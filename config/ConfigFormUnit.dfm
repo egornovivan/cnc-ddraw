@@ -2680,12 +2680,16 @@ object ConfigForm: TConfigForm
   Position = poDesktopCenter
   OnActivate = FormActivate
   OnCreate = FormCreate
+  DesignSize = (
+    741
+    476)
   TextHeight = 13
   object DisplayPnl: TPanel
     Left = 233
     Top = 8
     Width = 499
     Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
@@ -2871,6 +2875,7 @@ object ConfigForm: TConfigForm
     Top = 8
     Width = 499
     Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
@@ -3056,6 +3061,7 @@ object ConfigForm: TConfigForm
     Top = 8
     Width = 499
     Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False

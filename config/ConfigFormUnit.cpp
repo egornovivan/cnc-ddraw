@@ -209,9 +209,6 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 	else if (lang == "russian" || (lang == "auto" && priID == LANG_RUSSIAN)) {
 		LanguageImg->Visible = true;
 		ClientWidth *= 1.13;
-		DisplayPnl->Width *= 1.192;
-		AdvancedPnl->Width *= 1.192;
-		CompatibilityPnl->Width *= 1.192;
 
 		/* -Russian- made by shikulja @ github */
 
