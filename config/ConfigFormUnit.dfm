@@ -4,7 +4,7 @@ object ConfigForm: TConfigForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
-  ClientHeight = 477
+  ClientHeight = 476
   ClientWidth = 741
   Color = clHotLight
   Font.Charset = DEFAULT_CHARSET
