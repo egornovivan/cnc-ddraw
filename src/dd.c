@@ -748,11 +748,11 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         g_ddraw->render.opengl_y_align = 0;
     }
 
-    if (g_ddraw->remove_menu && GetMenu(g_ddraw->hwnd))
-        SetMenu(g_ddraw->hwnd, NULL);
-
     if (g_ddraw->windowed)
     {
+        if (g_ddraw->remove_menu && GetMenu(g_ddraw->hwnd))
+            SetMenu(g_ddraw->hwnd, NULL);
+
         if (!g_ddraw->wine)
         {
             MSG msg; /* workaround for "Not Responding" window problem in cnc games */
