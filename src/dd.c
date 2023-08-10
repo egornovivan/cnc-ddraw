@@ -49,6 +49,8 @@ HRESULT dd_EnumDisplayModes(
         while (--max_w % 8);
     }
 
+    BOOL rlf = g_ddraw->resolutions == RESLIST_FULL;
+
     SIZE resolutions[] =
     {
         { 320, 200 },
@@ -58,11 +60,29 @@ HRESULT dd_EnumDisplayModes(
         { 640, 480 },
         { 800, 600 },
         { 1024, 768 },
-        { g_ddraw->resolutions == RESLIST_FULL ? 1280 : 0, g_ddraw->resolutions == RESLIST_FULL ? 960 : 0 },
         { 1280, 1024 },
         { 1600, 1200 },
-        { g_ddraw->resolutions == RESLIST_FULL ? 2048 : 0, g_ddraw->resolutions == RESLIST_FULL ? 1536 : 0 },
         { 1280, 720 },
+        { rlf ? 1024 : 0, rlf ? 600 : 0 },
+        /* 4:3 */
+        { rlf ? 1280 : 0, rlf ? 960 : 0 },
+        { rlf ? 2048 : 0, rlf ? 1536 : 0 },
+        /* 16:10 */
+        { rlf ? 960 : 0, rlf ? 600 : 0 },
+        { rlf ? 1440 : 0, rlf ? 900 : 0 },
+        { rlf ? 1680 : 0, rlf ? 1050 : 0 },
+        { rlf ? 1920 : 0, rlf ? 1200 : 0 },
+        { rlf ? 2560 : 0, rlf ? 1600 : 0 },
+        /* 16:9 */
+        { rlf ? 960 : 0, rlf ? 540 : 0 },
+        { rlf ? 1360 : 0, rlf ? 768 : 0 },
+        { rlf ? 1600 : 0, rlf ? 900 : 0 },
+        { rlf ? 1920 : 0, rlf ? 1080 : 0 },
+        { rlf ? 2560 : 0, rlf ? 1440 : 0 },
+        /* 21:9 */
+        { rlf ? 1280 : 0, rlf ? 544 : 0 },
+        { rlf ? 1720 : 0, rlf ? 720 : 0 },
+        { rlf ? 2560 : 0, rlf ? 1080 : 0 },
         { max_w, max_h },
     };
     
@@ -246,7 +266,7 @@ HRESULT dd_EnumDisplayModes(
                 m.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
                 m.dmPelsWidth = resolutions[i].cx;
                 m.dmPelsHeight = resolutions[i].cy;
-
+            
                 if (ChangeDisplaySettings(&m, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     continue;
             }
