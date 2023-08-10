@@ -13,6 +13,7 @@
 #include "render_gdi.h"
 #include "directinput.h"
 #include "ddsurface.h"
+#include "ddclipper.h"
 #include "dllmain.h"
 #include "hook.h"
 
@@ -1206,6 +1207,8 @@ HRESULT WINAPI fake_CoCreateInstance(REFCLSID rclsid, LPUNKNOWN pUnkOuter, DWORD
 
         if (IsEqualGUID(&CLSID_DirectDraw, rclsid) || IsEqualGUID(&CLSID_DirectDraw7, rclsid))
         {
+            TRACE("     GUID = %08X (CLSID_DirectDrawX)\n", ((GUID*)rclsid)->Data1);
+
             if (IsEqualGUID(&IID_IDirectDraw2, riid) ||
                 IsEqualGUID(&IID_IDirectDraw4, riid) ||
                 IsEqualGUID(&IID_IDirectDraw7, riid))
@@ -1217,6 +1220,16 @@ HRESULT WINAPI fake_CoCreateInstance(REFCLSID rclsid, LPUNKNOWN pUnkOuter, DWORD
                 return dd_CreateEx(NULL, ppv, &IID_IDirectDraw, NULL);
             }
         }    
+
+        if (IsEqualGUID(&CLSID_DirectDrawClipper, rclsid))
+        {
+            TRACE("     GUID = %08X (CLSID_DirectDrawClipper)\n", ((GUID*)rclsid)->Data1);
+
+            if (IsEqualGUID(&IID_IDirectDrawClipper, riid))
+            {
+                return dd_CreateClipper(0, (IDirectDrawClipperImpl**)ppv, NULL);
+            }
+        }
     }
 
     return real_CoCreateInstance(rclsid, pUnkOuter, dwClsContext, riid, ppv);
