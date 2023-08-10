@@ -483,9 +483,9 @@ HRESULT __stdcall IDirectDraw__TestCooperativeLevel(IDirectDrawImpl* This)
 
 HRESULT __stdcall IDirectDraw__GetDeviceIdentifier(IDirectDrawImpl* This, LPDDDEVICEIDENTIFIER2 pDDDI, DWORD dwFlags)
 {
-    TRACE("NOT_IMPLEMENTED -> %s(This=%p, pDDDI=%p, dwFlags=%08X)\n", __FUNCTION__, This, pDDDI, dwFlags);
+    TRACE("-> %s(This=%p, pDDDI=%p, dwFlags=%08X)\n", __FUNCTION__, This, pDDDI, dwFlags);
     HRESULT ret = dd_GetDeviceIdentifier((LPDDDEVICEIDENTIFIER)pDDDI, dwFlags, &This->guid);
-    TRACE("NOT_IMPLEMENTED <- %s\n", __FUNCTION__);
+    TRACE("<- %s\n", __FUNCTION__);
     return ret;
 }
 

@@ -129,7 +129,7 @@ HRESULT dd_EnumDisplayModes(
                 flags == m.dmDisplayFlags &&
                 fixed_output == m.dmDisplayFixedOutput)
             {
-                TRACE_EXT(
+                TRACE(
                     "     %u: %ux%u@%u %u bpp\n",
                     i,
                     m.dmPelsWidth,

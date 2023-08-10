@@ -516,7 +516,7 @@ void dbg_dump_dds_blt_fx_flags(DWORD flags)
 
 void dbg_dump_dds_caps(DWORD caps)
 {
-#ifdef _DEBUG_X
+#ifdef _DEBUG
     if (caps & DDSCAPS_RESERVED1) {
         TRACE("     DDSCAPS_RESERVED1\n");
     }
@@ -612,7 +612,7 @@ void dbg_dump_dds_caps(DWORD caps)
 
 void dbg_dump_dds_flags(DWORD flags)
 {
-#ifdef _DEBUG_X
+#ifdef _DEBUG
     if (flags & DDSD_CAPS) {
         TRACE("     DDSD_CAPS\n");
     }

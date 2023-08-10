@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cnc-ddraw", "cnc-ddraw.vcxproj", "{96094551-5D52-4EBD-BE4C-5291A03507FC}"
 EndProject
@@ -9,6 +9,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		DebugLog|x86 = DebugLog|x86
+		DebugLogMini|x86 = DebugLogMini|x86
 		Release|x86 = Release|x86
 		ReleaseWin2000|x86 = ReleaseWin2000|x86
 	EndGlobalSection
@@ -17,6 +18,8 @@ Global
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.Debug|x86.Build.0 = Debug|Win32
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.DebugLog|x86.ActiveCfg = DebugLog|Win32
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.DebugLog|x86.Build.0 = DebugLog|Win32
+		{96094551-5D52-4EBD-BE4C-5291A03507FC}.DebugLogMini|x86.ActiveCfg = DebugLogMini|Win32
+		{96094551-5D52-4EBD-BE4C-5291A03507FC}.DebugLogMini|x86.Build.0 = DebugLogMini|Win32
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.Release|x86.ActiveCfg = Release|Win32
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.Release|x86.Build.0 = Release|Win32
 		{96094551-5D52-4EBD-BE4C-5291A03507FC}.ReleaseWin2000|x86.ActiveCfg = ReleaseWin2000|Win32

@@ -844,9 +844,9 @@ HRESULT dds_GetClipper(IDirectDrawSurfaceImpl* This, IDirectDrawClipperImpl** lp
 
 HRESULT dds_GetColorKey(IDirectDrawSurfaceImpl* This, DWORD dwFlags, LPDDCOLORKEY lpColorKey)
 {
-    if (dwFlags != DDCKEY_SRCBLT)
+    if (dwFlags != DDCKEY_SRCBLT || !lpColorKey)
     {
-        TRACE_EXT("     NOT_IMPLEMENTED dwFlags=%08X\n", dwFlags);
+        TRACE("     NOT_IMPLEMENTED dwFlags=%08X, lpColorKey=%p\n", dwFlags, lpColorKey);
     }
 
     if (lpColorKey)
@@ -1024,7 +1024,7 @@ HRESULT dds_SetColorKey(IDirectDrawSurfaceImpl* This, DWORD dwFlags, LPDDCOLORKE
 {
     if (dwFlags != DDCKEY_SRCBLT || !lpColorKey)
     {
-        TRACE_EXT("     NOT_IMPLEMENTED dwFlags=%08X, lpColorKey=%p\n", dwFlags, lpColorKey);
+        TRACE("     NOT_IMPLEMENTED dwFlags=%08X, lpColorKey=%p\n", dwFlags, lpColorKey);
     }
 
     if (lpColorKey)

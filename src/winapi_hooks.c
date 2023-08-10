@@ -909,11 +909,11 @@ HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
 {
     HMODULE hmod = real_LoadLibraryA(lpLibFileName);
 
-#ifdef _DEBUG_X
+#ifdef _DEBUG
     char mod_path[MAX_PATH] = { 0 };
     if (hmod && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
     {
-        TRACE_EXT("LoadLibraryA Module %s = %p (%s)\n", mod_path, hmod, lpLibFileName);
+        TRACE("LoadLibraryA Module %s = %p (%s)\n", mod_path, hmod, lpLibFileName);
     }
 #endif
 
@@ -1203,7 +1203,7 @@ HRESULT WINAPI fake_CoCreateInstance(REFCLSID rclsid, LPUNKNOWN pUnkOuter, DWORD
 {
     if (rclsid && riid)
     {
-        TRACE("CoCreateInstance rclsid = %08X, riid = %08X, \n", ((GUID*)rclsid)->Data1, ((GUID*)riid)->Data1);
+        TRACE("CoCreateInstance rclsid = %08X, riid = %08X\n", ((GUID*)rclsid)->Data1, ((GUID*)riid)->Data1);
 
         if (IsEqualGUID(&CLSID_DirectDraw, rclsid) || IsEqualGUID(&CLSID_DirectDraw7, rclsid))
         {
