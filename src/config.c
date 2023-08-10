@@ -48,6 +48,7 @@ void cfg_load()
     g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
     g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
+    g_ddraw->remove_menu = cfg_get_bool("remove_menu", FALSE);
     cfg_get_string("screenshotdir", ".\\Screenshots\\", g_ddraw->screenshot_dir, sizeof(g_ddraw->screenshot_dir));
 
 
