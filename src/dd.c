@@ -129,6 +129,11 @@ HRESULT dd_EnumDisplayModes(
                 flags == m.dmDisplayFlags &&
                 fixed_output == m.dmDisplayFixedOutput)
             {
+                if (g_ddraw->stronghold_hack && m.dmPelsWidth && (m.dmPelsWidth % 8))
+                {
+                    while (--m.dmPelsWidth % 8);
+                }
+
                 TRACE(
                     "     %u: %ux%u@%u %u bpp\n",
                     i,
