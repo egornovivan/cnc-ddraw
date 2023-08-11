@@ -337,7 +337,7 @@ static void cfg_create_ini()
             "singlecpu=true\n"
             "\n"
             "; Available resolutions, possible values: 0 = Small list, 1 = Very small list, 2 = Full list\n"
-            "; Note: Set this to 2 if your chosen resolution is not working or does not shpw up in the list\n"
+            "; Note: Set this to 2 if your chosen resolution is not working or does not show up in the list\n"
             "; Note: Set this to 1 if the game is crashing\n"
             "resolutions=0\n"
             "\n"
