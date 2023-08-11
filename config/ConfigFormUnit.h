@@ -49,8 +49,8 @@ __published:	// Von der IDE verwaltete Komponenten
 	TLabel *MaxgameticksLbl;
 	TLabel *NoactivateappLbl;
 	TToggleSwitch *NoactivateappChk;
-	TLabel *HookLbl;
-	TToggleSwitch *HookChk;
+	TLabel *ResolutionsLbl;
+	TToggleSwitch *ResolutionsChk;
 	TLabel *MinfpsLbl;
 	TToggleSwitch *MinfpsChk;
 	TToggleSwitch *SinglecpuChk;
@@ -79,7 +79,7 @@ __published:	// Von der IDE verwaltete Komponenten
 	void __fastcall SavesettingsChkClick(TObject *Sender);
 	void __fastcall MaxgameticksCbxChange(TObject *Sender);
 	void __fastcall NoactivateappChkClick(TObject *Sender);
-	void __fastcall HookChkClick(TObject *Sender);
+	void __fastcall ResolutionsChkClick(TObject *Sender);
 	void __fastcall MinfpsChkClick(TObject *Sender);
 	void __fastcall SinglecpuChkClick(TObject *Sender);
 	void __fastcall NonexclusiveChkClick(TObject *Sender);

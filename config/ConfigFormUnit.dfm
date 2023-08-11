@@ -2916,13 +2916,13 @@ object ConfigForm: TConfigForm
       ParentFont = False
       StyleElements = [seClient, seBorder]
     end
-    object HookLbl: TLabel
+    object ResolutionsLbl: TLabel
       Left = 40
       Top = 173
-      Width = 281
+      Width = 251
       Height = 21
       Margins.Top = 18
-      Caption = 'Fix broken windowed mode or upscaling'
+      Caption = 'Unlock additional screen resolutions'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -3023,14 +3023,14 @@ object ConfigForm: TConfigForm
       TabOrder = 1
       OnClick = NoactivateappChkClick
     end
-    object HookChk: TToggleSwitch
+    object ResolutionsChk: TToggleSwitch
       Left = 40
       Top = 200
       Width = 50
       Height = 20
       ShowStateCaption = False
       TabOrder = 2
-      OnClick = HookChkClick
+      OnClick = ResolutionsChkClick
     end
     object MinfpsChk: TToggleSwitch
       Left = 40
@@ -3267,6 +3267,7 @@ object ConfigForm: TConfigForm
     Color = clHotLight
     ParentBackground = False
     TabOrder = 0
+    ExplicitHeight = 464
     DesignSize = (
       227
       465)

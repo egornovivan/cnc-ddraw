@@ -19,7 +19,7 @@ bool IsEnglish;
 /* Save previous settings so we don't override custom settings */
 int Maxfps;
 int Savesettings;
-int Hook;
+int Resolutions;
 int Minfps;
 
 //---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"打开窗盒显示/整数缩放";
 		MaxgameticksLbl->Caption = L"限制游戏速率";
 		NoactivateappLbl->Caption = L"修复损坏的Alt+Tab功能";
-		HookLbl->Caption = L"修复损坏的窗口模式或拉伸";
+		ResolutionsLbl->Caption = L"解锁其他屏幕分辨率";
 		MinfpsLbl->Caption = L"强制高FPS / 修复使用Freesync/G-Sync的卡顿问题";
 		SinglecpuLbl->Caption = L"修复性能不佳和声音问题";
 		NonexclusiveLbl->Caption = L"修复不显示的视频/UI元素";
@@ -124,7 +124,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Activar encajado de ventanas / escalado de enteros";
 		MaxgameticksLbl->Caption = L"Limitar velocidad de juego";
 		NoactivateappLbl->Caption = L"Corregir Alt+Tab roto";
-		HookLbl->Caption = L"Corregir modo ventana o ampliación de escala";
+		ResolutionsLbl->Caption = L"Desbloquear resoluciones de pantalla adicionales";
 		MinfpsLbl->Caption = L"Forzar un alto FPS / Corregir retrasos en Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Solucione el mal rendimiento y los problemas de sonido";
 		NonexclusiveLbl->Caption = L"Corregir vídeos / elementos de interfaz invisibles";
@@ -176,7 +176,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Fensterboxing / Integer Skalierung aktivieren"; //Not 100% sure if "windowboxing" can be translated better.
 		MaxgameticksLbl->Caption = L"Spielgeschwindigkeit limitieren";
 		NoactivateappLbl->Caption = L"Fehlerhaftes Alt+Tab reparieren"; //The first word can be ignored if its to long (eng word "Fix"
-		HookLbl->Caption = L"Fehlerhafter Fenstermodus oder Hochskalierung reparieren"; //The first word can be ignored if its to long (eng word "Fix")
+		ResolutionsLbl->Caption = L"Zusätzliche Bildschirmauflösungen freischalten";
 		MinfpsLbl->Caption = L"Erzwinge Hohe FPS / Repariere Stottern bei Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Schlechte Leistung und Soundprobleme reparieren";
 		NonexclusiveLbl->Caption = L"Unsichtbare Videos / UI Elemente reparieren";
@@ -229,7 +229,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Включить windowboxing / целочисленное масштабирование";
 		MaxgameticksLbl->Caption = L"Ограничить скорость игры";
 		NoactivateappLbl->Caption = L"Исправить сломанный Alt+Tab";
-		HookLbl->Caption = L"Исправить сломанный оконный режим или масштабированние";
+		ResolutionsLbl->Caption = L"Разблокировать дополнительные разрешения экрана";
 		MinfpsLbl->Caption = L"Принудительно высокий FPS / Исправить заикание при Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Исправление проблем с производительностью и звуком";
 		NonexclusiveLbl->Caption = L"Исправить невидимые видео / элементы пользовательского интерфейса";
@@ -281,7 +281,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Ablakos mód / felskálázás bekapcsolása";
 		MaxgameticksLbl->Caption = L"Játéksebesség korlátozás";
 		NoactivateappLbl->Caption = L"Alt+Tab hiba kiküszöbölése";
-		HookLbl->Caption = L"Hibás ablakos mód, vagy felskálázás javítása";
+		ResolutionsLbl->Caption = L"További képernyőfelbontások feloldása";
 		MinfpsLbl->Caption = L"Magas FPS kényszerítés / Akadozásjavítás Freesync/G-Sync esetén";
 		SinglecpuLbl->Caption = L"Javítsa ki a rossz teljesítmény- és hangproblémákat";
 		NonexclusiveLbl->Caption = L"Láthatatlan videók / kezelőfelületi elemek javítása";
@@ -333,7 +333,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Activer windowboxing / mise à l'échelle par nombres entiers";
 		MaxgameticksLbl->Caption = L"Limiter la vitesse du jeu";
 		NoactivateappLbl->Caption = L"Corriger Alt+Tab défaillant";
-		HookLbl->Caption = L"Corriger mode fenêtré ou mise à l'échelle défaillant";
+		ResolutionsLbl->Caption = L"Déverrouiller des résolutions d'écran supplémentaires";
 		MinfpsLbl->Caption = L"Forcer FPS élevé / Corriger saccades en Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Résoudre les problèmes de mauvaise performance et de son";
 		NonexclusiveLbl->Caption = L"Corriger vidéos et éléments d'interface invisibles";
@@ -385,7 +385,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Abilita il ridimensionamento dei numeri interi";
 		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
 		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
-		HookLbl->Caption = L"Risolvi i problemi con la modalità finestra o il ridimensionamento";
+		ResolutionsLbl->Caption = L"Sblocca ulteriori risoluzioni dello schermo";
 		MinfpsLbl->Caption = L"Forza FPS elevati / Correggi balbuzie su Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Risolvi problemi di prestazioni e audio scadenti";
 		NonexclusiveLbl->Caption = L"Correggi video / elementi dell'interfaccia utente invisibili";
@@ -482,7 +482,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		BoxingLbl->Caption = L"Enable windowboxing / integer scaling";
 		MaxgameticksLbl->Caption = L"Limit game speed";
 		NoactivateappLbl->Caption = L"Fix broken Alt+Tab";
-		HookLbl->Caption = L"Fix broken windowed mode or upscaling";
+		ResolutionsLbl->Caption = L"Unlock additional screen resolutions";
 		MinfpsLbl->Caption = L"Force high FPS / Fix stuttering on Freesync/G-Sync";
 		SinglecpuLbl->Caption = L"Fix bad performance and sound issues";
 		NonexclusiveLbl->Caption = L"Fix invisible videos / UI elements";
@@ -687,8 +687,8 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	NoactivateappChk->State = GetBool(ini, "noactivateapp", false) ? tssOn : tssOff;
 
-	Hook = ini->ReadInteger("ddraw", "hook", 4);
-	HookChk->State = Hook == 3 ? tssOn : tssOff;
+	Resolutions = ini->ReadInteger("ddraw", "resolutions", 0);
+	ResolutionsChk->State = Resolutions == 2 ? tssOn : tssOff;
 
 	Minfps = ini->ReadInteger("ddraw", "minfps", 0);
 	MinfpsChk->State = Minfps != 0 ? tssOn : tssOff;
@@ -865,12 +865,12 @@ void TConfigForm::SaveSettings()
 		"noactivateapp",
 		NoactivateappChk->State == tssOn ? "true" : "false");
 
-	int hook = Hook != 3 ? Hook : 4;
+	int resolutions = Resolutions != 2 ? Resolutions : 0;
 
 	ini->WriteInteger(
 		"ddraw",
-		"hook",
-		HookChk->State == tssOn ? 3 : hook);
+		"resolutions",
+		ResolutionsChk->State == tssOn ? 2 : resolutions);
 
 	int minfps = Minfps == 0 ? -1 : Minfps;
 
@@ -1008,7 +1008,7 @@ void __fastcall TConfigForm::NoactivateappChkClick(TObject *Sender)
 	SaveSettings();
 }
 
-void __fastcall TConfigForm::HookChkClick(TObject *Sender)
+void __fastcall TConfigForm::ResolutionsChkClick(TObject *Sender)
 {
 	SaveSettings();
 }
