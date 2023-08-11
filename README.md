@@ -28,13 +28,11 @@ Wine (Linux/macOS) only: override `ddraw` in [winecfg](https://wiki.winehq.org/W
 
 &nbsp;
 
-If you use cnc-ddraw with a game that got its own windowed mode built in then **make sure you disable the games own windowed mode** first.
-
-If you want to play in windowed mode then start the game once in fullscreen and then press Alt+Enter to enable the cnc-ddraw windowed mode (Or enable windowed mode in the config program without using Alt+Enter).
+If you use cnc-ddraw with a game that got its own windowed mode built in then **make sure you disable the games own windowed mode** first. You can enable windowed mode via cnc-ddraw config.exe instead.
 
 &nbsp;
 
-**If the game starts but it doesn't work perfectly** then open the config program and check the **Compatibility settings**. Alternatively you can also open ddraw.ini with notepad and modify the **Compatibility settings** in there.
+**If the game starts but it doesn't work perfectly** then open the config program and check the **Compatibility settings**.
 
 &nbsp;
 
@@ -43,20 +41,6 @@ If you want to play in windowed mode then start the game once in fullscreen and 
 &nbsp;
 
 Some games may require additional steps before they can be used with cnc-ddraw, please check the [wiki](https://github.com/FunkyFr3sh/cnc-ddraw/wiki) for more details.
-
-&nbsp;
-
-**Compatibility settings in ddraw.ini**
-
-- If there are **problems on Alt+Tab** then try to set `noactivateapp=true` - If it still doesn't work also try `renderer=opengl` or `renderer=gdi`.
-
-- If the **game is running too fast** then try to set `maxgameticks=60` - If it's still too fast, try a lower value.
-
-- If **windowed mode or upscaling are not working properly** then try to set `hook=2` and `renderer=gdi`. 
-
-- If **videos or other UI elements are invisible** then try to set `nonexclusive=true`.
-
-- If the game is **stuttering on a Freesync/G-Sync monitor** then try to set `minfps=-1`.
 
 &nbsp;
 
