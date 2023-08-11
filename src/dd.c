@@ -25,6 +25,28 @@ HRESULT dd_EnumDisplayModes(
 {
     dbg_dump_edm_flags(dwFlags);
 
+    DWORD bpp_filter = 0;
+
+    if (lpDDSurfaceDesc)
+    {
+        dbg_dump_dds_flags(lpDDSurfaceDesc->dwFlags);
+        dbg_dump_dds_caps(lpDDSurfaceDesc->ddsCaps.dwCaps);
+
+        if (lpDDSurfaceDesc->dwFlags & DDSD_PIXELFORMAT)
+        {
+            TRACE("     ddpfPixelFormat.dwRGBBitCount=%u\n", lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount);
+
+            switch (lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount)
+            {
+            case 8:
+            case 16:
+            case 32:
+                bpp_filter = lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount;
+                break;
+            }
+        }
+    }
+
     DWORD i = 0;
     DWORD res_count = 0;
     DDSURFACEDESC2 s;
@@ -175,18 +197,21 @@ HRESULT dd_EnumDisplayModes(
                 s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
                 s.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
 
-                if (g_ddraw->bpp == 8 || g_ddraw->resolutions == RESLIST_FULL)
+                if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                    if (g_ddraw->bpp == 8 || g_ddraw->resolutions == RESLIST_FULL)
                     {
-                        TRACE("     resolution limit reached, stopping\n");
-                        return DD_OK;
-                    }
+                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        {
+                            TRACE("     resolution limit reached, stopping\n");
+                            return DD_OK;
+                        }
 
-                    if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-                    {
-                        TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                        return DD_OK;
+                        if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                        {
+                            TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                            return DD_OK;
+                        }
                     }
                 }
 
@@ -197,18 +222,21 @@ HRESULT dd_EnumDisplayModes(
                 s.ddpfPixelFormat.dwBBitMask = 0x001F;
                 s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-                if (g_ddraw->bpp == 16 || g_ddraw->resolutions == RESLIST_FULL)
+                if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                    if (g_ddraw->bpp == 16 || g_ddraw->resolutions == RESLIST_FULL)
                     {
-                        TRACE("     resolution limit reached, stopping\n");
-                        return DD_OK;
-                    }
+                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        {
+                            TRACE("     resolution limit reached, stopping\n");
+                            return DD_OK;
+                        }
 
-                    if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-                    {
-                        TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                        return DD_OK;
+                        if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                        {
+                            TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                            return DD_OK;
+                        }
                     }
                 }
 
@@ -219,20 +247,23 @@ HRESULT dd_EnumDisplayModes(
                 s.ddpfPixelFormat.dwBBitMask = 0x0000FF;
                 s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-                if (g_ddraw->bpp == 32 || g_ddraw->resolutions == RESLIST_FULL)
+                if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                    if (g_ddraw->bpp == 32 || g_ddraw->resolutions == RESLIST_FULL)
                     {
-                        TRACE("     resolution limit reached, stopping\n");
-                        return DD_OK;
-                    }
+                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        {
+                            TRACE("     resolution limit reached, stopping\n");
+                            return DD_OK;
+                        }
 
-                    if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-                    {
-                        TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                        return DD_OK;
+                        if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                        {
+                            TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                            return DD_OK;
+                        }
                     }
-                }
+                }             
 
                 for (int x = 0; x < sizeof(resolutions) / sizeof(resolutions[0]); x++)
                 {
@@ -284,16 +315,19 @@ HRESULT dd_EnumDisplayModes(
             s.dwWidth = resolutions[i].cx;
             s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-            if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+            if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                TRACE("     resolution limit reached, stopping\n");
-                return DD_OK;
-            }
+                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                {
+                    TRACE("     resolution limit reached, stopping\n");
+                    return DD_OK;
+                }
 
-            if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-            {
-                TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                return DD_OK;
+                if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                {
+                    TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                    return DD_OK;
+                }
             }
 
             s.ddpfPixelFormat.dwFlags = DDPF_RGB;
@@ -303,16 +337,19 @@ HRESULT dd_EnumDisplayModes(
             s.ddpfPixelFormat.dwBBitMask = 0x001F;
             s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-            if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+            if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                TRACE("     resolution limit reached, stopping\n");
-                return DD_OK;
-            }
+                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                {
+                    TRACE("     resolution limit reached, stopping\n");
+                    return DD_OK;
+                }
 
-            if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-            {
-                TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                return DD_OK;
+                if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                {
+                    TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                    return DD_OK;
+                }
             }
 
             if (g_ddraw->resolutions == RESLIST_MINI)
@@ -325,16 +362,19 @@ HRESULT dd_EnumDisplayModes(
             s.ddpfPixelFormat.dwBBitMask = 0x0000FF;
             s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-            if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+            if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                TRACE("     resolution limit reached, stopping\n");
-                return DD_OK;
-            }
+                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                {
+                    TRACE("     resolution limit reached, stopping\n");
+                    return DD_OK;
+                }
 
-            if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
-            {
-                TRACE("     DDENUMRET_CANCEL returned, stopping\n");
-                return DD_OK;
+                if (lpEnumModesCallback((LPDDSURFACEDESC)&s, lpContext) == DDENUMRET_CANCEL)
+                {
+                    TRACE("     DDENUMRET_CANCEL returned, stopping\n");
+                    return DD_OK;
+                }
             }
         }
     }
