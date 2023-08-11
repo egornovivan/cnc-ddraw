@@ -685,8 +685,6 @@ static void cfg_create_ini()
             "; Corsairs Gold\n"
             "[corsairs]\n"
             "adjmouse=true\n"
-            "renderer=gdi\n"
-            "hook=2\n"
             "\n"
             "; Divine Divinity\n"
             "[div]\n"
