@@ -3257,10 +3257,249 @@ object ConfigForm: TConfigForm
       OnClick = BoxingChkClick
     end
   end
+  object HotkeyPnl: TPanel
+    Left = 234
+    Top = 8
+    Width = 499
+    Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 4
+    Visible = False
+    StyleElements = [seFont, seBorder]
+    object ToggleWindowedLbl: TLabel
+      Left = 40
+      Top = 27
+      Width = 165
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Toggle windowed mode'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object ToggleWindowedKeyLbl: TLabel
+      Left = 41
+      Top = 60
+      Width = 34
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Alt +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object MaximizeWindowLbl: TLabel
+      Left = 39
+      Top = 107
+      Width = 125
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Maximize window'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object MaximizeWindowKeyLbl: TLabel
+      Left = 40
+      Top = 139
+      Width = 34
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Alt +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object UnlockCursor1Lbl: TLabel
+      Left = 40
+      Top = 186
+      Width = 109
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Unlock cursor 1'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object UnlockCursor1KeyLbl: TLabel
+      Left = 41
+      Top = 218
+      Width = 40
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Ctrl +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object UnlockCursor2Lbl: TLabel
+      Left = 41
+      Top = 265
+      Width = 109
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Unlock cursor 2'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object UnlockCursor2KeyLbl: TLabel
+      Left = 41
+      Top = 297
+      Width = 48
+      Height = 21
+      Margins.Top = 8
+      Caption = 'R Alt +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object ScreenshotLbl: TLabel
+      Left = 41
+      Top = 344
+      Width = 77
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Screenshot'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      StyleElements = [seClient, seBorder]
+    end
+    object ToggleWindowedEdt: TEdit
+      Left = 137
+      Top = 57
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
+    end
+    object MaximizeWindowEdt: TEdit
+      Left = 137
+      Top = 136
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
+    end
+    object UnlockCursor1Edt: TEdit
+      Left = 137
+      Top = 215
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
+    end
+    object UnlockCursor2Edt: TEdit
+      Left = 137
+      Top = 294
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 3
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
+    end
+    object ScreenshotEdt: TEdit
+      Left = 137
+      Top = 373
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 4
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
+    end
+  end
   object MenuPnl: TPanel
     Left = 0
     Top = 8
-    Width = 227
+    Width = 233
     Height = 465
     Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
@@ -3269,12 +3508,12 @@ object ConfigForm: TConfigForm
     TabOrder = 0
     ExplicitHeight = 464
     DesignSize = (
-      227
+      233
       465)
     object DisplayBtn: TSpeedButton
-      Left = 5
+      Left = 0
       Top = 8
-      Width = 216
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Display Settings'
@@ -3286,12 +3525,11 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = DisplayBtnClick
-      ExplicitWidth = 190
     end
     object AdvancedBtn: TSpeedButton
-      Left = 5
+      Left = 0
       Top = 55
-      Width = 216
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Advanced Settings'
@@ -3303,12 +3541,11 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = AdvancedBtnClick
-      ExplicitWidth = 190
     end
     object CompatibilityBtn: TSpeedButton
-      Left = 5
-      Top = 102
-      Width = 216
+      Left = 0
+      Top = 149
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Compatibility Settings'
@@ -3320,7 +3557,22 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = CompatibilityBtnClick
-      ExplicitWidth = 190
+    end
+    object HotkeyBtn: TSpeedButton
+      Left = 0
+      Top = 102
+      Width = 227
+      Height = 41
+      Anchors = [akLeft, akTop, akRight]
+      Caption = 'Hotkey Settings'
+      Flat = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      OnClick = HotkeyBtnClick
     end
   end
 end

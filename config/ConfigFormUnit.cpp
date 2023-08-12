@@ -70,6 +70,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL着色器";
 		MaxfpsLbl->Caption = L"限制帧率";
 		BoxingLbl->Caption = L"打开窗盒显示/整数缩放";
+		ToggleWindowedLbl->Caption = L"切换窗口模式";
+		MaximizeWindowLbl->Caption = L"最大化窗口";
+		UnlockCursor1Lbl->Caption = L"解锁光标 1";
+		UnlockCursor2Lbl->Caption = L"解锁光标 2";
+		ScreenshotLbl->Caption = L"截屏";
 		MaxgameticksLbl->Caption = L"限制游戏速率";
 		NoactivateappLbl->Caption = L"修复损坏的Alt+Tab功能";
 		ResolutionsLbl->Caption = L"解锁其他屏幕分辨率";
@@ -122,6 +127,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Sombreador OpenGL";
 		MaxfpsLbl->Caption = L"Limitar velocidad de fotogramas";
 		BoxingLbl->Caption = L"Activar encajado de ventanas / escalado de enteros";
+		ToggleWindowedLbl->Caption = L"Alternar modo de ventana";
+		MaximizeWindowLbl->Caption = L"Maximizar ventana";
+		UnlockCursor1Lbl->Caption = L"Desbloquear cursor 1";
+		UnlockCursor2Lbl->Caption = L"Desbloquear cursor 2";
+		ScreenshotLbl->Caption = L"Captura de pantalla";
 		MaxgameticksLbl->Caption = L"Limitar velocidad de juego";
 		NoactivateappLbl->Caption = L"Corregir Alt+Tab roto";
 		ResolutionsLbl->Caption = L"Desbloquear resoluciones de pantalla adicionales";
@@ -174,6 +184,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL shader";
 		MaxfpsLbl->Caption = L"Limitiere Aktualisierungsrate";
 		BoxingLbl->Caption = L"Fensterboxing / Integer Skalierung aktivieren"; //Not 100% sure if "windowboxing" can be translated better.
+		ToggleWindowedLbl->Caption = L"Fenstermodus umschalten";
+		MaximizeWindowLbl->Caption = L"Fenster maximieren";
+		UnlockCursor1Lbl->Caption = L"Cursor entsperren 1";
+		UnlockCursor2Lbl->Caption = L"Cursor entsperren 2";
+		ScreenshotLbl->Caption = L"Bildschirmfoto";
 		MaxgameticksLbl->Caption = L"Spielgeschwindigkeit limitieren";
 		NoactivateappLbl->Caption = L"Fehlerhaftes Alt+Tab reparieren"; //The first word can be ignored if its to long (eng word "Fix"
 		ResolutionsLbl->Caption = L"Zusätzliche Bildschirmauflösungen freischalten";
@@ -227,6 +242,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Шейдер OpenGL";
 		MaxfpsLbl->Caption = L"Ограничить частоту кадров";
 		BoxingLbl->Caption = L"Включить windowboxing / целочисленное масштабирование";
+		ToggleWindowedLbl->Caption = L"Переключить оконный режим";
+		MaximizeWindowLbl->Caption = L"Развернуть окно";
+		UnlockCursor1Lbl->Caption = L"Разблокировать курсор 1";
+		UnlockCursor2Lbl->Caption = L"Разблокировать курсор 2";
+		ScreenshotLbl->Caption = L"Скриншот";
 		MaxgameticksLbl->Caption = L"Ограничить скорость игры";
 		NoactivateappLbl->Caption = L"Исправить сломанный Alt+Tab";
 		ResolutionsLbl->Caption = L"Разблокировать дополнительные разрешения экрана";
@@ -279,6 +299,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL árnyaló";
 		MaxfpsLbl->Caption = L"Képkockaszám korlátozás";
 		BoxingLbl->Caption = L"Ablakos mód / felskálázás bekapcsolása";
+		ToggleWindowedLbl->Caption = L"Az ablakos mód váltása";
+		MaximizeWindowLbl->Caption = L"Az ablak maximalizálása";
+		UnlockCursor1Lbl->Caption = L"A kurzor feloldása 1";
+		UnlockCursor2Lbl->Caption = L"A kurzor feloldása 2";
+		ScreenshotLbl->Caption = L"Képernyőkép";
 		MaxgameticksLbl->Caption = L"Játéksebesség korlátozás";
 		NoactivateappLbl->Caption = L"Alt+Tab hiba kiküszöbölése";
 		ResolutionsLbl->Caption = L"További képernyőfelbontások feloldása";
@@ -331,6 +356,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Shader OpenGL";
 		MaxfpsLbl->Caption = L"Limiter les images par seconde (FPS)";
 		BoxingLbl->Caption = L"Activer windowboxing / mise à l'échelle par nombres entiers";
+		ToggleWindowedLbl->Caption = L"Basculer en mode fenêtré";
+		MaximizeWindowLbl->Caption = L"Agrandir la fenêtre";
+		UnlockCursor1Lbl->Caption = L"Déverrouiller le curseur 1";
+		UnlockCursor2Lbl->Caption = L"Déverrouiller le curseur 2";
+		ScreenshotLbl->Caption = L"Capture d'écran";
 		MaxgameticksLbl->Caption = L"Limiter la vitesse du jeu";
 		NoactivateappLbl->Caption = L"Corriger Alt+Tab défaillant";
 		ResolutionsLbl->Caption = L"Déverrouiller des résolutions d'écran supplémentaires";
@@ -383,6 +413,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Shader OpenGL";
 		MaxfpsLbl->Caption = L"Limita la frequenza dei fotogrammi (FPS)";
 		BoxingLbl->Caption = L"Abilita il ridimensionamento dei numeri interi";
+		ToggleWindowedLbl->Caption = L"Attiva/disattiva la modalità finestra";
+		MaximizeWindowLbl->Caption = L"Ingrandisci finestra";
+		UnlockCursor1Lbl->Caption = L"Sblocca cursore 1";
+		UnlockCursor2Lbl->Caption = L"Sblocca cursore 2";
+		ScreenshotLbl->Caption = L"Immagine dello schermo";
 		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
 		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
 		ResolutionsLbl->Caption = L"Sblocca ulteriori risoluzioni dello schermo";
@@ -480,6 +515,11 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL shader";
 		MaxfpsLbl->Caption = L"Limit frame rate";
 		BoxingLbl->Caption = L"Enable windowboxing / integer scaling";
+		ToggleWindowedLbl->Caption = L"Toggle windowed mode";
+		MaximizeWindowLbl->Caption = L"Maximize window";
+		UnlockCursor1Lbl->Caption = L"Unlock cursor 1";
+		UnlockCursor2Lbl->Caption = L"Unlock cursor 2";
+		ScreenshotLbl->Caption = L"Screenshot";
 		MaxgameticksLbl->Caption = L"Limit game speed";
 		NoactivateappLbl->Caption = L"Fix broken Alt+Tab";
 		ResolutionsLbl->Caption = L"Unlock additional screen resolutions";
@@ -513,18 +553,34 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"15 ticks per second", NULL);
 		*/
 	}
+
+	ToggleWindowedKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
+	MaximizeWindowKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
+	UnlockCursor1KeyLbl->Caption = GetKeyText(VK_CONTROL) + L" +";
+	UnlockCursor2KeyLbl->Caption = GetKeyText(VK_RMENU) + L" +";
 }
 
 void __fastcall TConfigForm::DisplayBtnClick(TObject *Sender)
 {
 	DisplayPnl->Visible = true;
 	AdvancedPnl->Visible = false;
+	HotkeyPnl->Visible = false;
 	CompatibilityPnl->Visible = false;
 }
 
 void __fastcall TConfigForm::AdvancedBtnClick(TObject *Sender)
 {
 	AdvancedPnl->Visible = true;
+	DisplayPnl->Visible = false;
+	HotkeyPnl->Visible = false;
+	CompatibilityPnl->Visible = false;
+}
+
+
+void __fastcall TConfigForm::HotkeyBtnClick(TObject *Sender)
+{
+	HotkeyPnl->Visible = true;
+	AdvancedPnl->Visible = false;
 	DisplayPnl->Visible = false;
 	CompatibilityPnl->Visible = false;
 }
@@ -534,6 +590,7 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 	CompatibilityPnl->Visible = true;
 	AdvancedPnl->Visible = false;
 	DisplayPnl->Visible = false;
+	HotkeyPnl->Visible = false;
 }
 
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
@@ -640,6 +697,23 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	Savesettings = ini->ReadInteger("ddraw", "savesettings", 1);
 	SavesettingsChk->State = Savesettings != 0 ? tssOn : tssOff;
+
+	/* Hotkey Settings */
+
+	ToggleWindowedEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keytogglefullscreen", 0x0D)));
+
+	MaximizeWindowEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keytogglemaximize", 0x22)));
+
+	UnlockCursor1Edt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyunlockcursor1", 0x09)));
+
+	UnlockCursor2Edt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyunlockcursor2", 0xA3)));
+
+	ScreenshotEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyscreenshot", 0x2C)));
 
 	/* Compatibility Settings */
 
@@ -817,6 +891,33 @@ void TConfigForm::SaveSettings()
 		ini->WriteInteger("ddraw", "posY", -32000);
 	}
 
+	/* Hotkey Settings */
+
+	ini->WriteString(
+		"ddraw",
+		"keytogglefullscreen",
+		"0x" + IntToHex(Byte(GetKeyCode(ToggleWindowedEdt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keytogglemaximize",
+		"0x" + IntToHex(Byte(GetKeyCode(MaximizeWindowEdt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyunlockcursor1",
+		"0x" + IntToHex(Byte(GetKeyCode(UnlockCursor1Edt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyunlockcursor2",
+		"0x" + IntToHex(Byte(GetKeyCode(UnlockCursor2Edt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyscreenshot",
+		"0x" + IntToHex(Byte(GetKeyCode(ScreenshotEdt->Text))));
+
 	/* Compatibility Settings */
 
 	switch(MaxgameticksCbx->ItemIndex) {
@@ -933,6 +1034,80 @@ void __fastcall TConfigForm::FormActivate(TObject *Sender)
 	reg->Free();
 }
 
+void __fastcall TConfigForm::HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	TEdit *edit = static_cast<TEdit*>(Sender);
+
+	if (Key == VK_DELETE || Key == VK_BACK) {
+		edit->Text = L"";
+	}
+	else if (GetAsyncKeyState(VK_RMENU) & 0x8000) {
+		edit->Text = GetKeyText(VK_RMENU);
+	}
+	else if (GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
+		edit->Text = GetKeyText(VK_RCONTROL);
+	}
+	else if (GetAsyncKeyState(VK_RSHIFT) & 0x8000) {
+		edit->Text = GetKeyText(VK_RSHIFT);
+	}
+	else {
+		edit->Text = GetKeyText(Key);
+	}
+}
+
+void __fastcall TConfigForm::HotkeyEdtKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	TEdit *edit = static_cast<TEdit*>(Sender);
+
+	if (Key == VK_SNAPSHOT || Key == VK_TAB) {
+		edit->Text = GetKeyText(Key);
+	}
+
+	SaveSettings();
+}
+
+WORD TConfigForm::GetKeyCode(System::UnicodeString key)
+{
+	if (key == L"Print Screen") {
+		return VK_SNAPSHOT;
+	}
+
+	if (key == L"R " + ShortCutToText(VK_MENU)) {
+		return VK_RMENU;
+	}
+
+	if (key == L"R " + ShortCutToText(VK_CONTROL)) {
+		return VK_RCONTROL;
+	}
+
+	if (key == L"R " + ShortCutToText(VK_SHIFT)) {
+		return VK_RSHIFT;
+	}
+
+	return TextToShortCut(key);
+}
+
+System::UnicodeString TConfigForm::GetKeyText(WORD key)
+{
+	if (key == VK_SNAPSHOT) {
+		return L"Print Screen";
+	}
+
+	if (key == VK_RMENU) {
+		return L"R " + ShortCutToText(VK_MENU);
+	}
+
+	if (key == VK_RCONTROL) {
+		return L"R " + ShortCutToText(VK_CONTROL);
+	}
+
+	if (key == VK_RSHIFT) {
+		return L"R " + ShortCutToText(VK_SHIFT);
+	}
+
+	return ShortCutToText(key);
+}
+
 bool TConfigForm::GetBool(TIniFile *ini, System::UnicodeString key, bool defValue)
 {
 	auto s = LowerCase(ini->ReadString("ddraw", key, defValue ? "true" : "false"));
@@ -1033,6 +1208,4 @@ void __fastcall TConfigForm::PboxPaint(TObject *Sender)
 	TPaintBox *pbox = static_cast<TPaintBox*>(Sender);
 	//pbox->Canvas->Rectangle(pbox->ClientRect);
 }
-
-//---------------------------------------------------------------------------
 

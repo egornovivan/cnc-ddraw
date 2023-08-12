@@ -62,6 +62,22 @@ __published:	// Von der IDE verwaltete Komponenten
 	TPaintBox *ShaderPbox;
 	TPaintBox *MaxgameticksPbox;
 	TImage *LanguageImg;
+	TPanel *HotkeyPnl;
+	TLabel *ToggleWindowedLbl;
+	TSpeedButton *HotkeyBtn;
+	TEdit *ToggleWindowedEdt;
+	TLabel *ToggleWindowedKeyLbl;
+	TLabel *MaximizeWindowLbl;
+	TEdit *MaximizeWindowEdt;
+	TLabel *MaximizeWindowKeyLbl;
+	TLabel *UnlockCursor1Lbl;
+	TEdit *UnlockCursor1Edt;
+	TLabel *UnlockCursor1KeyLbl;
+	TLabel *UnlockCursor2Lbl;
+	TEdit *UnlockCursor2Edt;
+	TLabel *UnlockCursor2KeyLbl;
+	TLabel *ScreenshotLbl;
+	TEdit *ScreenshotEdt;
 	void __fastcall DisplayBtnClick(TObject *Sender);
 	void __fastcall AdvancedBtnClick(TObject *Sender);
 	void __fastcall CompatibilityBtnClick(TObject *Sender);
@@ -86,10 +102,18 @@ __published:	// Von der IDE verwaltete Komponenten
 	void __fastcall PboxPaint(TObject *Sender);
 	void __fastcall LanguageImgClick(TObject *Sender);
 	void __fastcall FormActivate(TObject *Sender);
+	void __fastcall HotkeyBtnClick(TObject *Sender);
+	void __fastcall HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall HotkeyEdtKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
+
+
+
 private:	// Benutzer-Deklarationen
 	void SaveSettings();
 	bool GetBool(TIniFile *ini, System::UnicodeString key, bool defValue);
 	void ApplyTranslation(TIniFile *ini);
+	System::UnicodeString GetKeyText(WORD key);
+	WORD GetKeyCode(System::UnicodeString key);
 public:		// Benutzer-Deklarationen
 	__fastcall TConfigForm(TComponent* Owner);
 };
