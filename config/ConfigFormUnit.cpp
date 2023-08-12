@@ -1068,7 +1068,7 @@ void __fastcall TConfigForm::HotkeyEdtKeyUp(TObject *Sender, WORD &Key, TShiftSt
 
 WORD TConfigForm::GetKeyCode(System::UnicodeString key)
 {
-	if (key == L"Print Screen") {
+	if (key == L"PrtScn") {
 		return VK_SNAPSHOT;
 	}
 
@@ -1086,7 +1086,7 @@ WORD TConfigForm::GetKeyCode(System::UnicodeString key)
 System::UnicodeString TConfigForm::GetKeyText(WORD key)
 {
 	if (key == VK_SNAPSHOT) {
-		return L"Print Screen";
+		return L"PrtScn";
 	}
 
 	if (key == VK_RMENU) {
