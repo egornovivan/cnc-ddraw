@@ -58,6 +58,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw 配置";
 		DisplayBtn->Caption = L"显示设置";
 		AdvancedBtn->Caption = L"高级设置";
+		HotkeyBtn->Caption = L"热键设置";
 		CompatibilityBtn->Caption = L"兼容性设置";
 		PresentationLbl->Caption = L"显示方式";
 		MaintasLbl->Caption = L"保持纵横比";
@@ -115,6 +116,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Ajustes de cnc-ddraw";
 		DisplayBtn->Caption = L"Ajustes de pantalla";
 		AdvancedBtn->Caption = L"Ajustes avanzados";
+		HotkeyBtn->Caption = L"Teclas de acceso rápido";
 		CompatibilityBtn->Caption = L"Ajustes de compatibilidad";
 		PresentationLbl->Caption = L"Presentación";
 		MaintasLbl->Caption = L"Mantener la relación de aspecto";
@@ -172,16 +174,17 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw Konfiguration";
 		DisplayBtn->Caption = L"Anzeigeeinstellungen";
 		AdvancedBtn->Caption = L"Erweiterte Einstellungen";
+		HotkeyBtn->Caption = L"Tastenkürzel-Einstellungen";
 		CompatibilityBtn->Caption = L"Kompatibilitätseinstellungen";
-		PresentationLbl->Caption = L"Presentation";
-		MaintasLbl->Caption = L"Erhalte Seitenverhältnis";
+		PresentationLbl->Caption = L"Darstellung";
+		MaintasLbl->Caption = L"Seitenverhältnis beibehalten";
 		VsyncLbl->Caption = L"VSync aktiveren";
 		AdjmouseLbl->Caption = L"Mausempfindlichkeit anpassen";
 		DevmodeLbl->Caption = L"Sperre Cursor zu Fenster / Bildschirm"; //Not 100% sure, if not a better translation exists
 		RendererLbl->Caption = L"Renderer";
 		BorderLbl->Caption = L"Zeige Fensterränder in Fenstermodus";
 		SavesettingsLbl->Caption = L"Fensterposition und Größe merken";
-		ShaderLbl->Caption = L"OpenGL shader";
+		ShaderLbl->Caption = L"OpenGL Shader";
 		MaxfpsLbl->Caption = L"Limitiere Aktualisierungsrate";
 		BoxingLbl->Caption = L"Fensterboxing / Integer Skalierung aktivieren"; //Not 100% sure if "windowboxing" can be translated better.
 		ToggleWindowedLbl->Caption = L"Fenstermodus umschalten";
@@ -206,7 +209,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		PresentationCbx->AddItem(L"Vollbild", NULL);
 		PresentationCbx->AddItem(L"Hochskaliertes Vollbild", NULL);
 		PresentationCbx->AddItem(L"Ränderfreies Fenster", NULL);
-		PresentationCbx->AddItem(L"Fenster", NULL);
+		PresentationCbx->AddItem(L"Fenstermodus", NULL);
 
 		MaxgameticksCbx->Items->Clear();
 		MaxgameticksCbx->AddItem(L"Unlimitiert", NULL);
@@ -230,6 +233,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Настройки cnc-ddraw";
 		DisplayBtn->Caption = L"Настройки отображения";
 		AdvancedBtn->Caption = L"Расширенные настройки";
+		HotkeyBtn->Caption = L"Настройки горячих клавиш";
 		CompatibilityBtn->Caption = L"Настройки совместимости";
 		PresentationLbl->Caption = L"Отображение";
 		MaintasLbl->Caption = L"Сохранять соотношение сторон";
@@ -287,6 +291,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw Beállító";
 		DisplayBtn->Caption = L"Képbeállítások";
 		AdvancedBtn->Caption = L"Haladó Beállítások";
+		HotkeyBtn->Caption = L"Gyorsbillentyűk beállításai";
 		CompatibilityBtn->Caption = L"Kompatibilitás Beállítások";
 		PresentationLbl->Caption = L"Bemutató";
 		MaintasLbl->Caption = L"Képarány megtartása";
@@ -344,6 +349,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Configuration cnc-ddraw";
 		DisplayBtn->Caption = L"Paramètres d'Affichage";
 		AdvancedBtn->Caption = L"Paramètres Avancés";
+		HotkeyBtn->Caption = L"Paramètres de raccourci";
 		CompatibilityBtn->Caption = L"Paramètres de Compatibilité";
 		PresentationLbl->Caption = L"Présentation";
 		MaintasLbl->Caption = L"Conserver les proportions de l'image";
@@ -401,6 +407,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Configurazione di cnc-ddraw";
 		DisplayBtn->Caption = L"Impostazioni dello schermo";
 		AdvancedBtn->Caption = L"Impostazioni avanzate";
+		HotkeyBtn->Caption = L"Tasti di scelta rapida";
 		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
 		PresentationLbl->Caption = L"Presentazione";
 		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
@@ -503,6 +510,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw config";
 		DisplayBtn->Caption = L"Display Settings";
 		AdvancedBtn->Caption = L"Advanced Settings";
+		HotkeyBtn->Caption = L"Hotkey Settings";
 		CompatibilityBtn->Caption = L"Compatibility Settings";
 		PresentationLbl->Caption = L"Presentation";
 		MaintasLbl->Caption = L"Maintain aspect ratio";
