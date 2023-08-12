@@ -1080,10 +1080,6 @@ WORD TConfigForm::GetKeyCode(System::UnicodeString key)
 		return VK_RCONTROL;
 	}
 
-	if (key == L"R " + ShortCutToText(VK_SHIFT)) {
-		return VK_RSHIFT;
-	}
-
 	return TextToShortCut(key);
 }
 
@@ -1102,7 +1098,7 @@ System::UnicodeString TConfigForm::GetKeyText(WORD key)
 	}
 
 	if (key == VK_RSHIFT) {
-		return L"R " + ShortCutToText(VK_SHIFT);
+		return ShortCutToText(VK_SHIFT);
 	}
 
 	return ShortCutToText(key);

@@ -3270,6 +3270,8 @@ object ConfigForm: TConfigForm
     TabOrder = 4
     Visible = False
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     object ToggleWindowedLbl: TLabel
       Left = 40
       Top = 27
