@@ -834,9 +834,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	SinglecpuChk->State = GetBool(ini, "singlecpu", true) ? tssOff : tssOn;
 	NonexclusiveChk->State = GetBool(ini, "nonexclusive", false) ? tssOn : tssOff;
 
-	if (GetBool(ini, "hide_compat_tab", false)) {
-		CompatibilityBtn->Visible = false;
-	}
+	CompatibilityBtn->Visible = !GetBool(ini, "hide_compat_tab", false);
 
 	RestoreDefaultsBtn->Visible =
 		FileExists(".\\ddraw.dll") &&
