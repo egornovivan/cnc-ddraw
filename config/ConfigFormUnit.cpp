@@ -1174,7 +1174,7 @@ void __fastcall TConfigForm::RendererCbxChange(TObject *Sender)
 		ShaderCbx->Visible = false;
 	}
 	else {
-        ShaderLbl->Caption =
+		ShaderLbl->Caption =
 			ReplaceStr(ShaderLbl->Caption, "Direct3D", "OpenGL");
 
 		ShaderCbx->Visible = true;
