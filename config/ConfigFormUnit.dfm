@@ -2713,7 +2713,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaintasLbl: TLabel
       Left = 40
@@ -2728,7 +2727,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object VsyncLbl: TLabel
       Left = 40
@@ -2743,7 +2741,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object AdjmouseLbl: TLabel
       Left = 40
@@ -2758,7 +2755,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object DevmodeLbl: TLabel
       Left = 40
@@ -2773,7 +2769,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object PresentationPbox: TPaintBox
       Left = 40
@@ -2899,7 +2894,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object NoactivateappLbl: TLabel
       Left = 40
@@ -2914,7 +2908,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ResolutionsLbl: TLabel
       Left = 40
@@ -2929,7 +2922,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MinfpsLbl: TLabel
       Left = 40
@@ -2944,7 +2936,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object SinglecpuLbl: TLabel
       Left = 40
@@ -2959,7 +2950,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object NonexclusiveLbl: TLabel
       Left = 40
@@ -2974,7 +2964,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaxgameticksPbox: TPaintBox
       Left = 40
@@ -3087,7 +3076,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object SavesettingsLbl: TLabel
       Left = 40
@@ -3102,7 +3090,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ShaderLbl: TLabel
       Left = 40
@@ -3117,7 +3104,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaxfpsLbl: TLabel
       Left = 40
@@ -3132,7 +3118,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object BorderLbl: TLabel
       Left = 40
@@ -3147,7 +3132,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object BoxingLbl: TLabel
       Left = 40
@@ -3162,7 +3146,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object RendererPbox: TPaintBox
       Left = 40
@@ -3309,7 +3292,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ToggleWindowedKeyLbl: TLabel
       Left = 41
@@ -3324,7 +3306,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaximizeWindowLbl: TLabel
       Left = 39
@@ -3339,7 +3320,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaximizeWindowKeyLbl: TLabel
       Left = 40
@@ -3354,7 +3334,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object UnlockCursor1Lbl: TLabel
       Left = 40
@@ -3369,7 +3348,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object UnlockCursor1KeyLbl: TLabel
       Left = 41
@@ -3384,7 +3362,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object UnlockCursor2Lbl: TLabel
       Left = 41
@@ -3399,7 +3376,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object UnlockCursor2KeyLbl: TLabel
       Left = 41
@@ -3414,7 +3390,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ScreenshotLbl: TLabel
       Left = 41
@@ -3429,7 +3404,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ToggleWindowedEdt: TEdit
       Left = 137
