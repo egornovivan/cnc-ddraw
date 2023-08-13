@@ -299,11 +299,11 @@
                 <DeployFile LocalName="Resources\CN.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\DE.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\ES.png" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="Resources\IT.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\RU.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\US.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\fr.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Resources\hu.png" Configuration="Release" Class="ProjectFile"/>
-                <DeployFile LocalName="Resources\IT.png" Configuration="Release" Class="ProjectFile"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

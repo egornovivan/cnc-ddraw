@@ -6,7 +6,7 @@ object ConfigForm: TConfigForm
   Caption = 'cnc-ddraw config'
   ClientHeight = 476
   ClientWidth = 741
-  Color = clHotLight
+  Color = clMenu
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -3270,6 +3270,8 @@ object ConfigForm: TConfigForm
     TabOrder = 4
     Visible = False
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     object ToggleWindowedLbl: TLabel
       Left = 40
       Top = 27
@@ -3503,7 +3505,7 @@ object ConfigForm: TConfigForm
     Height = 465
     Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
-    Color = clHotLight
+    Color = clMenu
     ParentBackground = False
     TabOrder = 0
     ExplicitHeight = 464
@@ -3519,7 +3521,7 @@ object ConfigForm: TConfigForm
       Caption = 'Display Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
+      Font.Color = clBlack
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -3535,7 +3537,7 @@ object ConfigForm: TConfigForm
       Caption = 'Advanced Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
+      Font.Color = clBlack
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -3551,7 +3553,7 @@ object ConfigForm: TConfigForm
       Caption = 'Compatibility Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
+      Font.Color = clBlack
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -3567,7 +3569,7 @@ object ConfigForm: TConfigForm
       Caption = 'Hotkey Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
+      Font.Color = clBlack
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
