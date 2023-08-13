@@ -662,6 +662,12 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	if (renderer == "direct3d9on12") {
 		RendererCbx->AddItem(L"Direct3D 12 (9On12)", NULL);
 		RendererCbx->ItemIndex = 4;
+
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
 	}
 	else if (renderer == "openglcore") {
 		RendererCbx->AddItem(L"OpenGL Core", NULL);
@@ -669,6 +675,12 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 	else if (StartsStr("d", renderer)) {
 		RendererCbx->ItemIndex = 1;
+
+        ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
 	}
 	else if (StartsStr("o", renderer)) {
 		RendererCbx->ItemIndex = 2;
@@ -695,6 +707,20 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 	catch (...)
 	{
+	}
+
+	int d3d9_filter = ini->ReadInteger("ddraw", "d3d9_filter", 2);
+
+	switch (d3d9_filter) {
+	case 0:
+		ShaderD3DCbx->ItemIndex = 0;
+		break;
+	case 1:
+		ShaderD3DCbx->ItemIndex = 1;
+		break;
+	default:
+		ShaderD3DCbx->ItemIndex = 2;
+		break;
 	}
 
 	Maxfps = ini->ReadInteger("ddraw", "maxfps", -1);
@@ -867,6 +893,8 @@ void TConfigForm::SaveSettings()
 	}
 
 	ini->WriteString("ddraw", "shader", ShaderCbx->Text);
+
+	ini->WriteInteger("ddraw", "d3d9_filter", ShaderD3DCbx->ItemIndex);
 
 	int maxfps = Maxfps == 0 ? -1 : Maxfps;
 
@@ -1139,6 +1167,22 @@ void __fastcall TConfigForm::DevmodeChkClick(TObject *Sender)
 
 void __fastcall TConfigForm::RendererCbxChange(TObject *Sender)
 {
+	if (ContainsStr(RendererCbx->Text, "Direct3D")) {
+
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
+	}
+	else {
+        ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "Direct3D", "OpenGL");
+
+		ShaderCbx->Visible = true;
+		ShaderD3DCbx->Visible = false;
+	}
+
 	SaveSettings();
 }
 
@@ -1148,6 +1192,11 @@ void __fastcall TConfigForm::ShaderCbxChange(TObject *Sender)
 		RendererCbx->ItemIndex = 2;
 	}
 
+	SaveSettings();
+}
+
+void __fastcall TConfigForm::ShaderD3DCbxChange(TObject *Sender)
+{
 	SaveSettings();
 }
 

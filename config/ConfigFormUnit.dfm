@@ -3178,6 +3178,30 @@ object ConfigForm: TConfigForm
       Height = 31
       OnPaint = PboxPaint
     end
+    object ShaderD3DCbx: TComboBox
+      Left = 41
+      Top = 132
+      Width = 425
+      Height = 29
+      BevelEdges = []
+      BevelInner = bvNone
+      BevelOuter = bvSpace
+      Style = csDropDownList
+      DropDownCount = 10
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+      Visible = False
+      OnChange = ShaderD3DCbxChange
+      Items.Strings = (
+        'Nearest neighbor'
+        'Bilinear'
+        'Bicubic Catmull-Rom')
+    end
     object RendererCbx: TComboBox
       Left = 41
       Top = 55
