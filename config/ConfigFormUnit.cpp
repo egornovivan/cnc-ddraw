@@ -584,7 +584,6 @@ void __fastcall TConfigForm::AdvancedBtnClick(TObject *Sender)
 	CompatibilityPnl->Visible = false;
 }
 
-
 void __fastcall TConfigForm::HotkeyBtnClick(TObject *Sender)
 {
 	HotkeyPnl->Visible = true;
@@ -676,7 +675,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	else if (StartsStr("d", renderer)) {
 		RendererCbx->ItemIndex = 1;
 
-        ShaderLbl->Caption =
+		ShaderLbl->Caption =
 			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
 
 		ShaderD3DCbx->Visible = true;
@@ -1028,7 +1027,6 @@ void TConfigForm::SaveSettings()
 
 	delete ini;
 }
-
 
 void __fastcall TConfigForm::FormActivate(TObject *Sender)
 {
