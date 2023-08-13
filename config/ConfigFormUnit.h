@@ -79,6 +79,7 @@ __published:	// Von der IDE verwaltete Komponenten
 	TLabel *ScreenshotLbl;
 	TEdit *ScreenshotEdt;
 	TComboBox *ShaderD3DCbx;
+	TSpeedButton *RestoreDefaultsBtn;
 	void __fastcall DisplayBtnClick(TObject *Sender);
 	void __fastcall AdvancedBtnClick(TObject *Sender);
 	void __fastcall CompatibilityBtnClick(TObject *Sender);
@@ -107,6 +108,7 @@ __published:	// Von der IDE verwaltete Komponenten
 	void __fastcall HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall HotkeyEdtKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ShaderD3DCbxChange(TObject *Sender);
+	void __fastcall RestoreDefaultsBtnClick(TObject *Sender);
 
 
 

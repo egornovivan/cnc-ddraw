@@ -45,6 +45,29 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 	Application->Terminate();
 }
 
+void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
+{
+	if (Application->MessageBox(
+			(RestoreDefaultsBtn->Caption + "?").w_str(),
+			L"cnc-ddraw",
+			MB_YESNO) == IDNO) {
+
+		return;
+	}
+
+	DeleteFile(".\\ddraw.ini");
+
+	ShellExecute(
+		NULL,
+		L"open",
+		Application->ExeName.w_str(),
+		NULL,
+		NULL,
+		SW_SHOWNORMAL);
+
+	Application->Terminate();
+}
+
 void TConfigForm::ApplyTranslation(TIniFile *ini)
 {
 	auto lang = LowerCase(ini->ReadString("ddraw", "configlang", "auto"));
@@ -60,6 +83,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"高级设置";
 		HotkeyBtn->Caption = L"热键设置";
 		CompatibilityBtn->Caption = L"兼容性设置";
+		RestoreDefaultsBtn->Caption = L"恢复默认设置";
 		PresentationLbl->Caption = L"显示方式";
 		MaintasLbl->Caption = L"保持纵横比";
 		VsyncLbl->Caption = L"打开垂直同步";
@@ -118,6 +142,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Ajustes avanzados";
 		HotkeyBtn->Caption = L"Teclas de acceso rápido";
 		CompatibilityBtn->Caption = L"Ajustes de compatibilidad";
+		RestoreDefaultsBtn->Caption = L"Restaurar la configuración predeterminada";
 		PresentationLbl->Caption = L"Presentación";
 		MaintasLbl->Caption = L"Mantener la relación de aspecto";
 		VsyncLbl->Caption = L"Activar VSync";
@@ -176,6 +201,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Erweiterte Einstellungen";
 		HotkeyBtn->Caption = L"Tastenkürzel-Einstellungen";
 		CompatibilityBtn->Caption = L"Kompatibilitätseinstellungen";
+		RestoreDefaultsBtn->Caption = L"Standardeinstellungen wiederherstellen";
 		PresentationLbl->Caption = L"Darstellung";
 		MaintasLbl->Caption = L"Seitenverhältnis beibehalten";
 		VsyncLbl->Caption = L"VSync aktiveren";
@@ -235,6 +261,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Расширенные настройки";
 		HotkeyBtn->Caption = L"Настройки горячих клавиш";
 		CompatibilityBtn->Caption = L"Настройки совместимости";
+		RestoreDefaultsBtn->Caption = L"Восстановить настройки по умолчанию";
 		PresentationLbl->Caption = L"Отображение";
 		MaintasLbl->Caption = L"Сохранять соотношение сторон";
 		VsyncLbl->Caption = L"Включить VSync";
@@ -293,6 +320,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Haladó Beállítások";
 		HotkeyBtn->Caption = L"Gyorsbillentyűk beállításai";
 		CompatibilityBtn->Caption = L"Kompatibilitás Beállítások";
+		RestoreDefaultsBtn->Caption = L"Visszaállítja az alapértelmezett beállításokat";
 		PresentationLbl->Caption = L"Bemutató";
 		MaintasLbl->Caption = L"Képarány megtartása";
 		VsyncLbl->Caption = L"VSync bekapcsolása";
@@ -351,6 +379,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Paramètres Avancés";
 		HotkeyBtn->Caption = L"Paramètres de raccourci";
 		CompatibilityBtn->Caption = L"Paramètres de Compatibilité";
+		RestoreDefaultsBtn->Caption = L"Restaurer les paramètres par défaut";
 		PresentationLbl->Caption = L"Présentation";
 		MaintasLbl->Caption = L"Conserver les proportions de l'image";
 		VsyncLbl->Caption = L"Activer la synchro verticale (VSync)";
@@ -409,6 +438,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Impostazioni avanzate";
 		HotkeyBtn->Caption = L"Tasti di scelta rapida";
 		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
+		RestoreDefaultsBtn->Caption = L"Ripristina le impostazioni di default";
 		PresentationLbl->Caption = L"Presentazione";
 		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
 		VsyncLbl->Caption = L"Abilita la sincronizzazione verticale (VSync)";
@@ -512,6 +542,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Advanced Settings";
 		HotkeyBtn->Caption = L"Hotkey Settings";
 		CompatibilityBtn->Caption = L"Compatibility Settings";
+		RestoreDefaultsBtn->Caption = L"Restore Default Settings";
 		PresentationLbl->Caption = L"Presentation";
 		MaintasLbl->Caption = L"Maintain aspect ratio";
 		VsyncLbl->Caption = L"Enable VSync";
@@ -806,6 +837,9 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	if (GetBool(ini, "hide_compat_tab", false)) {
 		CompatibilityBtn->Visible = false;
 	}
+
+	RestoreDefaultsBtn->Visible =
+		FileExists(".\\ddraw.dll") && GetBool(ini, "allow_reset", true);
 
 	delete ini;
 

@@ -3600,5 +3600,21 @@ object ConfigForm: TConfigForm
       ParentFont = False
       OnClick = HotkeyBtnClick
     end
+    object RestoreDefaultsBtn: TSpeedButton
+      Left = 0
+      Top = 440
+      Width = 227
+      Height = 22
+      Anchors = [akLeft, akTop, akRight]
+      Caption = 'Restore Default Settings'
+      Flat = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      OnClick = RestoreDefaultsBtnClick
+    end
   end
 end
