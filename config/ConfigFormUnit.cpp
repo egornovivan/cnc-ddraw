@@ -618,7 +618,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 				(void (WINAPI*)(void*, void**, void*))
 					GetProcAddress(ddraw, "DirectDrawCreate");
 
-			if (dd_create) {
+			if (dd_create && GetProcAddress(ddraw, "GameHandlesClose")) {
 
 				void *buf;
 				dd_create(NULL, &buf, NULL);
