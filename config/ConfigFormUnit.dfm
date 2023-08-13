@@ -3606,7 +3606,7 @@ object ConfigForm: TConfigForm
       Width = 227
       Height = 22
       Anchors = [akLeft, akTop, akRight]
-      Caption = 'Restore Default Settings'
+      Caption = 'Restore default settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack

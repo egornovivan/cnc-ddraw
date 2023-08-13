@@ -542,7 +542,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Advanced Settings";
 		HotkeyBtn->Caption = L"Hotkey Settings";
 		CompatibilityBtn->Caption = L"Compatibility Settings";
-		RestoreDefaultsBtn->Caption = L"Restore Default Settings";
+		RestoreDefaultsBtn->Caption = L"Restore default settings";
 		PresentationLbl->Caption = L"Presentation";
 		MaintasLbl->Caption = L"Maintain aspect ratio";
 		VsyncLbl->Caption = L"Enable VSync";
