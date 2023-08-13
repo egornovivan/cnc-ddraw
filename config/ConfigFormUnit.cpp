@@ -604,7 +604,7 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
 {
 	/* Let cnc-ddraw create a new ddraw.ini if it doesn't exist */
-	if (!FileExists(".\\ddraw.ini")) {
+	if (FileExists(".\\ddraw.dll") && !FileExists(".\\ddraw.ini")) {
 
 		SetEnvironmentVariableW(L"cnc_ddraw_config_init", L"1");
 
