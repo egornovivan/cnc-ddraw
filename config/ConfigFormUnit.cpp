@@ -839,7 +839,9 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 
 	RestoreDefaultsBtn->Visible =
-		FileExists(".\\ddraw.dll") && GetBool(ini, "allow_reset", true);
+		FileExists(".\\ddraw.dll") &&
+		FileExists(".\\ddraw.ini") &&
+		GetBool(ini, "allow_reset", true);
 
 	delete ini;
 
