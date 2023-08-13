@@ -1080,6 +1080,10 @@ WORD TConfigForm::GetKeyCode(System::UnicodeString key)
 		return VK_SNAPSHOT;
 	}
 
+	if (key == L"Pause_") {
+		return VK_PAUSE;
+	}
+
 	if (key == L"R " + ShortCutToText(VK_MENU)) {
 		return VK_RMENU;
 	}
@@ -1095,6 +1099,10 @@ System::UnicodeString TConfigForm::GetKeyText(WORD key)
 {
 	if (key == VK_SNAPSHOT) {
 		return L"PrtScn";
+	}
+
+	if (key == VK_PAUSE) {
+		return L"Pause_";
 	}
 
 	if (key == VK_RMENU) {
