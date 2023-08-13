@@ -105,7 +105,6 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         }
 
         timeBeginPeriod(1);
-        g_hook_method = cfg_get_int("hook", 4);
         hook_init(TRUE);
         break;
     }

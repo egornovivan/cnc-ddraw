@@ -364,6 +364,45 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
     }
 }
 
+BOOL hook_got_ddraw_import()
+{
+    __try
+    {
+        HMODULE hmod = GetModuleHandleA(NULL);
+
+        PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)hmod;
+        if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
+            return FALSE;
+
+        PIMAGE_NT_HEADERS nt_headers = (PIMAGE_NT_HEADERS)((DWORD)dos_header + (DWORD)dos_header->e_lfanew);
+        if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
+            return FALSE;
+
+        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header +
+            (DWORD)(nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress));
+
+        if (import_desc == (PIMAGE_IMPORT_DESCRIPTOR)nt_headers)
+            return FALSE;
+
+        while (import_desc->FirstThunk)
+        {
+            char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
+
+            if (_stricmp(imp_module_name, "ddraw.dll") == 0)
+            {
+                return TRUE;
+            }
+
+            import_desc++;
+        }
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+    }
+
+    return FALSE;
+}
+
 void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 {
 #ifdef _MSC_VER
@@ -525,6 +564,17 @@ void hook_revert(HOOKLIST* hooks)
 
 void hook_init(BOOL initial_hook)
 {
+    if (initial_hook)
+    {
+        g_hook_method = cfg_get_int("hook", 4);
+
+        if (g_hook_method == 4 && hook_got_ddraw_import())
+        {
+            /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
+            g_hook_method = 3;
+        }
+    }
+
     if (!g_hook_active || g_hook_method == 3 || g_hook_method == 4)
     {
 #if defined(_DEBUG) && defined(_MSC_VER)
