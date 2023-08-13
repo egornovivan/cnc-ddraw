@@ -1055,9 +1055,6 @@ void __fastcall TConfigForm::HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShift
 	else if (GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
 		edit->Text = GetKeyText(VK_RCONTROL);
 	}
-	else if (GetAsyncKeyState(VK_RSHIFT) & 0x8000) {
-		edit->Text = GetKeyText(VK_RSHIFT);
-	}
 	else {
 		edit->Text = GetKeyText(Key);
 	}
