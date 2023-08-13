@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <IniFiles.hpp>
 #pragma hdrstop
 #include <tchar.h>
 //---------------------------------------------------------------------------
@@ -14,7 +15,15 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	{
 		Application->Initialize();
 		Application->MainFormOnTaskBar = true;
-		TStyleManager::TrySetStyle("Windows10");
+
+		auto *ini = new TIniFile(".\\ddraw.ini");
+		auto theme = ini->ReadString("ddraw", "configtheme", "Windows10");
+
+		TStyleManager::TrySetStyle(
+			theme == "Cobalt XEMedia" ? "Cobalt XEMedia" : "Windows10");
+
+		delete ini;
+
 		Application->CreateForm(__classid(TConfigForm), &ConfigForm);
 		Application->Run();
 	}

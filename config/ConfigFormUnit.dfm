@@ -2778,7 +2778,7 @@ object ConfigForm: TConfigForm
       OnPaint = PboxPaint
     end
     object LanguageImg: TImage
-      Left = 477
+      Left = 453
       Top = 8
       Width = 16
       Height = 11
@@ -2805,7 +2805,6 @@ object ConfigForm: TConfigForm
       Stretch = True
       Visible = False
       OnClick = LanguageImgClick
-      ExplicitLeft = 569
     end
     object PresentationCbx: TComboBox
       Left = 41
@@ -2865,6 +2864,20 @@ object ConfigForm: TConfigForm
       ShowStateCaption = False
       TabOrder = 4
       OnClick = DevmodeChkClick
+    end
+    object ThemePnl: TPanel
+      Left = 475
+      Top = 8
+      Width = 16
+      Height = 11
+      Anchors = [akTop, akRight]
+      BevelOuter = bvNone
+      Color = 2039583
+      ParentBackground = False
+      TabOrder = 5
+      StyleElements = [seFont, seBorder]
+      OnClick = ThemePnlClick
+      ExplicitLeft = 471
     end
   end
   object CompatibilityPnl: TPanel
@@ -3579,7 +3592,7 @@ object ConfigForm: TConfigForm
       Top = 440
       Width = 227
       Height = 22
-      Anchors = [akLeft, akTop, akRight]
+      Anchors = [akLeft, akRight, akBottom]
       Caption = 'Restore default settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET

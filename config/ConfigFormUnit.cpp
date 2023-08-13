@@ -45,6 +45,27 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 	Application->Terminate();
 }
 
+void __fastcall TConfigForm::ThemePnlClick(TObject *Sender)
+{
+	auto *ini = new TIniFile(".\\ddraw.ini");
+	auto theme =
+		ThemePnl->Color == (TColor)RGB(31, 31, 31) ? "Cobalt XEMedia" : "Windows10";
+
+	ini->WriteString("ddraw", "configtheme", theme);
+
+	delete ini;
+
+	ShellExecute(
+		NULL,
+		L"open",
+		Application->ExeName.w_str(),
+		NULL,
+		NULL,
+		SW_SHOWNORMAL);
+
+	Application->Terminate();
+}
+
 void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
 {
 	if (Application->MessageBox(
@@ -659,6 +680,18 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 
 	auto *ini = new TIniFile(".\\ddraw.ini");
+
+	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
+
+		ThemePnl->Color = (TColor)RGB(243, 243, 243);
+		DisplayPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		AdvancedPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		HotkeyPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		CompatibilityPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+
+		MenuPnl->StyleElements = TStyleElements(seFont);
+		MenuPnl->Color = (TColor)RGB(31, 31, 31);
+	}
 
 	ApplyTranslation(ini);
 
