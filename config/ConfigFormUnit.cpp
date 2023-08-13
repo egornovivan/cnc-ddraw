@@ -565,7 +565,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 	ToggleWindowedKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
 	MaximizeWindowKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
 	UnlockCursor1KeyLbl->Caption = GetKeyText(VK_CONTROL) + L" +";
-	UnlockCursor2KeyLbl->Caption = GetKeyText(VK_RMENU) + L" +";
+	UnlockCursor2KeyLbl->Caption = "R " + GetKeyText(VK_MENU) + L" +";
 }
 
 void __fastcall TConfigForm::DisplayBtnClick(TObject *Sender)
@@ -1049,9 +1049,6 @@ void __fastcall TConfigForm::HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShift
 	if (Key == VK_DELETE || Key == VK_BACK) {
 		edit->Text = L"";
 	}
-	else if (GetAsyncKeyState(VK_RMENU) & 0x8000) {
-		edit->Text = GetKeyText(VK_RMENU);
-	}
 	else if (GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
 		edit->Text = GetKeyText(VK_RCONTROL);
 	}
@@ -1081,10 +1078,6 @@ WORD TConfigForm::GetKeyCode(System::UnicodeString key)
 		return VK_PAUSE;
 	}
 
-	if (key == L"R " + ShortCutToText(VK_MENU)) {
-		return VK_RMENU;
-	}
-
 	if (key == L"R " + ShortCutToText(VK_CONTROL)) {
 		return VK_RCONTROL;
 	}
@@ -1100,10 +1093,6 @@ System::UnicodeString TConfigForm::GetKeyText(WORD key)
 
 	if (key == VK_PAUSE) {
 		return L"Pause_";
-	}
-
-	if (key == VK_RMENU) {
-		return L"R " + ShortCutToText(VK_MENU);
 	}
 
 	if (key == VK_RCONTROL) {
