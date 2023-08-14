@@ -3513,16 +3513,16 @@ object ConfigForm: TConfigForm
     Left = 0
     Top = 8
     Width = 233
-    Height = 465
+    Height = 468
     Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
     Color = clMenu
     ParentBackground = False
     TabOrder = 0
-    ExplicitHeight = 464
+    ExplicitHeight = 467
     DesignSize = (
       233
-      465)
+      468)
     object DisplayBtn: TSpeedButton
       Left = 0
       Top = 8
