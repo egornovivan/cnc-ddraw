@@ -924,6 +924,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                     g_ddraw->render.width,
                     g_ddraw->render.height,
                     swp_flags);
+
+                swp_flags = SWP_SHOWWINDOW;
             }
 
             d3d9_active = d3d9_create();
