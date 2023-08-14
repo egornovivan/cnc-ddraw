@@ -365,7 +365,7 @@ void util_toggle_fullscreen()
             mouse_unlock();
             g_config.window_state = g_ddraw->windowed = TRUE;
 
-            if (g_ddraw->renderer == d3d9_render_main)
+            if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
             {
                 d3d9_reset(g_ddraw->windowed);
             }

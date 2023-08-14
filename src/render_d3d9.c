@@ -50,15 +50,6 @@ BOOL d3d9_create()
 
     if (g_d3d9.hmodule)
     {
-        if (g_ddraw->nonexclusive)
-        {
-            int (WINAPI * d3d9_enable_shim)(BOOL) =
-                (int (WINAPI*)(BOOL))real_GetProcAddress(g_d3d9.hmodule, "Direct3D9EnableMaximizedWindowedModeShim");
-
-            if (d3d9_enable_shim)
-                d3d9_enable_shim(TRUE);
-        }
-
         LPDIRECT3D9 d3d9on12 = NULL;
         D3D9ON12_ARGS args;
         memset(&args, 0, sizeof(args));
@@ -118,7 +109,7 @@ BOOL d3d9_create()
 
             memset(&g_d3d9.params, 0, sizeof(g_d3d9.params));
 
-            g_d3d9.params.Windowed = g_ddraw->windowed;
+            g_d3d9.params.Windowed = g_ddraw->windowed || g_ddraw->nonexclusive;
             g_d3d9.params.SwapEffect = D3DSWAPEFFECT_DISCARD;
             g_d3d9.params.hDeviceWindow = g_ddraw->hwnd;
             g_d3d9.params.PresentationInterval = g_ddraw->vsync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -166,9 +157,9 @@ BOOL d3d9_on_device_lost()
 
 BOOL d3d9_reset(BOOL windowed)
 {
-    g_d3d9.params.Windowed = windowed;
-    g_d3d9.params.BackBufferWidth = windowed ? 0 : g_ddraw->render.width;
-    g_d3d9.params.BackBufferHeight = windowed ? 0 : g_ddraw->render.height;
+    g_d3d9.params.Windowed = windowed || g_ddraw->nonexclusive;
+    g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
+    g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
     g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
 
     if (g_d3d9.device && SUCCEEDED(IDirect3DDevice9_Reset(g_d3d9.device, &g_d3d9.params)))

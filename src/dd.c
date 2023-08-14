@@ -506,7 +506,6 @@ HRESULT dd_RestoreDisplayMode()
         return DD_OK;
     }
 
-    /* only stop drawing in GL mode when minimized */
     if (g_ddraw->renderer != gdi_render_main)
     {
         EnterCriticalSection(&g_ddraw->cs);
@@ -523,7 +522,7 @@ HRESULT dd_RestoreDisplayMode()
 
     if (!g_ddraw->windowed)
     {
-        if (g_ddraw->renderer == d3d9_render_main)
+        if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
         {
             if (!d3d9_reset(TRUE))
                 d3d9_release();
@@ -922,7 +921,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             }
         }
 
-        if (!d3d9_active && ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+        if ((!d3d9_active || g_ddraw->nonexclusive) &&
+            ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
         {
             g_ddraw->render.run = FALSE;
             g_ddraw->windowed = TRUE;
@@ -1185,7 +1185,7 @@ ULONG dd_Release()
 
         if (!g_ddraw->windowed)
         {
-            if (g_ddraw->renderer == d3d9_render_main)
+            if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
             {
                 if (!d3d9_reset(TRUE))
                     d3d9_release();
