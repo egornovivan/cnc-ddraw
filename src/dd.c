@@ -911,6 +911,21 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
         if (g_ddraw->renderer == d3d9_render_main)
         {
+            if (g_ddraw->nonexclusive)
+            {
+                if (IsIconic(g_ddraw->hwnd))
+                    real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
+
+                real_SetWindowPos(
+                    g_ddraw->hwnd,
+                    HWND_TOPMOST,
+                    0,
+                    0,
+                    g_ddraw->render.width,
+                    g_ddraw->render.height,
+                    swp_flags);
+            }
+
             d3d9_active = d3d9_create();
 
             if (!d3d9_active)
