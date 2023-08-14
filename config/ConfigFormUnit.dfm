@@ -3307,7 +3307,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object ToggleWindowedKeyLbl: TLabel
-      Left = 41
+      Left = 50
       Top = 60
       Width = 34
       Height = 21
@@ -3321,7 +3321,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object MaximizeWindowLbl: TLabel
-      Left = 39
+      Left = 40
       Top = 107
       Width = 125
       Height = 21
@@ -3335,7 +3335,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object MaximizeWindowKeyLbl: TLabel
-      Left = 40
+      Left = 50
       Top = 139
       Width = 34
       Height = 21
@@ -3363,7 +3363,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object UnlockCursor1KeyLbl: TLabel
-      Left = 41
+      Left = 50
       Top = 218
       Width = 40
       Height = 21
@@ -3377,7 +3377,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object UnlockCursor2Lbl: TLabel
-      Left = 41
+      Left = 40
       Top = 265
       Width = 109
       Height = 21
@@ -3391,7 +3391,7 @@ object ConfigForm: TConfigForm
       ParentFont = False
     end
     object UnlockCursor2KeyLbl: TLabel
-      Left = 41
+      Left = 50
       Top = 297
       Width = 48
       Height = 21
