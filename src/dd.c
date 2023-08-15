@@ -967,6 +967,9 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             g_ddraw->render.height,
             swp_flags);
 
+        if (d3d9_active && g_ddraw->nonexclusive)
+            d3d9_reset(TRUE);
+
         g_ddraw->last_set_window_pos_tick = timeGetTime();
 
         mouse_lock();
