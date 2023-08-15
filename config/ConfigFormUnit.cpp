@@ -628,6 +628,10 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 	MaximizeWindowKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
 	UnlockCursor1KeyLbl->Caption = GetKeyText(VK_CONTROL) + L" +";
 	UnlockCursor2KeyLbl->Caption = "R " + GetKeyText(VK_MENU) + L" +";
+
+	ConfigForm->Caption +=
+		" (" + TPath::GetFileName(
+					TPath::GetDirectoryName(Application->ExeName)) + ")";
 }
 
 void __fastcall TConfigForm::DisplayBtnClick(TObject *Sender)
