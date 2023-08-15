@@ -21,7 +21,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 			FindWindow(
 				THashSHA1::GetHashString(Application->ExeName).w_str(), NULL);
 
-		if (hwnd) {
+		if (hwnd && ParamStr(1) != L"-restart") {
 
 			if (IsIconic(hwnd)) {
 				ShowWindow(hwnd, SW_RESTORE);

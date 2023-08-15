@@ -48,7 +48,7 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 		NULL,
 		L"open",
 		Application->ExeName.w_str(),
-		NULL,
+		L"-restart",
 		NULL,
 		SW_SHOWNORMAL);
 
@@ -69,7 +69,7 @@ void __fastcall TConfigForm::ThemePnlClick(TObject *Sender)
 		NULL,
 		L"open",
 		Application->ExeName.w_str(),
-		NULL,
+		L"-restart",
 		NULL,
 		SW_SHOWNORMAL);
 
@@ -92,7 +92,7 @@ void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
 		NULL,
 		L"open",
 		Application->ExeName.w_str(),
-		NULL,
+		L"-restart",
 		NULL,
 		SW_SHOWNORMAL);
 
