@@ -423,7 +423,7 @@ DWORD WINAPI d3d9_render_main(void)
 
     BOOL needs_update = FALSE;
 
-    DWORD timeout = g_ddraw->render.minfps > 0 ? g_ddraw->render.minfps_tick_len : 200;
+    DWORD timeout = g_ddraw->render.minfps > 0 ? g_ddraw->render.minfps_tick_len : INFINITE;
 
     while (g_ddraw->render.run &&
         (g_ddraw->render.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
