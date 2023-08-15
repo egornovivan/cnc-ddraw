@@ -115,6 +115,7 @@ __published:	// Von der IDE verwaltete Komponenten
 
 
 private:	// Benutzer-Deklarationen
+	virtual void __fastcall CreateParams(TCreateParams & Params);
 	void SaveSettings();
 	bool GetBool(TIniFile *ini, System::UnicodeString key, bool defValue);
 	void ApplyTranslation(TIniFile *ini);

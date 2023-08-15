@@ -8,6 +8,7 @@
 #include <IOUtils.hpp>
 #include <SysUtils.hpp>
 #include <Registry.hpp>
+#include <System.Hash.hpp>
 #include "ConfigFormUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -26,6 +27,15 @@ int Minfps;
 __fastcall TConfigForm::TConfigForm(TComponent* Owner)
 	: TForm(Owner)
 {
+}
+
+void __fastcall TConfigForm::CreateParams(TCreateParams & Params)
+{
+	TForm::CreateParams(Params);
+
+	StrCopy(
+		Params.WinClassName,
+		THashSHA1::GetHashString(Application->ExeName).w_str());
 }
 
 void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
