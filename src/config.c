@@ -1047,7 +1047,7 @@ static void cfg_create_ini()
             "\n"
             "; War Wind\n"
             "[WW]\n"
-            "renderer=opengl\n"
+            "minfps=-1\n"
             "\n"
             "; Zeus and Poseidon\n"
             "[Zeus]\n"
