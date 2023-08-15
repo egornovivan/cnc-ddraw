@@ -704,7 +704,6 @@ static void cfg_create_ini()
             "\n"
             "; Dark Reign: The Future of War\n"
             "[DKReign]\n"
-            "renderer=opengl\n"
             "maxgameticks=60\n"
             "\n"
             "; Dungeon Keeper 2\n"
