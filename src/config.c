@@ -367,6 +367,7 @@ static void cfg_create_ini()
             "rgb555=false\n"
             "no_dinput_hook=false\n"
             "refresh_rate=0\n"
+            "non_anti_aliased_fonts=true\n"
             "\n"
             "\n"
             "\n"

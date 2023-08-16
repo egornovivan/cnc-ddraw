@@ -905,6 +905,54 @@ int WINAPI fake_StretchDIBits(
             rop);
 }
 
+HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA* lplf)
+{
+    LOGFONTA lf;
+    memcpy(&lf, lplf, sizeof(lf));
+
+    if (cfg_get_bool("non_anti_aliased_fonts", TRUE))
+        lf.lfQuality = NONANTIALIASED_QUALITY;
+
+    return real_CreateFontIndirectA(&lf);
+}
+
+HFONT WINAPI fake_CreateFontA(
+    int nHeight, 
+    int nWidth, 
+    int nEscapement, 
+    int nOrientation, 
+    int fnWeight,
+    DWORD fdwItalic,
+    DWORD fdwUnderline,
+    DWORD fdwStrikeOut,
+    DWORD fdwCharSet,
+    DWORD fdwOutputPrecision,
+    DWORD fdwClipPrecision,
+    DWORD fdwQuality, 
+    DWORD fdwPitchAndFamily,
+    LPCTSTR lpszFace)
+{
+    if (cfg_get_bool("non_anti_aliased_fonts", TRUE))
+        fdwQuality = NONANTIALIASED_QUALITY;
+
+    return 
+        real_CreateFontA(
+            nHeight, 
+            nWidth, 
+            nEscapement, 
+            nOrientation, 
+            fnWeight,
+            fdwItalic, 
+            fdwUnderline, 
+            fdwStrikeOut, 
+            fdwCharSet,
+            fdwOutputPrecision, 
+            fdwClipPrecision, 
+            fdwQuality, 
+            fdwPitchAndFamily,
+            lpszFace);
+}
+
 HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
 {
     HMODULE hmod = real_LoadLibraryA(lpLibFileName);

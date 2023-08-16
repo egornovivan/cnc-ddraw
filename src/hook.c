@@ -49,6 +49,8 @@ SETFOREGROUNDWINDOWPROC real_SetForegroundWindow = SetForegroundWindow;
 SETWINDOWSHOOKEXAPROC real_SetWindowsHookExA = SetWindowsHookExA;
 PEEKMESSAGEAPROC real_PeekMessageA = PeekMessageA;
 GETDEVICECAPSPROC real_GetDeviceCaps = GetDeviceCaps;
+CREATEFONTINDIRECTAPROC real_CreateFontIndirectA = CreateFontIndirectA;
+CREATEFONTAPROC real_CreateFontA = CreateFontA;
 LOADLIBRARYAPROC real_LoadLibraryA = LoadLibraryA;
 LOADLIBRARYWPROC real_LoadLibraryW = LoadLibraryW;
 LOADLIBRARYEXAPROC real_LoadLibraryExA = LoadLibraryExA;
@@ -124,6 +126,9 @@ HOOKLIST g_hook_hooklist[] =
             { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, SKIP_HOOK2 },
             { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, SKIP_HOOK2 },
             { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
+            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
+            { "CreateFontA", (PROC)fake_CreateFontA, (PROC*)&real_CreateFontA, 0 },
+            { "CreateFontIndirectA", (PROC)fake_CreateFontIndirectA, (PROC*)&real_CreateFontIndirectA, 0 },
             { "", NULL, NULL, 0 }
         }
     },

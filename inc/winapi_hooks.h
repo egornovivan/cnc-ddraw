@@ -43,6 +43,9 @@ int WINAPI fake_SetDIBitsToDevice(
 int WINAPI fake_StretchDIBits(
     HDC, int, int, int, int, int, int, int, int, const VOID*, const BITMAPINFO*, UINT, DWORD);
 
+HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA*);
+HFONT WINAPI fake_CreateFontA(int, int, int, int, int, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, LPCTSTR);
+
 HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags);
