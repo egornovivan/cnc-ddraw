@@ -218,8 +218,8 @@ BOOL util_get_lowest_resolution(
             m.dmPelsHeight >= min_height &&
             m.dmPelsWidth <= max_width &&
             m.dmPelsHeight <= max_height &&
-            m.dmPelsWidth < lowest.cx &&
-            m.dmPelsHeight < lowest.cy)
+            m.dmPelsWidth <= lowest.cx &&
+            m.dmPelsHeight <= lowest.cy)
         {
             int res_ratio = (int)((((float)m.dmPelsWidth / m.dmPelsHeight) + 0.005f) * 10);
 
