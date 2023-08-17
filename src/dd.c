@@ -102,7 +102,7 @@ HRESULT dd_EnumDisplayModes(
         { rlf ? 1920 : 0, rlf ? 1080 : 0 },
         { rlf ? 2560 : 0, rlf ? 1440 : 0 },
         /* 21:9 */
-        { rlf ? 1280 : 0, rlf ? 544 : 0 },
+        { rlf ? 1280 : 0, rlf ? 540 : 0 },
         { rlf ? 1720 : 0, rlf ? 720 : 0 },
         { rlf ? 2560 : 0, rlf ? 1080 : 0 },
         { max_w, max_h },
