@@ -256,6 +256,51 @@ void dbg_draw_frame_info_end()
         g_dbg_frame_time = dbg_counter_stop();
 }
 
+void dbg_dump_swp_flags(DWORD flags)
+{
+#ifdef _DEBUG
+    if (flags & SWP_NOSIZE) {
+        TRACE("     SWP_NOSIZE\n");
+    }
+    if (flags & SWP_NOMOVE) {
+        TRACE("     SWP_NOMOVE\n");
+    }
+    if (flags & SWP_NOZORDER) {
+        TRACE("     SWP_NOZORDER\n");
+    }
+    if (flags & SWP_NOREDRAW) {
+        TRACE("     SWP_NOREDRAW\n");
+    }
+    if (flags & SWP_NOACTIVATE) {
+        TRACE("     SWP_NOACTIVATE\n");
+    }
+    if (flags & SWP_FRAMECHANGED) {
+        TRACE("     SWP_FRAMECHANGED\n");
+    }
+    if (flags & SWP_SHOWWINDOW) {
+        TRACE("     SWP_SHOWWINDOW\n");
+    }
+    if (flags & SWP_HIDEWINDOW) {
+        TRACE("     SWP_HIDEWINDOW\n");
+    }
+    if (flags & SWP_NOCOPYBITS) {
+        TRACE("     SWP_NOCOPYBITS\n");
+    }
+    if (flags & SWP_NOOWNERZORDER) {
+        TRACE("     SWP_NOOWNERZORDER\n");
+    }
+    if (flags & SWP_NOSENDCHANGING) {
+        TRACE("     SWP_NOSENDCHANGING\n");
+    }
+    if (flags & SWP_DEFERERASE) {
+        TRACE("     SWP_DEFERERASE\n");
+    }
+    if (flags & SWP_ASYNCWINDOWPOS) {
+        TRACE("     SWP_ASYNCWINDOWPOS\n");
+    }
+#endif
+}
+
 void dbg_dump_ddp_flags(DWORD flags)
 {
 #ifdef _DEBUG
@@ -991,6 +1036,8 @@ char* dbg_mes_to_str(int id)
     case 673: return "WM_MOUSEHOVER";
     case 674: return "WM_NCMOUSELEAVE";
     case 675: return "WM_MOUSELEAVE";
+    case 736: return "WM_DPICHANGED";
+    case 740: return "WM_GETDPISCALEDSIZE";
     case 768: return "WM_CUT";
     case 769: return "WM_COPY";
     case 770: return "WM_PASTE";

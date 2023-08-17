@@ -13,6 +13,7 @@ void dbg_draw_frame_info_start();
 void dbg_draw_frame_info_end();
 int dbg_printf(const char* fmt, ...);
 void dbg_init();
+void dbg_dump_swp_flags(DWORD flags);
 void dbg_dump_ddp_flags(DWORD flags);
 void dbg_dump_scl_flags(DWORD flags);
 void dbg_dump_edm_flags(DWORD flags);
