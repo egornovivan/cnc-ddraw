@@ -481,10 +481,12 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         WINDOWPOS* pos = (WINDOWPOS*)lParam;
 
+        /*
         dbg_dump_swp_flags(pos->flags);
         TRACE(
             "     hwndInsertAfter=%p, x=%d, y=%d, cx=%d, cy=%d\n",
             pos->hwndInsertAfter, pos->x, pos->y, pos->cx, pos->cy);
+        */
 
         /* workaround for a bug where sometimes a background window steals the focus */
         if (g_mouse_locked)
