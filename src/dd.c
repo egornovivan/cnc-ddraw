@@ -631,17 +631,25 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     mouse_unlock();
 
     memset(&g_ddraw->render.mode, 0, sizeof(DEVMODE));
-
     g_ddraw->render.mode.dmSize = sizeof(DEVMODE);
-    g_ddraw->render.mode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
-    g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
-    g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
     if (g_ddraw->refresh_rate)
     {
         g_ddraw->render.mode.dmFields |= DM_DISPLAYFREQUENCY;
         g_ddraw->render.mode.dmDisplayFrequency = g_ddraw->refresh_rate;
+
+        if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
+        {
+            g_ddraw->refresh_rate = 0;
+
+            g_ddraw->render.mode.dmFields = 0;
+            g_ddraw->render.mode.dmDisplayFrequency = 0;
+        }
     }
+
+    g_ddraw->render.mode.dmFields |= DM_PELSWIDTH | DM_PELSHEIGHT;
+    g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
+    g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
     if (!g_ddraw->windowed)
     {
