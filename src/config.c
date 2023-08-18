@@ -993,6 +993,7 @@ static void cfg_create_ini()
             "; Total Annihilation: Kingdoms\n"
             "[Kingdoms]\n"
             "game_handles_close=true\n"
+            "max_resolutions=32\n"
             "\n"
             "; Three Kingdoms: Fate of the Dragon\n"
             "[sanguo]\n"
