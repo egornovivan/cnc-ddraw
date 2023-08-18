@@ -637,6 +637,12 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
     g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
+    if (g_ddraw->refresh_rate)
+    {
+        g_ddraw->render.mode.dmFields |= DM_DISPLAYFREQUENCY;
+        g_ddraw->render.mode.dmDisplayFrequency = g_ddraw->refresh_rate;
+    }
+
     if (!g_ddraw->windowed)
     {
         /* Making sure the chosen resolution is valid */

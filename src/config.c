@@ -45,6 +45,7 @@ void cfg_load()
     g_ddraw->allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
     g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
     g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
+    g_ddraw->refresh_rate = cfg_get_int("refresh_rate", 0);
     g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
     g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
@@ -362,6 +363,7 @@ static void cfg_create_ini()
             "fixmousehook=false\n"
             "rgb555=false\n"
             "no_dinput_hook=false\n"
+            "refresh_rate=0\n"
             "\n"
             "\n"
             "\n"

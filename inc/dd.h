@@ -157,6 +157,7 @@ typedef struct CNCDDRAW
     int guard_lines;
     int resolutions;
     int max_resolutions;
+    int refresh_rate;
     BOOL limit_bltfast;
     BOOL armadahack;
     BOOL tshack;
