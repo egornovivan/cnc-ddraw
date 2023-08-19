@@ -104,11 +104,17 @@ void dbg_init()
             DWORD name_size = sizeof(name);
             RegQueryValueExA(hkey, "ProductName", NULL, NULL, (PVOID)&name, &name_size);
 
+            char dversion[256] = { 0 };
+            DWORD dversion_size = sizeof(dversion);
+            RegQueryValueExA(hkey, "DisplayVersion", NULL, NULL, (PVOID)&dversion, &dversion_size);
+
             char build[256] = { 0 };
             DWORD build_size = sizeof(build);
             RegQueryValueExA(hkey, "BuildLab", NULL, NULL, (PVOID)&build, &build_size);
 
-            TRACE("%s (%s)\n", name, build);
+            TRACE("%s %s (%s)\n", name, dversion, build);
+
+            RegCloseKey(hkey);
         }
 
         const char* (CDECL * wine_get_version)() =
