@@ -115,18 +115,22 @@ void cfg_load()
         g_ddraw->flip_limiter.tick_length = (DWORD)(flip_len + 0.5f);
     }
 
+    DWORD system_affinity;
+    DWORD proc_affinity;
+    HANDLE proc = GetCurrentProcess();
+
     if (cfg_get_bool("singlecpu", TRUE))
     {
-        SetProcessAffinityMask(GetCurrentProcess(), 1);
+        SetProcessAffinityMask(proc, 1);
     }
-    else
+    else if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
     {
-        DWORD system_affinity;
-        DWORD proc_affinity;
-        HANDLE proc = GetCurrentProcess();
+        SetProcessAffinityMask(proc, system_affinity);
+    }
 
-        if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
-            SetProcessAffinityMask(proc, system_affinity);
+    if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
+    {
+        TRACE("     proc_affinity=%08X, system_affinity=%08X\n", proc_affinity, system_affinity);
     }
 
     /* to do: read .glslp config file instead of the shader and apply the correct settings  */
