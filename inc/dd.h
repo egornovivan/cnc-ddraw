@@ -158,6 +158,8 @@ typedef struct CNCDDRAW
     int resolutions;
     int max_resolutions;
     int refresh_rate;
+    int custom_width;
+    int custom_height;
     BOOL limit_bltfast;
     BOOL armadahack;
     BOOL tshack;

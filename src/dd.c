@@ -106,6 +106,8 @@ HRESULT dd_EnumDisplayModes(
         { rlf ? 1280 : 0, rlf ? 540 : 0 },
         { rlf ? 1720 : 0, rlf ? 720 : 0 },
         { rlf ? 2560 : 0, rlf ? 1080 : 0 },
+        /* Inject custom resolution */
+        { g_ddraw->custom_width, g_ddraw->custom_height },
         { max_w, max_h },
     };
     

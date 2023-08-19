@@ -46,6 +46,8 @@ void cfg_load()
     g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
     g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
     g_ddraw->refresh_rate = cfg_get_int("refresh_rate", 0);
+    g_ddraw->custom_width = cfg_get_int("custom_width", 0);
+    g_ddraw->custom_height = cfg_get_int("custom_height", 0);
     g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
     g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
     g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
@@ -791,8 +793,11 @@ static void cfg_create_ini()
             "\n"
             "; Icewind Dale 2\n"
             "; Note: 'Full Screen' must be enabled in Config.exe\n"
+            "; Note: Custom width/height is the lowest possible 16:9 res for the WS patch (600/601 height will crash)\n"
             "[iwd2]\n"
             "resolutions=2\n"
+            "custom_width=1070\n"
+            "custom_height=602\n"
             "\n"
             "; Invictus\n"
             "[Invictus]\n"
