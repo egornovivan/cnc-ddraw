@@ -175,6 +175,7 @@ typedef struct CNCDDRAW
     RECT bnet_win_rect;
     POINT bnet_pos;
     void* last_freed_palette; /* Dungeon Keeper hack */
+    void* last_freed_surface; /* Nox hack */
     BOOL child_window_exists;
     BOOL got_child_windows;
     DWORD last_set_window_pos_tick; /* WINE hack */

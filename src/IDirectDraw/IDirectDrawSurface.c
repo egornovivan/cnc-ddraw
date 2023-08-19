@@ -111,8 +111,10 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         if (This->mapping)
             CloseHandle(This->mapping);
 
-        if (This->backbuffer)
+        if (This->backbuffer && (!g_ddraw || (void*)This->backbuffer != g_ddraw->last_freed_surface))
+        {
             IDirectDrawSurface_Release(This->backbuffer);
+        }
 
         if (This->clipper)
             IDirectDrawClipper_Release(This->clipper);
@@ -123,6 +125,9 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         }
 
         DeleteCriticalSection(&This->cs);
+
+        if (g_ddraw)
+            g_ddraw->last_freed_surface = This;
 
         HeapFree(GetProcessHeap(), 0, This);
     }
