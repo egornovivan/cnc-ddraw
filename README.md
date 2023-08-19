@@ -62,6 +62,7 @@ Some games may require additional steps before they can be used with cnc-ddraw, 
  - Command & Conquer: Red Alert
  - Command & Conquer: Tiberian Sun
  - Command & Conquer: Red Alert 2
+ - Captain Claw
  - Carmageddon
  - Carmageddon 2
  - Warcraft 2
