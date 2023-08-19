@@ -793,7 +793,7 @@ static void cfg_create_ini()
             "\n"
             "; Icewind Dale 2\n"
             "; Note: 'Full Screen' must be enabled in Config.exe\n"
-            "; Note: Custom width/height is the lowest possible 16:9 res for the WS patch (600/601 height will crash)\n"
+            "; Note: 1070x602 is the lowest possible 16:9 resolution for the Widescreen patch (600/601 height will crash)\n"
             "[iwd2]\n"
             "resolutions=2\n"
             "custom_width=1070\n"
