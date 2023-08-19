@@ -732,6 +732,7 @@ HRESULT dds_EnumAttachedSurfaces(
     if (This->backbuffer)
     {
         dds_GetSurfaceDesc(This->backbuffer, (LPDDSURFACEDESC)&desc);
+        IDirectDrawSurface_AddRef(This->backbuffer);
         lpEnumSurfacesCallback((LPDIRECTDRAWSURFACE)This->backbuffer, (LPDDSURFACEDESC)&desc, lpContext);
     }
 
