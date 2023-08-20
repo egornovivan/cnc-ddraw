@@ -573,11 +573,6 @@ void hook_init(BOOL initial_hook)
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
             g_hook_method = 3;
         }
-
-        if (g_hook_method == 2)
-        {
-            //dinput_hook_init();
-        }
     }
 
     if (!g_hook_active || g_hook_method == 3 || g_hook_method == 4)
