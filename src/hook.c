@@ -105,7 +105,7 @@ HOOKLIST g_hook_hooklist[] =
         "dinput.dll",
         {
             { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, SKIP_HOOK2 },
-            { "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 },
+            //{ "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 },
             { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, SKIP_HOOK2 },
             { "", NULL, NULL, 0 }
         }
@@ -572,6 +572,11 @@ void hook_init(BOOL initial_hook)
         {
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
             g_hook_method = 3;
+        }
+
+        if (g_hook_method == 2)
+        {
+            //dinput_hook_init();
         }
     }
 
