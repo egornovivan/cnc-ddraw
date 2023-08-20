@@ -371,6 +371,17 @@ void util_toggle_fullscreen()
             }
             else
             {
+                if (g_ddraw->render.thread)
+                {
+                    EnterCriticalSection(&g_ddraw->cs);
+                    g_ddraw->render.run = FALSE;
+                    ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+                    LeaveCriticalSection(&g_ddraw->cs);
+
+                    WaitForSingleObject(g_ddraw->render.thread, INFINITE);
+                    g_ddraw->render.thread = NULL;
+                }
+
                 ChangeDisplaySettings(NULL, g_ddraw->bnet_active ? CDS_FULLSCREEN : 0);
             }
 

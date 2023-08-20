@@ -487,7 +487,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             "     hwndInsertAfter=%p, x=%d, y=%d, cx=%d, cy=%d\n",
             pos->hwndInsertAfter, pos->x, pos->y, pos->cx, pos->cy);
         */
-
+        
         /* workaround for a bug where sometimes a background window steals the focus */
         if (g_mouse_locked)
         {
@@ -529,6 +529,9 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             {
                 if (g_ddraw->renderer != d3d9_render_main || g_ddraw->nonexclusive)
                 {
+                    if (g_ddraw->renderer == d3d9_render_main) /* Needed for Windows 7 */
+                        real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
+
                     ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN);
                     real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
                     mouse_lock();
