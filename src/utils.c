@@ -11,6 +11,13 @@
 #include "config.h"
 
 
+BOOL util_is_minimized(HWND hwnd)
+{
+    RECT rc = { 0 };
+
+    return IsIconic(hwnd) || (real_GetClientRect(hwnd, &rc) && (rc.right - rc.left == 0 || rc.bottom - rc.top == 0));
+}
+
 BOOL util_is_avx_supported()
 {
     const DWORD XMM_STATE_BIT = 1 << 1;

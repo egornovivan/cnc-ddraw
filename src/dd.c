@@ -861,7 +861,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             x = y = 0;
         }
 
-        if (IsIconic(g_ddraw->hwnd))
+        if (util_is_minimized(g_ddraw->hwnd))
             real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
 
         RECT dst = { x, y, g_ddraw->render.width + x, g_ddraw->render.height + y };
@@ -930,7 +930,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         {
             if (g_ddraw->nonexclusive)
             {
-                if (IsIconic(g_ddraw->hwnd))
+                if (util_is_minimized(g_ddraw->hwnd))
                     real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
 
                 real_SetWindowPos(
@@ -972,7 +972,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                 real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE) | WS_MINIMIZEBOX);
         }
 
-        if (IsIconic(g_ddraw->hwnd))
+        if (util_is_minimized(g_ddraw->hwnd))
             real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
 
         real_SetWindowPos(

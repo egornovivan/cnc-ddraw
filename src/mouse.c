@@ -3,6 +3,7 @@
 #include "winapi_hooks.h"
 #include "dd.h"
 #include "hook.h"
+#include "utils.h"
 
 
 BOOL g_mouse_locked;
@@ -14,7 +15,7 @@ void mouse_lock()
     if (g_ddraw->devmode || g_ddraw->bnet_active || !g_ddraw->hwnd)
         return;
 
-    if (g_hook_active && !g_mouse_locked && !IsIconic(g_ddraw->hwnd))
+    if (g_hook_active && !g_mouse_locked && !util_is_minimized(g_ddraw->hwnd))
     {
         int game_count = InterlockedExchangeAdd((LONG*)&g_ddraw->show_cursor_count, 0);
         int cur_count = real_ShowCursor(TRUE) - 1;

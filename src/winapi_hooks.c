@@ -170,7 +170,7 @@ BOOL WINAPI fake_ClipCursor(const RECT* lpRect)
 
         CopyRect(&g_ddraw->mouse.rc, &dst_rc);
 
-        if (g_mouse_locked && !IsIconic(g_ddraw->hwnd))
+        if (g_mouse_locked && !util_is_minimized(g_ddraw->hwnd))
         {
             real_MapWindowPoints(g_ddraw->hwnd, HWND_DESKTOP, (LPPOINT)&dst_rc, 2);
 

@@ -206,7 +206,7 @@ int dbg_printf(const char* fmt, ...)
 
 void dbg_print_rect(char* info, LPRECT rect)
 {
-#ifdef _DEBUG_X
+#ifdef _DEBUG
     if (rect)
     {
         TRACE(
