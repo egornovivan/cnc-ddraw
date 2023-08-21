@@ -72,18 +72,19 @@ HRESULT dd_EnumDisplayModes(
     }
 
     BOOL rlf = g_ddraw->resolutions == RESLIST_FULL;
+    BOOL rlm = g_ddraw->resolutions == RESLIST_MINI;
 
     SIZE resolutions[] =
     {
         { 320, 200 },
         { 320, 240 },
-        { 512, 384 },
+        { rlm ? 0 : 512, rlm ? 0 : 384 },
         { 640, 400 },
         { 640, 480 },
         { 800, 600 },
         { 1024, 768 },
         { 1280, 1024 },
-        { 1600, 1200 },
+        { rlm ? 0 : 1600, rlm ? 0 : 1200 },
         { 1280, 720 },
         { rlf ? 1024 : 0, rlf ? 600 : 0 },
         /* 4:3 */
