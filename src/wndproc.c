@@ -39,6 +39,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
     switch (uMsg)
     {
+    case WM_GETMINMAXINFO:
     case WM_MOVING:
     case WM_NCLBUTTONDOWN:
     case WM_NCLBUTTONUP:
