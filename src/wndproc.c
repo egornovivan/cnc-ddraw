@@ -465,8 +465,31 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         return DefWindowProc(hWnd, uMsg, wParam, lParam); /* Carmageddon fix */
     }
+    case WM_NCMOUSELEAVE:
+    {
+        if (!g_ddraw->wine) /* hack: disable aero snap */
+        {
+            LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
+
+            if (!(style & WS_MAXIMIZEBOX))
+            {
+                real_SetWindowLongA(g_ddraw->hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX);
+            }
+        }
+        break;
+    }
     case WM_SYSCOMMAND:
     {
+        if ((wParam & ~0x0F) == SC_MOVE && !g_ddraw->wine) /* hack: disable aero snap */
+        {
+            LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
+
+            if ((style & WS_MAXIMIZEBOX))
+            {
+                real_SetWindowLongA(g_ddraw->hwnd, GWL_STYLE, style & ~WS_MAXIMIZEBOX);
+            }
+        }
+
         if (wParam == SC_MAXIMIZE)
         {
             if (g_ddraw->resizable)
