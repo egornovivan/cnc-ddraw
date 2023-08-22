@@ -1437,7 +1437,7 @@ HRESULT dd_CreateSurface(
 
 
         if (InterlockedExchangeAdd(&g_dds_gdi_handles, 0) < 4000 || 
-            (dst_surface->caps & (DDSCAPS_PRIMARYSURFACE|DDSCAPS_FLIP)))
+            (dst_surface->width == g_ddraw->width && dst_surface->height == g_ddraw->height))
         {
             dst_surface->hdc = CreateCompatibleDC(g_ddraw->render.hdc);
 
