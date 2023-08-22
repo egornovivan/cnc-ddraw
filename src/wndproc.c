@@ -24,13 +24,15 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         uMsg != WM_D3D9DEVICELOST)
     {
         TRACE(
-            "     uMsg = %s (%d), wParam = %08X (%d), lParam = %08X (%d)\n",
+            "     uMsg = %s (%d), wParam = %08X (%d), lParam = %08X (%d, LO=%d HI=%d)\n",
             dbg_mes_to_str(uMsg),
             uMsg,
             wParam,
             wParam,
             lParam,
-            lParam);
+            lParam,
+            (int)(short)LOWORD(lParam),
+            (int)(short)HIWORD(lParam));
     }
 #endif
 
@@ -202,6 +204,13 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_WINDOWPOSCHANGED:
     {
         WINDOWPOS* pos = (WINDOWPOS*)lParam;
+
+        /*
+        dbg_dump_swp_flags(pos->flags);
+        TRACE(
+            "     hwndInsertAfter=%p, x=%d, y=%d, cx=%d, cy=%d\n",
+            pos->hwndInsertAfter, pos->x, pos->y, pos->cx, pos->cy);
+        */
 
         if (g_ddraw->wine &&
             !g_ddraw->windowed &&
@@ -407,9 +416,9 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         g_config.window_rect.bottom = HIWORD(lParam);
                     }
                     else /* Aero Snap resized window */
-                {
-                    g_config.window_rect.right = LOWORD(lParam);
-                    g_config.window_rect.bottom = HIWORD(lParam);
+                    {
+                        g_config.window_rect.right = LOWORD(lParam);
+                        g_config.window_rect.bottom = HIWORD(lParam);
 
                         if (g_config.window_rect.right != g_ddraw->render.width ||
                             g_config.window_rect.bottom != g_ddraw->render.height)
