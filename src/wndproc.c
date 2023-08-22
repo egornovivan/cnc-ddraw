@@ -49,28 +49,6 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
-    case WM_GETMINMAXINFO:
-    {
-        if (g_ddraw->windowed && g_ddraw->width)
-        {
-            MINMAXINFO* mmi = (MINMAXINFO*)lParam;
-
-            RECT rc = { 0, 0, g_ddraw->width, g_ddraw->height };
-
-            AdjustWindowRectEx(
-                &rc,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE),
-                GetMenu(g_ddraw->hwnd) != NULL,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
-
-            mmi->ptMinTrackSize.x = rc.right - rc.left;
-            mmi->ptMinTrackSize.y = rc.bottom - rc.top;
-
-            return 0;
-        }
-
-        return DefWindowProc(hWnd, uMsg, wParam, lParam);
-    }
     case WM_NCACTIVATE:
     {
         if (g_ddraw->noactivateapp)
@@ -399,25 +377,10 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (wParam == SIZE_RESTORED)
             {
-                if (in_size_move)
-                {
-                    /* User resized window */
-                    if (!g_ddraw->render.thread)
-                    {
-                        g_config.window_rect.right = LOWORD(lParam);
-                        g_config.window_rect.bottom = HIWORD(lParam);
-                    }
-                    else /* Aero Snap resized window */
+                if (in_size_move && !g_ddraw->render.thread)
                 {
                     g_config.window_rect.right = LOWORD(lParam);
                     g_config.window_rect.bottom = HIWORD(lParam);
-
-                        if (g_config.window_rect.right != g_ddraw->render.width ||
-                            g_config.window_rect.bottom != g_ddraw->render.height)
-                        {
-                            dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
-                        }                       
-                    }
                 }
                 /*
                 else if (g_ddraw->wine)
