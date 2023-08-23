@@ -876,6 +876,13 @@ char* dbg_mes_to_str(int id)
     case 134: return "WM_NCACTIVATE";
     case 135: return "WM_GETDLGCODE";
     case 136: return "WM_SYNCPAINT";
+    case 144: return "WM_UAHDESTROYWINDOW";
+    case 145: return "WM_UAHDRAWMENU";
+    case 146: return "WM_UAHDRAWMENUITEM";
+    case 147: return "WM_UAHINITMENU";
+    case 148: return "WM_UAHMEASUREMENUITEM";
+    case 149: return "WM_UAHNCPAINTMENUPOPUP";
+    case 150: return "WM_UAHUPDATE";
     case 160: return "WM_NCMOUSEMOVE";
     case 161: return "WM_NCLBUTTONDOWN";
     case 162: return "WM_NCLBUTTONUP";
