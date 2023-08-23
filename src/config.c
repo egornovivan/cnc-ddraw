@@ -298,7 +298,7 @@ static void cfg_create_ini()
             "resizable=true\n"
             "\n"
             "; Upscaling filter for the direct3d9* renderers\n"
-            "; Possible values: 0 = nearest-neighbor, 1 = bilinear, 2 = bicubic (16/32bit color depth games only)\n"
+            "; Possible values: 0 = nearest-neighbor, 1 = bilinear, 2 = bicubic, 3 = lanczos (bicubic/lanczos only support 16/32bit color depth games)\n"
             "d3d9_filter=2\n"
             "\n"
             "; Enable upscale hack for high resolution patches (Supports C&C1, Red Alert 1 and KKND Xtreme)\n"

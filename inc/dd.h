@@ -39,6 +39,7 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
 #define FILTER_NEAREST 0
 #define FILTER_LINEAR 1
 #define FILTER_CUBIC 2
+#define FILTER_LANCZOS 3
 
 #define SDM_MODE_SET_BY_GAME 0x00000001l
 #define SDM_LEAVE_WINDOWED   0x00000002l
