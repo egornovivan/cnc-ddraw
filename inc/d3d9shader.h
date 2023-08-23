@@ -168,7 +168,7 @@ const BYTE D3D9_PALETTE_SHADER[] =
         lrp r2, r0.y, r1, r5
         mov oC0, r2
 
-        // approximately 35 instruction slots used (8 texture, 27 arithmetic)
+// approximately 35 instruction slots used (8 texture, 27 arithmetic)
 
 // fxc.exe /Tps_2_0 shader.hlsl /Fhshader.h
 /*
@@ -360,19 +360,6 @@ const BYTE D3D9_PALETTE_SHADER_BILINEAR[] =
       0,   8,  15, 128,   2,   0,
     228, 128, 255, 255,   0,   0
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* catmull rom upscaling */
