@@ -549,7 +549,6 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
 
             ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
-            PostMessageA(g_ddraw->hwnd, WM_D3D9DEVICELOST, 0, 0);
         }
         else
         {
