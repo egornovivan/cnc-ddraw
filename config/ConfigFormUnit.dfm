@@ -3196,7 +3196,8 @@ object ConfigForm: TConfigForm
       Items.Strings = (
         'Nearest neighbor'
         'Bilinear'
-        'Bicubic Catmull-Rom')
+        'Bicubic (Catmull-Rom)'
+        'Lanczos')
     end
     object RendererCbx: TComboBox
       Left = 41

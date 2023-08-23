@@ -795,8 +795,12 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	case 1:
 		ShaderD3DCbx->ItemIndex = 1;
 		break;
+	case 2:
 	default:
 		ShaderD3DCbx->ItemIndex = 2;
+		break;
+	case 3:
+		ShaderD3DCbx->ItemIndex = 3;
 		break;
 	}
 
