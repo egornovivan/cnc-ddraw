@@ -127,46 +127,46 @@ const BYTE D3D9_PALETTE_SHADER[] =
 //
 
     ps_2_0
-        def c1, -0.5, 0.5, 1.5, 0
-        def c2, 0.99609375, 0.001953125, 0, 0
-        dcl t0.xy
-        dcl_2d s0
-        dcl_2d s1
-        mov r0.w, c1.x
-        mad r0.xy, t0, c0, r0.w
-        frc r0.zw, r0.wzyx
-        add r0.xy, -r0.wzyx, r0
-        add r0.zw, r0.wzyx, c1.z
-        add r0.xy, r0, c1.y
-        rcp r1.x, c0.x
-        rcp r1.y, c0.y
-        mul r2.xy, r0.wzyx, r1
-        mul r1.xy, r0, r1
-        mad r0.xy, t0, c0, -r0
-        mov r3.x, r2.x
-        mov r3.y, r1.y
-        mov r4.x, r1.x
-        mov r4.y, r2.y
-        texld r3, r3, s0
-        texld r1, r1, s0
-        texld r2, r2, s0
-        texld r4, r4, s0
-        mad r3.x, r3.x, c2.x, c2.y
-        mov r3.y, c1.w
-        mad r1.x, r1.x, c2.x, c2.y
-        mov r1.y, c1.w
-        mad r2.x, r2.x, c2.x, c2.y
-        mad r4.x, r4.x, c2.x, c2.y
-        mov r4.y, c1.w
-        mov r2.y, c1.w
-        texld r3, r3, s1
-        texld r1, r1, s1
-        texld r4, r4, s1
-        texld r2, r2, s1
-        lrp r5, r0.x, r3, r1
-        lrp r1, r0.x, r2, r4
-        lrp r2, r0.y, r1, r5
-        mov oC0, r2
+    def c1, -0.5, 0.5, 1.5, 0
+    def c2, 0.99609375, 0.001953125, 0, 0
+    dcl t0.xy
+    dcl_2d s0
+    dcl_2d s1
+    mov r0.w, c1.x
+    mad r0.xy, t0, c0, r0.w
+    frc r0.zw, r0.wzyx
+    add r0.xy, -r0.wzyx, r0
+    add r0.zw, r0.wzyx, c1.z
+    add r0.xy, r0, c1.y
+    rcp r1.x, c0.x
+    rcp r1.y, c0.y
+    mul r2.xy, r0.wzyx, r1
+    mul r1.xy, r0, r1
+    mad r0.xy, t0, c0, -r0
+    mov r3.x, r2.x
+    mov r3.y, r1.y
+    mov r4.x, r1.x
+    mov r4.y, r2.y
+    texld r3, r3, s0
+    texld r1, r1, s0
+    texld r2, r2, s0
+    texld r4, r4, s0
+    mad r3.x, r3.x, c2.x, c2.y
+    mov r3.y, c1.w
+    mad r1.x, r1.x, c2.x, c2.y
+    mov r1.y, c1.w
+    mad r2.x, r2.x, c2.x, c2.y
+    mad r4.x, r4.x, c2.x, c2.y
+    mov r4.y, c1.w
+    mov r2.y, c1.w
+    texld r3, r3, s1
+    texld r1, r1, s1
+    texld r4, r4, s1
+    texld r2, r2, s1
+    lrp r5, r0.x, r3, r1
+    lrp r1, r0.x, r2, r4
+    lrp r2, r0.y, r1, r5
+    mov oC0, r2
 
 // approximately 35 instruction slots used (8 texture, 27 arithmetic)
 
