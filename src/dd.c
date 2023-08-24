@@ -719,7 +719,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
                         if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                         {
-                            /* everything failed, use windowed mode instead */
+                            /* everything failed, use windowed/borderless mode instead */
                             g_ddraw->render.width = g_ddraw->width;
                             g_ddraw->render.height = g_ddraw->height;
 
@@ -727,6 +727,20 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                             g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
                             g_ddraw->windowed = TRUE;
+
+                            if (g_ddraw->render.width  <= real_GetSystemMetrics(SM_CXSCREEN) &&
+                                g_ddraw->render.height <= real_GetSystemMetrics(SM_CYSCREEN))
+                            {
+                                /* Switch to borderless mode if window fits into screen */
+                                g_ddraw->fullscreen = TRUE;
+                            }
+                            else
+                            {
+                                /* Make window titlebar visible if window does not fit into screen */
+                                g_config.window_rect.left = -32000;
+                                g_config.window_rect.top = 
+                                    real_GetSystemMetrics(SM_CYCAPTION) + real_GetSystemMetrics(SM_CYSIZEFRAME);
+                            }
                         }
                     }
                 }

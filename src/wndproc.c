@@ -41,7 +41,6 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
     switch (uMsg)
     {
-    case WM_GETMINMAXINFO:
     case WM_MOVING:
     case WM_NCLBUTTONDOWN:
     case WM_NCLBUTTONUP:
@@ -49,6 +48,35 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_CANCELMODE:
     case WM_DISPLAYCHANGE:
     {
+        return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    }
+    case WM_GETMINMAXINFO:
+    {
+        MINMAXINFO* mmi = (MINMAXINFO*)lParam;
+
+        if (g_ddraw->windowed && g_ddraw->width)
+        {
+            RECT rc = { 0, 0, g_ddraw->width, g_ddraw->height };
+
+            AdjustWindowRectEx(
+                &rc,
+                real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE),
+                GetMenu(g_ddraw->hwnd) != NULL,
+                real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
+
+            // set minimum window size
+            //mmi->ptMinTrackSize.x = rc.right - rc.left;
+            //mmi->ptMinTrackSize.y = rc.bottom - rc.top;
+
+            if (mmi->ptMaxTrackSize.x < rc.right - rc.left)
+                mmi->ptMaxTrackSize.x = rc.right - rc.left;
+
+            if (mmi->ptMaxTrackSize.y < rc.bottom - rc.top)
+                mmi->ptMaxTrackSize.y = rc.bottom - rc.top;
+
+            return 0;
+        }
+
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
     case WM_NCACTIVATE:
