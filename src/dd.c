@@ -887,6 +887,11 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         {
             x = y = 0;
         }
+        else if (border && g_config.window_rect.top == -32000 && y < 0)
+        {
+            /* Make window titlebar visible if window does not fit into screen */
+            y = real_GetSystemMetrics(SM_CYCAPTION) + real_GetSystemMetrics(SM_CYSIZEFRAME);
+        }
 
         if (util_is_minimized(g_ddraw->hwnd))
             real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
