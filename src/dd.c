@@ -685,7 +685,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                         (float)g_ddraw->width / g_ddraw->height,
                         &res,
                         g_ddraw->width + 1, /* don't return the original resolution since we tested that one already */
-                        g_ddraw->height + 1,
+                        g_ddraw->height,
                         g_ddraw->mode.dmPelsWidth,
                         g_ddraw->mode.dmPelsHeight);
 
