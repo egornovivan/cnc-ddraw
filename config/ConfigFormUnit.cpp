@@ -778,12 +778,23 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 		for (int i = 0; i < list.Length; i++)
 			ShaderCbx->AddItem(list[i], NULL);
-
-		auto shader = ini->ReadString("ddraw", "shader", "");
-		ShaderCbx->ItemIndex = ShaderCbx->Items->IndexOf(shader);
 	}
 	catch (...)
 	{
+	}
+
+	if (ShaderCbx->Items->Count == 0) {
+		ShaderCbx->AddItem("Nearest neighbor", NULL);
+		ShaderCbx->AddItem("Bilinear", NULL);
+		ShaderCbx->AddItem("Bicubic", NULL);
+	}
+
+	auto shader = ini->ReadString("ddraw", "shader", "Bicubic");
+	ShaderCbx->ItemIndex = ShaderCbx->Items->IndexOf(shader);
+
+	if (ShaderCbx->ItemIndex == -1) {
+		ShaderCbx->AddItem(shader, NULL);
+		ShaderCbx->ItemIndex = ShaderCbx->Items->Count - 1;
 	}
 
 	int d3d9_filter = ini->ReadInteger("ddraw", "d3d9_filter", 2);

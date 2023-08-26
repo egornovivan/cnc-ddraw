@@ -15,25 +15,25 @@ const char PASSTHROUGH_VERT_SHADER_110[] =
 
 const char PALETTE_FRAG_SHADER_110[] =
     "#version 110\n"
-    "uniform sampler2D SurfaceTex; \n"
-    "uniform sampler2D PaletteTex; \n"
+    "uniform sampler2D Texture; \n"
+    "uniform sampler2D PaletteTexture; \n"
     "varying vec2 TEX0; \n"
     "\n"
     "void main()\n"
     "{\n"
-    "   vec4 pIndex = texture2D(SurfaceTex, TEX0); \n"
-    "   gl_FragColor = texture2D(PaletteTex, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0)); \n"
+    "   vec4 pIndex = texture2D(Texture, TEX0); \n"
+    "   gl_FragColor = texture2D(PaletteTexture, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0)); \n"
     "}\n";
 
 
 const char PASSTHROUGH_FRAG_SHADER_110[] =
     "#version 110\n"
-    "uniform sampler2D SurfaceTex; \n"
+    "uniform sampler2D Texture; \n"
     "varying vec2 TEX0; \n"
     "\n"
     "void main()\n"
     "{\n"
-    "   vec4 texel = texture2D(SurfaceTex, TEX0); \n"
+    "   vec4 texel = texture2D(Texture, TEX0); \n"
     "   gl_FragColor = texel; \n"
     "}\n";
 
@@ -59,26 +59,26 @@ const char PASSTHROUGH_VERT_SHADER[] =
 const char PALETTE_FRAG_SHADER[] =
     "#version 130\n"
     "out vec4 FragColor;\n"
-    "uniform sampler2D SurfaceTex;\n"
-    "uniform sampler2D PaletteTex;\n"
+    "uniform sampler2D Texture;\n"
+    "uniform sampler2D PaletteTexture;\n"
     "in vec4 TEX0;\n"
     "\n"
     "void main()\n"
     "{\n"
-    "    vec4 pIndex = texture(SurfaceTex, TEX0.xy);\n"
-    "    FragColor = texture(PaletteTex, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0));\n"
+    "    vec4 pIndex = texture(Texture, TEX0.xy);\n"
+    "    FragColor = texture(PaletteTexture, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0));\n"
     "}\n";
 
 
 const char PASSTHROUGH_FRAG_SHADER[] =
     "#version 130\n"
     "out vec4 FragColor;\n"
-    "uniform sampler2D SurfaceTex;\n"
+    "uniform sampler2D Texture;\n"
     "in vec4 TEX0;\n"
     "\n"
     "void main()\n"
     "{\n"
-    "    vec4 texel = texture(SurfaceTex, TEX0.xy);\n"
+    "    vec4 texel = texture(Texture, TEX0.xy);\n"
     "    FragColor = texel;\n"
     "}\n";
 
@@ -104,26 +104,26 @@ const char PASSTHROUGH_VERT_SHADER_CORE[] =
 const char PALETTE_FRAG_SHADER_CORE[] =
     "#version 150\n"
     "out vec4 FragColor;\n"
-    "uniform sampler2D SurfaceTex;\n"
-    "uniform sampler2D PaletteTex;\n"
+    "uniform sampler2D Texture;\n"
+    "uniform sampler2D PaletteTexture;\n"
     "in vec4 TEX0;\n"
     "\n"
     "void main()\n"
     "{\n"
-    "    vec4 pIndex = texture(SurfaceTex, TEX0.xy);\n"
-    "    FragColor = texture(PaletteTex, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0));\n"
+    "    vec4 pIndex = texture(Texture, TEX0.xy);\n"
+    "    FragColor = texture(PaletteTexture, vec2(pIndex.r * (255.0/256.0) + (0.5/256.0), 0));\n"
     "}\n";
 
 
 const char PASSTHROUGH_FRAG_SHADER_CORE[] =
     "#version 150\n"
     "out vec4 FragColor;\n"
-    "uniform sampler2D SurfaceTex;\n"
+    "uniform sampler2D Texture;\n"
     "in vec4 TEX0;\n"
     "\n"
     "void main()\n"
     "{\n"
-    "    vec4 texel = texture(SurfaceTex, TEX0.xy);\n"
+    "    vec4 texel = texture(Texture, TEX0.xy);\n"
     "    FragColor = texel;\n"
     "}\n";
 

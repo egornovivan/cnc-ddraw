@@ -185,15 +185,24 @@ static void ogl_build_programs()
                     (g_ddraw->render.viewport.width != g_ddraw->width ||
                         g_ddraw->render.viewport.height != g_ddraw->height))
                 {
-                    g_ogl.scale_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, CATMULL_ROM_FRAG_SHADER);
+                    g_ogl.scale_program = 
+                        oglu_build_program(
+                            PASSTHROUGH_VERT_SHADER, 
+                            _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
+                            _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
+                            CATMULL_ROM_FRAG_SHADER);
 
                     if (!g_ogl.scale_program)
                     {
                         g_ogl.scale_program =
-                            oglu_build_program(PASSTHROUGH_VERT_SHADER_CORE, CATMULL_ROM_FRAG_SHADER_CORE);
+                            oglu_build_program(
+                                PASSTHROUGH_VERT_SHADER_CORE, 
+                                _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
+                                _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
+                                CATMULL_ROM_FRAG_SHADER_CORE);
                     }
 
-                    bilinear = TRUE;
+                    bilinear = _stricmp(g_ddraw->shader, "Nearest neighbor") != 0;
                 }
             }
         }
@@ -365,10 +374,10 @@ static void ogl_init_main_program()
 
     glUseProgram(g_ogl.main_program);
 
-    glUniform1i(glGetUniformLocation(g_ogl.main_program, "SurfaceTex"), 0);
+    glUniform1i(glGetUniformLocation(g_ogl.main_program, "Texture"), 0);
 
     if (g_ddraw->bpp == 8)
-        glUniform1i(glGetUniformLocation(g_ogl.main_program, "PaletteTex"), 1);
+        glUniform1i(glGetUniformLocation(g_ogl.main_program, "PaletteTexture"), 1);
 
     if (g_oglu_got_version3)
     {
@@ -521,11 +530,25 @@ static void ogl_init_scale_program()
     output_size[0] = (float)g_ddraw->render.viewport.width;
     output_size[1] = (float)g_ddraw->render.viewport.height;
 
-    glUniform2fv(glGetUniformLocation(g_ogl.scale_program, "OutputSize"), 1, output_size);
-    glUniform2fv(glGetUniformLocation(g_ogl.scale_program, "TextureSize"), 1, texture_size);
-    glUniform2fv(glGetUniformLocation(g_ogl.scale_program, "InputSize"), 1, input_size);
-    glUniform1i(glGetUniformLocation(g_ogl.scale_program, "FrameDirection"), 1);
-    glUniform1i(glGetUniformLocation(g_ogl.scale_program, "Texture"), 0);
+    GLint loc = glGetUniformLocation(g_ogl.scale_program, "OutputSize");
+    if (loc != -1) 
+        glUniform2fv(loc, 1, output_size);
+
+    loc = glGetUniformLocation(g_ogl.scale_program, "TextureSize");
+    if (loc != -1) 
+        glUniform2fv(loc, 1, texture_size);
+
+    loc = glGetUniformLocation(g_ogl.scale_program, "InputSize");
+    if (loc != -1) 
+        glUniform2fv(loc, 1, input_size);
+
+    loc = glGetUniformLocation(g_ogl.scale_program, "FrameDirection");
+    if (loc != -1) 
+        glUniform1i(loc, 1);
+
+    loc = glGetUniformLocation(g_ogl.scale_program, "Texture");
+    if (loc != -1) 
+        glUniform1i(loc, 0);
 
     const float mvp_matrix[16] = {
         1,0,0,0,
