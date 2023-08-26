@@ -204,7 +204,7 @@ static void ogl_build_programs()
                                 CATMULL_ROM_FRAG_SHADER_CORE);
                     }
 
-                    bilinear = TRUE;
+                    bilinear =
                         _stricmp(g_ddraw->shader, "Nearest neighbor") != 0 && 
                         _stricmp(g_ddraw->shader, "Lanczos") != 0;
                 }
