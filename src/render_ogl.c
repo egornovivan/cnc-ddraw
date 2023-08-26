@@ -190,6 +190,7 @@ static void ogl_build_programs()
                             PASSTHROUGH_VERT_SHADER, 
                             _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
                             _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
+                            _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER :
                             CATMULL_ROM_FRAG_SHADER);
 
                     if (!g_ogl.scale_program)
@@ -199,10 +200,13 @@ static void ogl_build_programs()
                                 PASSTHROUGH_VERT_SHADER_CORE, 
                                 _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
                                 _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
+                                _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER_CORE :
                                 CATMULL_ROM_FRAG_SHADER_CORE);
                     }
 
-                    bilinear = _stricmp(g_ddraw->shader, "Nearest neighbor") != 0;
+                    bilinear = TRUE;
+                        _stricmp(g_ddraw->shader, "Nearest neighbor") != 0 && 
+                        _stricmp(g_ddraw->shader, "Lanczos") != 0;
                 }
             }
         }
