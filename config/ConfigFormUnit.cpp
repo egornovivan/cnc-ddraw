@@ -469,7 +469,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		AdvancedBtn->Caption = L"Impostazioni avanzate";
 		HotkeyBtn->Caption = L"Tasti di scelta rapida";
 		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
-		RestoreDefaultsBtn->Caption = L"Ripristina le impostazioni di default";
+		RestoreDefaultsBtn->Caption = L"Ripristina le impostazioni predefinite";
 		PresentationLbl->Caption = L"Presentazione";
 		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
 		VsyncLbl->Caption = L"Abilita la sincronizzazione verticale (VSync)";
@@ -485,7 +485,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaximizeWindowLbl->Caption = L"Ingrandisci finestra";
 		UnlockCursor1Lbl->Caption = L"Sblocca cursore 1";
 		UnlockCursor2Lbl->Caption = L"Sblocca cursore 2";
-		ScreenshotLbl->Caption = L"Immagine dello schermo";
+		ScreenshotLbl->Caption = L"Istantanea dello schermo";
 		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
 		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
 		ResolutionsLbl->Caption = L"Sblocca ulteriori risoluzioni dello schermo";
