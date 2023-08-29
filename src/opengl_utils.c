@@ -216,7 +216,7 @@ void oglu_init()
         g_oglu_got_version3 = FALSE;
         wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)xwglGetProcAddress("wglCreateContextAttribsARB");
     }
-    
+
     if (g_ddraw->opengl_core)
     {
         wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)xwglGetProcAddress("wglCreateContextAttribsARB");
@@ -270,6 +270,22 @@ GLuint oglu_build_program(const GLchar* vert_source, const GLchar* frag_source)
         glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &is_compiled);
         if (is_compiled == GL_FALSE)
         {
+#ifdef _DEBUG
+            GLint len = 0;
+            glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &len);
+            if (len > 0)
+            {
+                char* log = calloc(len + 50, 1);
+
+                if (log)
+                {
+                    glGetShaderInfoLog(frag_shader, len, &len, &log[0]);
+                    TRACE("glGetShaderInfoLog (Vertex):\n%s", log);
+                    free(log);
+                }
+            }
+#endif
+
             if (glDeleteShader)
                 glDeleteShader(vert_shader);
 
@@ -283,14 +299,22 @@ GLuint oglu_build_program(const GLchar* vert_source, const GLchar* frag_source)
         glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &is_compiled);
         if (is_compiled == GL_FALSE)
         {
-            /*
+#ifdef _DEBUG
             GLint len = 0;
             glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &len);
-            char* log = calloc(len + 50, 1);
-            glGetShaderInfoLog(frag_shader, len, &len, &log[0]);
-            TRACE("| GL_LOG: %s\n", log);
-            free(log);
-            */
+            if (len > 0)
+            {
+                char* log = calloc(len + 50, 1);
+
+                if (log)
+                {
+                    glGetShaderInfoLog(frag_shader, len, &len, &log[0]);
+                    TRACE("glGetShaderInfoLog (Fragment):\n%s", log);
+                    free(log);
+                }
+            }
+#endif
+
             if (glDeleteShader)
             {
                 glDeleteShader(frag_shader);
