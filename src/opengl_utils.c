@@ -247,11 +247,32 @@ BOOL oglu_ext_exists(char* ext, HDC hdc)
     return FALSE;
 }
 
-GLuint oglu_build_program(const GLchar* vert_source, const GLchar* frag_source)
+GLuint oglu_build_program(GLchar* vert_source, GLchar* frag_source, BOOL core_profile)
 {
     if (!glCreateShader || !glShaderSource || !glCompileShader || !glCreateProgram ||
-        !glAttachShader || !glLinkProgram || !glUseProgram || !glDetachShader)
+        !glAttachShader || !glLinkProgram || !glUseProgram || !glDetachShader ||
+        !vert_source || !frag_source)
         return 0;
+
+    char* version_start = strstr(vert_source, "#version");
+    if (version_start && core_profile)
+    {
+        if (_strnicmp(version_start, "#version 130", 12) == 0 ||
+            _strnicmp(version_start, "#version 140", 12) == 0)
+        {
+            memcpy(version_start, "#version 150", 12);
+        }
+    }
+
+    version_start = strstr(frag_source, "#version");
+    if (version_start && core_profile)
+    {
+        if (_strnicmp(version_start, "#version 130", 12) == 0 ||
+            _strnicmp(version_start, "#version 140", 12) == 0)
+        {
+            memcpy(version_start, "#version 150", 12);
+        }
+    }
 
     GLuint vert_shader = glCreateShader(GL_VERTEX_SHADER);
     GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -401,7 +422,7 @@ GLuint oglu_build_program_from_file(const char* file_path, BOOL core_profile)
                     strcat(vert_source, version + strlen(version) + 1);
                     strcat(frag_source, version + strlen(version) + 1);
 
-                    program = oglu_build_program(vert_source, frag_source);
+                    program = oglu_build_program(vert_source, frag_source, core_profile);
                 }
                 else
                 {
@@ -412,7 +433,7 @@ GLuint oglu_build_program_from_file(const char* file_path, BOOL core_profile)
                     strcat(vert_source, source);
                     strcat(frag_source, source);
 
-                    program = oglu_build_program(vert_source, frag_source);
+                    program = oglu_build_program(vert_source, frag_source, core_profile);
                 }
 
                 free(vert_source);

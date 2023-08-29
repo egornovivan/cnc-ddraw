@@ -133,25 +133,17 @@ static void ogl_build_programs()
 {
     g_ogl.main_program = g_ogl.scale_program = 0;
 
+    BOOL core_profile = wglCreateContextAttribsARB != NULL;
+
     if (g_oglu_got_version3)
     {
         if (g_ddraw->bpp == 8)
         {
-            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PALETTE_FRAG_SHADER);
-
-            if (!g_ogl.main_program)
-            {
-                g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_CORE, PALETTE_FRAG_SHADER_CORE);
-            }
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PALETTE_FRAG_SHADER, core_profile);
         }
         else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
         {
-            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PASSTHROUGH_FRAG_SHADER);
-
-            if (!g_ogl.main_program)
-            {
-                g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_CORE, PASSTHROUGH_FRAG_SHADER_CORE);
-            }
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PASSTHROUGH_FRAG_SHADER, core_profile);
         }
 
         BOOL bilinear = FALSE;
@@ -179,7 +171,7 @@ static void ogl_build_programs()
                 g_ddraw->render.viewport.width != g_ddraw->width ||
                 g_ddraw->render.viewport.height != g_ddraw->height)
             {
-                g_ogl.scale_program = oglu_build_program_from_file(shader_path, wglCreateContextAttribsARB != NULL);
+                g_ogl.scale_program = oglu_build_program_from_file(shader_path, core_profile);
 
                 if (!g_ogl.scale_program &&
                     (g_ddraw->render.viewport.width != g_ddraw->width ||
@@ -191,18 +183,8 @@ static void ogl_build_programs()
                             _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
                             _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
                             _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER :
-                            CATMULL_ROM_FRAG_SHADER);
-
-                    if (!g_ogl.scale_program)
-                    {
-                        g_ogl.scale_program =
-                            oglu_build_program(
-                                PASSTHROUGH_VERT_SHADER_CORE, 
-                                _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
-                                _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER_CORE :
-                                _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER_CORE :
-                                CATMULL_ROM_FRAG_SHADER_CORE);
-                    }
+                            CATMULL_ROM_FRAG_SHADER, 
+                            core_profile);
 
                     bilinear =
                         _stricmp(g_ddraw->shader, "Nearest neighbor") != 0 && 
@@ -222,11 +204,11 @@ static void ogl_build_programs()
     {
         if (g_ddraw->bpp == 8)
         {
-            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PALETTE_FRAG_SHADER_110);
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PALETTE_FRAG_SHADER_110, FALSE);
         }
         else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
         {
-            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PASSTHROUGH_FRAG_SHADER_110);
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PASSTHROUGH_FRAG_SHADER_110, FALSE);
         }
     }
 }
