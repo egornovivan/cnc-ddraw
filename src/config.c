@@ -276,7 +276,7 @@ static void cfg_create_ini()
             "; Preliminary libretro shader support - (Requires 'renderer=opengl*') https://github.com/libretro/glsl-shaders\n"
             "; 2x scaling example: https://imgur.com/a/kxsM1oY - 4x scaling example: https://imgur.com/a/wjrhpFV\n"
             "; You can specify a full path to a .glsl shader file here or use one of the values listed below\n"
-            "; Possible values: Nearest neighbor, Bilinear, Bicubic, Lanczos\n"
+            "; Possible values: Nearest neighbor, Bilinear, Bicubic, Lanczos, xBR-lv2\n"
             "shader=Shaders\\cubic\\catmull-rom-bilinear.glsl\n"
             "\n"
             "; Window position, -32000 = center to screen\n"

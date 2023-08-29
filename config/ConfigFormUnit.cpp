@@ -788,6 +788,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		ShaderCbx->AddItem("Bilinear", NULL);
 		ShaderCbx->AddItem("Bicubic", NULL);
 		ShaderCbx->AddItem("Lanczos", NULL);
+		ShaderCbx->AddItem("xBR-lv2", NULL);
 	}
 
 	auto shader = ini->ReadString("ddraw", "shader", "Bicubic");

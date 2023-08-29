@@ -179,16 +179,19 @@ static void ogl_build_programs()
                 {
                     g_ogl.scale_program = 
                         oglu_build_program(
+                            _stricmp(g_ddraw->shader, "xBR-lv2") == 0 ? XBR_LV2_VERT_SHADER :
                             PASSTHROUGH_VERT_SHADER, 
                             _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
                             _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
                             _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER :
+                            _stricmp(g_ddraw->shader, "xBR-lv2") == 0 ? XBR_LV2_FRAG_SHADER :
                             CATMULL_ROM_FRAG_SHADER, 
                             core_profile);
 
                     bilinear =
                         _stricmp(g_ddraw->shader, "Nearest neighbor") != 0 && 
-                        _stricmp(g_ddraw->shader, "Lanczos") != 0;
+                        _stricmp(g_ddraw->shader, "Lanczos") != 0 &&
+                        _stricmp(g_ddraw->shader, "xBR-lv2") != 0;
                 }
             }
         }
