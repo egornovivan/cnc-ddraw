@@ -1128,6 +1128,24 @@ HWND WINAPI fake_CreateWindowExA(
     DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y,
     int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
 {
+    /* Center Claw DVD movies */
+    if (HIWORD(lpClassName) &&
+        _strcmpi(lpClassName, "Afx:400000:3") == 0 &&
+        g_ddraw && g_ddraw->hwnd && g_ddraw->width &&
+        (dwStyle & WS_POPUP | WS_CHILD) == WS_POPUP | WS_CHILD)
+    {
+        POINT pt = { 0, 0 };
+        real_ClientToScreen(g_ddraw->hwnd, &pt);
+
+        int added_height = g_ddraw->render.height - g_ddraw->height;
+        int added_width = g_ddraw->render.width - g_ddraw->width;
+        int align_y = added_height > 0 ? added_height / 2 : 0;
+        int align_x = added_width > 0 ? added_width / 2 : 0;
+
+        X = pt.x + align_x;
+        Y = pt.y + align_y;
+    }
+
     /* Fix for SMACKW32.DLL creating another window that steals the focus */
     if (HIWORD(lpClassName) && _strcmpi(lpClassName, "MouseTypeWind") == 0 && g_ddraw && g_ddraw->hwnd)
     {
