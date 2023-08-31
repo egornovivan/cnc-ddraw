@@ -544,6 +544,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     if (dwBPP != 8 && dwBPP != 16 && dwBPP != 32)
         return DDERR_INVALIDMODE;
 
+    if (g_ddraw->mgs_hack && dwHeight == 480) dwHeight -= 32; /* Remove black bar in Metal Gear Solid */
+
     if (g_ddraw->render.thread)
     {
         EnterCriticalSection(&g_ddraw->cs);

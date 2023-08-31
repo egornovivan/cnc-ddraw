@@ -166,6 +166,7 @@ typedef struct CNCDDRAW
     BOOL tshack;
     BOOL infantryhack;
     BOOL stronghold_hack;
+    BOOL mgs_hack;
     BOOL remove_menu;
     int maxgameticks;
     BOOL alt_key_down;

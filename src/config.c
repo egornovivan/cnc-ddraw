@@ -59,6 +59,7 @@ void cfg_load()
     g_ddraw->tshack = cfg_get_bool("tshack", FALSE);
     g_ddraw->infantryhack = cfg_get_bool("infantryhack", FALSE);
     g_ddraw->stronghold_hack = cfg_get_bool("stronghold_hack", FALSE);
+    g_ddraw->mgs_hack = cfg_get_bool("mgs_hack", FALSE);
 
     if (cfg_get_bool("game_handles_close", FALSE) || g_ddraw->infantryhack)
     {
