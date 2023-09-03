@@ -56,7 +56,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         if (g_ddraw->windowed && g_ddraw->width)
         {
-            RECT rc = { 0, 0, g_ddraw->width, g_ddraw->height };
+            RECT rc = { 0, 0, g_ddraw->render.width, g_ddraw->render.height };
 
             AdjustWindowRectEx(
                 &rc,
@@ -64,15 +64,24 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 GetMenu(g_ddraw->hwnd) != NULL,
                 real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
 
-            // set minimum window size
-            //mmi->ptMinTrackSize.x = rc.right - rc.left;
-            //mmi->ptMinTrackSize.y = rc.bottom - rc.top;
-
             if (mmi->ptMaxTrackSize.x < rc.right - rc.left)
                 mmi->ptMaxTrackSize.x = rc.right - rc.left;
 
             if (mmi->ptMaxTrackSize.y < rc.bottom - rc.top)
                 mmi->ptMaxTrackSize.y = rc.bottom - rc.top;
+
+            /*
+            RECT rcmin = { 0, 0, g_ddraw->width, g_ddraw->height };
+
+            AdjustWindowRectEx(
+                &rcmin,
+                real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE),
+                GetMenu(g_ddraw->hwnd) != NULL,
+                real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
+
+            mmi->ptMinTrackSize.x = rcmin.right - rcmin.left;
+            mmi->ptMinTrackSize.y = rcmin.bottom - rcmin.top;
+            */
 
             return 0;
         }
