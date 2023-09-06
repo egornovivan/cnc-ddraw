@@ -205,7 +205,7 @@ void oglu_init()
 
     g_oglu_got_version2 = glGetUniformLocation && glActiveTexture && glUniform1i;
 
-    g_oglu_got_version3 = glGenFramebuffers&& glBindFramebuffer&& glFramebufferTexture2D&& glDrawBuffers&&
+    g_oglu_got_version3 = glGenFramebuffers && glBindFramebuffer && glFramebufferTexture2D && glDrawBuffers &&
         glCheckFramebufferStatus && glUniform4f && glActiveTexture && glUniform1i &&
         glGetAttribLocation && glGenBuffers && glBindBuffer && glBufferData && glVertexAttribPointer &&
         glEnableVertexAttribArray && glUniform2fv && glUniformMatrix4fv && glGenVertexArrays && glBindVertexArray &&
