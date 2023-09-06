@@ -84,7 +84,7 @@ static char PASSTHROUGH_FRAG_SHADER[] =
     "}\n";
 
 
-static char RBG555_FRAG_SHADER[] =
+static char RGB555_FRAG_SHADER[] =
     "#version 130\n"
     "out vec4 FragColor;\n"
     "uniform sampler2D Texture;\n"

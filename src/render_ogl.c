@@ -143,7 +143,7 @@ static void ogl_build_programs()
         }
         else if (g_ddraw->bpp == 16 && g_ddraw->rgb555)
         {
-            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, RBG555_FRAG_SHADER, core_profile);
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, RGB555_FRAG_SHADER, core_profile);
         }
         else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
         {
