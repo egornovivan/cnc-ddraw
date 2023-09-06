@@ -281,7 +281,7 @@ static BOOL d3d9_create_resources()
                 g_d3d9.tex_height,
                 1,
                 0,
-                g_ddraw->bpp == 16 ? (g_ddraw->rgb555 ? D3DFMT_A1R5G5B5 : D3DFMT_R5G6B5) : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
+                g_ddraw->bpp == 16 ? (g_ddraw->rgb555 ? D3DFMT_X1R5G5B5 : D3DFMT_R5G6B5) : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
                 D3DPOOL_MANAGED,
                 &g_d3d9.surface_tex[i],
                 0));
