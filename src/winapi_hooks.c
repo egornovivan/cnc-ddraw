@@ -1132,7 +1132,7 @@ HWND WINAPI fake_CreateWindowExA(
     if (HIWORD(lpClassName) &&
         _strcmpi(lpClassName, "Afx:400000:3") == 0 &&
         g_ddraw && g_ddraw->hwnd && g_ddraw->width &&
-        (dwStyle & WS_POPUP | WS_CHILD) == WS_POPUP | WS_CHILD)
+        (dwStyle & (WS_POPUP | WS_CHILD)) == (WS_POPUP | WS_CHILD))
     {
         POINT pt = { 0, 0 };
         real_ClientToScreen(g_ddraw->hwnd, &pt);

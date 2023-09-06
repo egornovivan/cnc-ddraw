@@ -280,8 +280,8 @@ GLuint oglu_build_program(GLchar* vert_source, GLchar* frag_source, BOOL core_pr
     if (!vert_shader || !frag_shader)
         return 0;
 
-    glShaderSource(vert_shader, 1, &vert_source, NULL);
-    glShaderSource(frag_shader, 1, &frag_source, NULL);
+    glShaderSource(vert_shader, 1, (const GLchar**)&vert_source, NULL);
+    glShaderSource(frag_shader, 1, (const GLchar**)&frag_source, NULL);
 
     GLint is_compiled = 0;
 

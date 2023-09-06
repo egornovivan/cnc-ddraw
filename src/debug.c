@@ -130,8 +130,8 @@ void dbg_init()
 
         if (wine_get_host_version)
         {
-            char* sysname = NULL;
-            char* release = NULL;
+            const char* sysname = NULL;
+            const char* release = NULL;
 
             wine_get_host_version(&sysname, &release);
 
