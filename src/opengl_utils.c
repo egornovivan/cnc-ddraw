@@ -293,14 +293,14 @@ GLuint oglu_build_program(GLchar* vert_source, GLchar* frag_source, BOOL core_pr
         {
 #ifdef _DEBUG
             GLint len = 0;
-            glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &len);
+            glGetShaderiv(vert_shader, GL_INFO_LOG_LENGTH, &len);
             if (len > 0)
             {
                 char* log = calloc(len + 50, 1);
 
                 if (log)
                 {
-                    glGetShaderInfoLog(frag_shader, len, &len, &log[0]);
+                    glGetShaderInfoLog(vert_shader, len, &len, &log[0]);
                     TRACE("glGetShaderInfoLog (Vertex):\n%s", log);
                     free(log);
                 }
