@@ -84,6 +84,25 @@ static char PASSTHROUGH_FRAG_SHADER[] =
     "}\n";
 
 
+static char RBG555_FRAG_SHADER[] =
+    "#version 130\n"
+    "out vec4 FragColor;\n"
+    "uniform sampler2D Texture;\n"
+    "in vec4 TEX0;\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    vec4 texel = texture(Texture, TEX0.xy);\n"
+    "    int bytes = int(texel.r * 255.0 + 0.5) | int(texel.g * 255.0 + 0.5) << 8;\n"
+    "    vec4 color;\n"
+    "    color.r = float((bytes >> 10) & 31) / 31.0;\n"
+    "    color.g = float((bytes >> 5) & 31) / 31.0;\n"
+    "    color.b = float(bytes & 31) / 31.0;\n"
+    "    color.a = 1.0;\n"
+    "    FragColor = color;\n"
+    "}\n";
+
+
 /*   
 //    The following code is licensed under the MIT license: https://gist.github.com/TheRealMJP/bc503b0b87b643d3505d41eab8b332ae
 //    Ported from code: https://gist.github.com/TheRealMJP/c83b8c0f46b63f3a88a5986f4fa982b1

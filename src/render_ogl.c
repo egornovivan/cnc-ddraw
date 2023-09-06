@@ -141,6 +141,10 @@ static void ogl_build_programs()
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PALETTE_FRAG_SHADER, core_profile);
         }
+        else if (g_ddraw->bpp == 16 && g_ddraw->rgb555)
+        {
+            g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, RBG555_FRAG_SHADER, core_profile);
+        }
         else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PASSTHROUGH_FRAG_SHADER, core_profile);
@@ -260,12 +264,12 @@ static void ogl_create_textures(int width, int height)
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
-                GL_RGB5_A1,
+                GL_RG8,
                 g_ogl.surface_tex_width,
                 g_ogl.surface_tex_height,
                 0,
-                g_ogl.surface_format = GL_BGRA,
-                g_ogl.surface_type = GL_UNSIGNED_SHORT_1_5_5_5_REV,
+                g_ogl.surface_format = GL_RG,
+                g_ogl.surface_type = GL_UNSIGNED_BYTE,
                 0);
         }
         else if (g_ddraw->bpp == 16)
