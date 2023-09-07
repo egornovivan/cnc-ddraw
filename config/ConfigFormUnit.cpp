@@ -1128,6 +1128,12 @@ void TConfigForm::SaveSettings()
 
 void __fastcall TConfigForm::FormActivate(TObject *Sender)
 {
+	DisableGameUX();
+	AddDllOverride();
+}
+
+void TConfigForm::AddDllOverride()
+{
 	/* Detect wine (Linux/macOS) and create the needed dll override */
 	if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
 		return;
@@ -1156,6 +1162,47 @@ void __fastcall TConfigForm::FormActivate(TObject *Sender)
 			if (reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
 
 				reg->WriteString("ddraw", "native,builtin");
+				reg->CloseKey();
+			}
+		}
+		else
+			reg->CloseKey();
+	}
+
+	reg->Free();
+}
+
+void TConfigForm::DisableGameUX()
+{
+	/* Prevent bug where some games don't start properly and run in the background */
+	if (!(TOSVersion::Major == 6 && TOSVersion::Minor == 1))
+		return;
+
+	TRegistry* reg = new TRegistry(KEY_READ);
+	reg->RootKey = HKEY_CLASSES_ROOT;
+
+	if (reg->OpenKey(
+		"Local Settings\\Software\\Microsoft\\Windows\\GameUX\\ServiceLocation\\",
+		false)) {
+
+		if (reg->ValueExists("Games") &&
+			reg->ReadString("Games") != "127.0.0.1" &&
+			LowerCase(reg->ReadString("Games")) != "localhost") {
+
+			reg->CloseKey();
+
+			reg->Access = KEY_WRITE;
+
+			if (reg->OpenKey(
+				"Local Settings\\Software\\Microsoft\\Windows\\GameUX\\ServiceLocation\\",
+				false)) {
+
+				try {
+					reg->WriteString("Games", "127.0.0.1");
+				} catch (...) {
+					/* maybe restart with admin rights here? */
+				}
+
 				reg->CloseKey();
 			}
 		}

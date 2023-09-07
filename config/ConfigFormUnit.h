@@ -121,6 +121,8 @@ private:	// Benutzer-Deklarationen
 	void ApplyTranslation(TIniFile *ini);
 	System::UnicodeString GetKeyText(WORD key);
 	WORD GetKeyCode(System::UnicodeString key);
+	void DisableGameUX();
+    void AddDllOverride();
 public:		// Benutzer-Deklarationen
 	__fastcall TConfigForm(TComponent* Owner);
 };
