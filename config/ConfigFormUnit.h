@@ -122,7 +122,7 @@ private:	// Benutzer-Deklarationen
 	System::UnicodeString GetKeyText(WORD key);
 	WORD GetKeyCode(System::UnicodeString key);
 	void DisableGameUX();
-    void AddDllOverride();
+	void AddDllOverride();
 public:		// Benutzer-Deklarationen
 	__fastcall TConfigForm(TComponent* Owner);
 };
