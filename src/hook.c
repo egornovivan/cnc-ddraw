@@ -126,7 +126,6 @@ HOOKLIST g_hook_hooklist[] =
             { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, SKIP_HOOK2 },
             { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, SKIP_HOOK2 },
             { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
-            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
             { "CreateFontA", (PROC)fake_CreateFontA, (PROC*)&real_CreateFontA, 0 },
             { "CreateFontIndirectA", (PROC)fake_CreateFontIndirectA, (PROC*)&real_CreateFontIndirectA, 0 },
             { "", NULL, NULL, 0 }
