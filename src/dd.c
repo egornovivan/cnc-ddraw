@@ -406,7 +406,8 @@ HRESULT dd_GetCaps(LPDDCAPS_DX1 lpDDDriverCaps, LPDDCAPS_DX1 lpDDEmulCaps)
             DDCAPS_BLTSTRETCH | 
             DDCAPS_CANCLIP | 
             DDCAPS_CANBLTSYSMEM |
-            DDCAPS_CANCLIPSTRETCHED;
+            DDCAPS_CANCLIPSTRETCHED | 
+            DDCAPS_COLORKEY;
 
         lpDDDriverCaps->dwCaps2 =
             DDCAPS2_NOPAGELOCKREQUIRED |

@@ -686,8 +686,7 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
             DDSD_HEIGHT | 
             DDSD_PITCH | 
             DDSD_PIXELFORMAT | 
-            DDSD_LPSURFACE | 
-            DDSD_BACKBUFFERCOUNT;
+            DDSD_LPSURFACE;
 
         lpDDSurfaceDesc->dwWidth = This->width;
         lpDDSurfaceDesc->dwHeight = This->height;
@@ -697,7 +696,12 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         lpDDSurfaceDesc->ddpfPixelFormat.dwFlags = DDPF_RGB;
         lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount = This->bpp;
         lpDDSurfaceDesc->ddsCaps.dwCaps = This->caps;
+
+        if (This->flags & DDSD_BACKBUFFERCOUNT)
+        {
+            lpDDSurfaceDesc->dwFlags |= DDSD_BACKBUFFERCOUNT;
         lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
+        }
 
         if (This->bpp == 8)
         {
