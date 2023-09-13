@@ -770,6 +770,21 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             }
         }
     }
+    else if (g_ddraw->fullscreen) /* Support downscaling in borderless mode */
+    {
+        if (g_ddraw->width > g_ddraw->mode.dmPelsWidth ||
+            g_ddraw->height > g_ddraw->mode.dmPelsHeight)
+        {
+            /* Downscaling requires adjmouse to be enabled */
+            g_ddraw->adjmouse = TRUE;
+
+            g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
+            g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
+
+            g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
+            g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
+        }
+    }
 
     g_ddraw->render.viewport.width = g_ddraw->render.width;
     g_ddraw->render.viewport.height = g_ddraw->render.height;
