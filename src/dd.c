@@ -311,7 +311,7 @@ HRESULT dd_EnumDisplayModes(
                 if (ChangeDisplaySettings(&m, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     continue;
             }
-            DebugBreak();
+
             memset(&s, 0, sizeof(s));
 
             s.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
