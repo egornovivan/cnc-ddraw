@@ -714,8 +714,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                         ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     {
                         /* try current display settings */
-                        g_ddraw->render.width = max(g_ddraw->width, g_ddraw->mode.dmPelsWidth);
-                        g_ddraw->render.height = max(g_ddraw->height, g_ddraw->mode.dmPelsHeight);
+                        g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
+                        g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
 
                         g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
                         g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
