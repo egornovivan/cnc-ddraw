@@ -700,7 +700,7 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         if (This->flags & DDSD_BACKBUFFERCOUNT)
         {
             lpDDSurfaceDesc->dwFlags |= DDSD_BACKBUFFERCOUNT;
-        lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
+            lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
         }
 
         if (This->bpp == 8)
