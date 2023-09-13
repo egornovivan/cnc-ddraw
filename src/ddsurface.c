@@ -700,7 +700,7 @@ HRESULT dds_GetSurfaceDesc(IDirectDrawSurfaceImpl* This, LPDDSURFACEDESC lpDDSur
         if (This->flags & DDSD_BACKBUFFERCOUNT)
         {
             lpDDSurfaceDesc->dwFlags |= DDSD_BACKBUFFERCOUNT;
-        lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
+            lpDDSurfaceDesc->dwBackBufferCount = This->backbuffer_count;
         }
 
         if (This->bpp == 8)
@@ -952,6 +952,8 @@ HRESULT dds_Lock(
     if (g_ddraw && g_ddraw->lock_surfaces)
         EnterCriticalSection(&This->cs);
 
+    This->locked = TRUE;
+
     dbg_dump_dds_lock_flags(dwFlags);
 
     if (g_ddraw && g_ddraw->fixnotresponding && !g_ddraw->wine)
@@ -976,6 +978,11 @@ HRESULT dds_Lock(
 
         lpDDSurfaceDesc->lpSurface =
             (char*)dds_GetBuffer(This) + (lpDestRect->left * This->bytes_pp) + (lpDestRect->top * This->pitch);
+    }
+
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && (dwFlags & DDLOCK_WAIT))
+    {
+        Sleep(5);
     }
 
     return ret;
@@ -1070,6 +1077,8 @@ HRESULT dds_SetPalette(IDirectDrawSurfaceImpl* This, IDirectDrawPaletteImpl* lpD
 
 HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
 {
+    if (!This->locked) return DDERR_NOTLOCKED;
+
     /* Hack for Warcraft II BNE and Diablo */
     HWND hwnd = g_ddraw && g_ddraw->bnet_active ? FindWindowEx(HWND_DESKTOP, NULL, "SDlgDialog", NULL) : NULL;
 
@@ -1179,6 +1188,8 @@ HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
                 util_limit_game_ticks();
         }
     }
+
+    This->locked = FALSE;
 
     if (g_ddraw && g_ddraw->lock_surfaces)
         LeaveCriticalSection(&This->cs);
