@@ -713,6 +713,13 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                     if (!found_res ||
                         ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     {
+                        if (g_ddraw->width > g_ddraw->mode.dmPelsWidth ||
+                            g_ddraw->height > g_ddraw->mode.dmPelsHeight)
+                        {
+                            /* Downscaling requires adjmouse to be enabled */
+                            g_ddraw->adjmouse = TRUE;
+                        }
+
                         /* try current display settings */
                         g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
                         g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
