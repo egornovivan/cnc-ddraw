@@ -713,13 +713,6 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                     if (!found_res ||
                         ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     {
-                        if (g_ddraw->width > g_ddraw->mode.dmPelsWidth ||
-                            g_ddraw->height > g_ddraw->mode.dmPelsHeight)
-                        {
-                            /* Downscaling requires adjmouse to be enabled */
-                            g_ddraw->adjmouse = TRUE;
-                        }
-
                         /* try current display settings */
                         g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
                         g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
@@ -1178,9 +1171,6 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
 HRESULT dd_WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
 {
-    Sleep(5);
-    return DD_OK;
-
     if (g_ddraw->maxgameticks == -2)
     {
         if (fpsl_dwm_flush() || fpsl_wait_for_vblank(g_ddraw->render.maxfps >= 0 && !g_ddraw->vsync))
