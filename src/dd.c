@@ -729,48 +729,26 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
                         if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                         {
-                            /* everything failed, use windowed/borderless mode instead */
+                            /* everything failed, use borderless mode instead */
                             ChangeDisplaySettings(NULL, 0);
 
-                            g_ddraw->render.width = g_ddraw->width;
-                            g_ddraw->render.height = g_ddraw->height;
-
-                            g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
-                            g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
-
                             g_ddraw->windowed = TRUE;
+                            g_ddraw->fullscreen = TRUE;
+                            border = FALSE;
 
-                            if (g_ddraw->render.width  <= g_ddraw->mode.dmPelsWidth &&
-                                g_ddraw->render.height <= g_ddraw->mode.dmPelsHeight)
-                            {
-                                /* Switch to borderless mode if window fits into screen */
-                                g_ddraw->fullscreen = TRUE;
-                                border = FALSE;
-   
-                                g_ddraw->render.width  = g_ddraw->mode.dmPelsWidth;
-                                g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
-
-                                g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
-                                g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
-
-                                /* prevent OpenGL from going automatically into fullscreen exclusive mode */
-                                if (g_ddraw->renderer == ogl_render_main)
-                                    nonexclusive = TRUE;
-                            }
-                            else
-                            {
-                                /* Make window titlebar visible if window does not fit into screen */
-                                g_config.window_rect.left = -32000;
-                                g_config.window_rect.top = 
-                                    real_GetSystemMetrics(SM_CYCAPTION) + real_GetSystemMetrics(SM_CYSIZEFRAME);
-                            }
+                            /* prevent OpenGL from going automatically into fullscreen exclusive mode */
+                            if (g_ddraw->renderer == ogl_render_main)
+                                nonexclusive = TRUE;
+                            
                         }
                     }
                 }
             }
         }
     }
-    else if (g_ddraw->fullscreen) /* Support downscaling in borderless mode */
+    
+    /* Support downscaling in borderless mode */
+    if (g_ddraw->windowed && g_ddraw->fullscreen)
     {
         if (g_ddraw->width > g_ddraw->mode.dmPelsWidth ||
             g_ddraw->height > g_ddraw->mode.dmPelsHeight)
