@@ -179,6 +179,12 @@ HRESULT dd_EnumDisplayModes(
                     while (--m.dmPelsWidth % 8);
                 }
 
+                if (i == 0 && g_ddraw->custom_width && g_ddraw->custom_height)
+                {
+                    m.dmPelsWidth = g_ddraw->custom_width;
+                    m.dmPelsHeight = g_ddraw->custom_height;
+                }
+
                 TRACE(
                     "     %u: %ux%u@%u %u bpp\n",
                     i,
@@ -291,7 +297,8 @@ HRESULT dd_EnumDisplayModes(
             if (!resolutions[i].cx || !resolutions[i].cy)
                 continue;
 
-            if ((max_w && resolutions[i].cx > max_w) || (max_h && resolutions[i].cy > max_h))
+            if (!(resolutions[i].cx == g_ddraw->custom_width && resolutions[i].cy == g_ddraw->custom_height) &&
+                ((max_w && resolutions[i].cx > max_w) || (max_h && resolutions[i].cy > max_h)))
             {
                 DEVMODE m;
                 memset(&m, 0, sizeof(DEVMODE));
@@ -304,7 +311,7 @@ HRESULT dd_EnumDisplayModes(
                 if (ChangeDisplaySettings(&m, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
                     continue;
             }
-
+            DebugBreak();
             memset(&s, 0, sizeof(s));
 
             s.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
