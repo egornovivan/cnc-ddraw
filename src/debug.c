@@ -187,7 +187,7 @@ void dbg_printf(const char* fmt, ...)
 
     EnterCriticalSection(&cs);
 
-    if (g_log_file && ftell(g_log_file) >= 1024 * 1024 * 100) /* rotate every 100MB */
+    if (g_log_file && ftell(g_log_file) >= 1024 * 1024 * 50) /* rotate every 50MB */
     {
         char filename[MAX_PATH] = { 0 };
         _snprintf(filename, sizeof(filename) - 1, "cnc-ddraw-%d.log", g_log_rotate ? 3 : 2);
