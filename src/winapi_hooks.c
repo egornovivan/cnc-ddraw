@@ -74,8 +74,8 @@ BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
 
         if (g_ddraw->adjmouse)
         {
-            x = min((DWORD)(roundf(pt.x * g_ddraw->render.unscale_w)), g_ddraw->width - 1);
-            y = min((DWORD)(roundf(pt.y * g_ddraw->render.unscale_h)), g_ddraw->height - 1);
+            x = min((DWORD)(roundf(pt.x * g_ddraw->mouse.unscale_x)), g_ddraw->width - 1);
+            y = min((DWORD)(roundf(pt.y * g_ddraw->mouse.unscale_y)), g_ddraw->height - 1);
         }
         else
         {
@@ -299,8 +299,8 @@ BOOL WINAPI fake_SetCursorPos(int X, int Y)
 
     if (g_ddraw->adjmouse)
     {
-        pt.x = (LONG)(roundf(pt.x * g_ddraw->render.scale_w));
-        pt.y = (LONG)(roundf(pt.y * g_ddraw->render.scale_h));
+        pt.x = (LONG)(roundf(pt.x * g_ddraw->mouse.scale_x));
+        pt.y = (LONG)(roundf(pt.y * g_ddraw->mouse.scale_y));
     }
 
     pt.x += g_ddraw->mouse.x_adjust;
@@ -428,8 +428,8 @@ LRESULT WINAPI fake_SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
         if (g_ddraw->adjmouse)
         {
-            x = (int)(roundf(x * g_ddraw->render.scale_w));
-            y = (int)(roundf(y * g_ddraw->render.scale_h));
+            x = (int)(roundf(x * g_ddraw->mouse.scale_x));
+            y = (int)(roundf(y * g_ddraw->mouse.scale_y));
         }
 
         lParam = MAKELPARAM(x + g_ddraw->mouse.x_adjust, y + g_ddraw->mouse.y_adjust);
@@ -620,8 +620,8 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
                 }
                 else
                 {
-                    x = (DWORD)((x - g_ddraw->render.viewport.x) * g_ddraw->render.unscale_w);
-                    y = (DWORD)((y - g_ddraw->render.viewport.y) * g_ddraw->render.unscale_h);
+                    x = (DWORD)((x - g_ddraw->render.viewport.x) * g_ddraw->mouse.unscale_x);
+                    y = (DWORD)((y - g_ddraw->render.viewport.y) * g_ddraw->mouse.unscale_y);
                 }
 
                 InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
@@ -667,8 +667,8 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
                 }
                 else
                 {
-                    x = (DWORD)(roundf(x * g_ddraw->render.unscale_w));
-                    y = (DWORD)(roundf(y * g_ddraw->render.unscale_h));
+                    x = (DWORD)(roundf(x * g_ddraw->mouse.unscale_x));
+                    y = (DWORD)(roundf(y * g_ddraw->mouse.unscale_y));
                 }
             }
 

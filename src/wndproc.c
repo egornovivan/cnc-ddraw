@@ -758,8 +758,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
             else
             {
-                x = (DWORD)((x - g_ddraw->render.viewport.x) * g_ddraw->render.unscale_w);
-                y = (DWORD)((y - g_ddraw->render.viewport.y) * g_ddraw->render.unscale_h);
+                x = (DWORD)((x - g_ddraw->render.viewport.x) * g_ddraw->mouse.unscale_x);
+                y = (DWORD)((y - g_ddraw->render.viewport.y) * g_ddraw->mouse.unscale_y);
             }
 
             InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
@@ -804,8 +804,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
             else
             {
-                x = (DWORD)(roundf(x * g_ddraw->render.unscale_w));
-                y = (DWORD)(roundf(y * g_ddraw->render.unscale_h));
+                x = (DWORD)(roundf(x * g_ddraw->mouse.unscale_x));
+                y = (DWORD)(roundf(y * g_ddraw->mouse.unscale_y));
             }
         }
 
@@ -833,8 +833,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (!g_ddraw->devmode && !g_mouse_locked)
             {
-                int x = (DWORD)((GET_X_LPARAM(lParam) - g_ddraw->render.viewport.x) * g_ddraw->render.unscale_w);
-                int y = (DWORD)((GET_Y_LPARAM(lParam) - g_ddraw->render.viewport.y) * g_ddraw->render.unscale_h);
+                int x = (DWORD)((GET_X_LPARAM(lParam) - g_ddraw->render.viewport.x) * g_ddraw->mouse.unscale_x);
+                int y = (DWORD)((GET_Y_LPARAM(lParam) - g_ddraw->render.viewport.y) * g_ddraw->mouse.unscale_y);
 
                 InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
                 InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);

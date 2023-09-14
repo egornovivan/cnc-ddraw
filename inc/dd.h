@@ -109,6 +109,11 @@ typedef struct CNCDDRAW
 
     struct
     {
+        float scale_x;
+        float scale_y;
+        float unscale_x;
+        float unscale_y;
+
         int y_adjust;
         int x_adjust;
         RECT rc;

@@ -41,8 +41,8 @@ void mouse_lock()
         int cur_y = InterlockedExchangeAdd((LONG*)&g_ddraw->cursor.y, 0);
 
         real_SetCursorPos(
-            g_ddraw->adjmouse ? (int)(rc.left + (cur_x * g_ddraw->render.scale_w)) : rc.left + cur_x,
-            g_ddraw->adjmouse ? (int)(rc.top + (cur_y * g_ddraw->render.scale_h)) : rc.top + cur_y);
+            g_ddraw->adjmouse ? (int)(rc.left + (cur_x * g_ddraw->mouse.scale_x)) : rc.left + cur_x,
+            g_ddraw->adjmouse ? (int)(rc.top + (cur_y * g_ddraw->mouse.scale_y)) : rc.top + cur_y);
 
         CopyRect(&rc, &g_ddraw->mouse.rc);
         real_MapWindowPoints(g_ddraw->hwnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
@@ -73,8 +73,8 @@ void mouse_unlock()
         int cur_y = InterlockedExchangeAdd((LONG*)&g_ddraw->cursor.y, 0);
 
         real_SetCursorPos(
-            (int)(rc.left + (cur_x * g_ddraw->render.scale_w)),
-            (int)(rc.top + (cur_y * g_ddraw->render.scale_h)));
+            (int)(rc.left + (cur_x * g_ddraw->mouse.scale_x)),
+            (int)(rc.top + (cur_y * g_ddraw->mouse.scale_y)));
 
         real_SetCursor(LoadCursor(NULL, IDC_ARROW));
 
