@@ -16,6 +16,8 @@ LPTOP_LEVEL_EXCEPTION_FILTER g_dbg_exception_filter;
 static LONGLONG g_dbg_counter_start_time = 0;
 static double g_dbg_counter_freq = 0.0;
 static int g_dbg_crash_count = 0;
+static FILE* g_log_file;
+static BOOL g_log_rotate;
 
 #if _DEBUG 
 int dbg_exception_handler(EXCEPTION_POINTERS* exception)
@@ -85,14 +87,21 @@ int dbg_exception_handler(EXCEPTION_POINTERS* exception)
 
 void dbg_init()
 {
-    static int stdout_open = 0;
+    static BOOL once = 0;
 
-    if (!stdout_open)
+    if (!once)
     {
-        stdout_open = 1;
+        once = TRUE;
 
-        freopen("cnc-ddraw.log", "w", stdout);
-        setvbuf(stdout, NULL, _IOLBF, 1024);
+        remove("cnc-ddraw-1.dmp");
+        remove("cnc-ddraw-2.dmp");
+
+        remove("cnc-ddraw-1.log");
+        remove("cnc-ddraw-2.log");
+        remove("cnc-ddraw-3.log");
+
+        g_log_file = fopen("cnc-ddraw-1.log", "w");
+        setvbuf(g_log_file, NULL, _IOLBF, 1024);
 
         HKEY hkey;
         LONG status =
@@ -165,7 +174,7 @@ void dbg_debug_string(const char* format, ...)
     OutputDebugStringA(buffer);
 }
 
-int dbg_printf(const char* fmt, ...)
+void dbg_printf(const char* fmt, ...)
 {
     static CRITICAL_SECTION cs;
     static BOOL initialized;
@@ -178,30 +187,44 @@ int dbg_printf(const char* fmt, ...)
 
     EnterCriticalSection(&cs);
 
-    va_list args;
-    int ret;
+    if (g_log_file && ftell(g_log_file) >= 1024 * 1024 * 100) /* rotate every 100MB */
+    {
+        char filename[MAX_PATH] = { 0 };
+        _snprintf(filename, sizeof(filename) - 1, "cnc-ddraw-%d.log", g_log_rotate ? 3 : 2);
 
-    SYSTEMTIME st;
-    GetLocalTime(&st);
+        g_log_rotate = !g_log_rotate;
 
-    fprintf(
-        stdout,
-        "[%lu] %02d:%02d:%02d.%03d ",
-        GetCurrentThreadId(),
-        st.wHour,
-        st.wMinute,
-        st.wSecond,
-        st.wMilliseconds);
+        if (g_log_file = freopen(filename, "w", g_log_file))
+        {
+            setvbuf(g_log_file, NULL, _IOLBF, 1024);
+        }
+    }
 
-    va_start(args, fmt);
-    ret = vfprintf(stdout, fmt, args);
-    va_end(args);
+    if (g_log_file)
+    {
+        va_list args;
+        int ret;
 
-    fflush(stdout);
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+
+        fprintf(
+            g_log_file,
+            "[%lu] %02d:%02d:%02d.%03d ",
+            GetCurrentThreadId(),
+            st.wHour,
+            st.wMinute,
+            st.wSecond,
+            st.wMilliseconds);
+
+        va_start(args, fmt);
+        vfprintf(g_log_file, fmt, args);
+        va_end(args);
+
+        fflush(g_log_file);
+    }
 
     LeaveCriticalSection(&cs);
-
-    return ret;
 }
 
 void dbg_print_rect(char* info, LPRECT rect)

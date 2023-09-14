@@ -11,7 +11,7 @@ void dbg_debug_string(const char* format, ...);
 void dbg_print_rect(char* info, LPRECT rect);
 void dbg_draw_frame_info_start();
 void dbg_draw_frame_info_end();
-int dbg_printf(const char* fmt, ...);
+void dbg_printf(const char* fmt, ...);
 void dbg_init();
 void dbg_dump_swp_flags(DWORD flags);
 void dbg_dump_ddp_flags(DWORD flags);
