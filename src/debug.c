@@ -16,8 +16,8 @@ LPTOP_LEVEL_EXCEPTION_FILTER g_dbg_exception_filter;
 static LONGLONG g_dbg_counter_start_time = 0;
 static double g_dbg_counter_freq = 0.0;
 static int g_dbg_crash_count = 0;
-static FILE* g_log_file;
-static BOOL g_log_rotate;
+static FILE* g_dbg_log_file;
+static BOOL g_dbg_log_rotate;
 
 #if _DEBUG 
 int dbg_exception_handler(EXCEPTION_POINTERS* exception)
@@ -100,8 +100,8 @@ void dbg_init()
         remove("cnc-ddraw-2.log");
         remove("cnc-ddraw-3.log");
 
-        g_log_file = fopen("cnc-ddraw-1.log", "w");
-        setvbuf(g_log_file, NULL, _IOLBF, 1024);
+        g_dbg_log_file = fopen("cnc-ddraw-1.log", "w");
+        setvbuf(g_dbg_log_file, NULL, _IOLBF, 1024);
 
         HKEY hkey;
         LONG status =
@@ -187,20 +187,20 @@ void dbg_printf(const char* fmt, ...)
 
     EnterCriticalSection(&cs);
 
-    if (g_log_file && ftell(g_log_file) >= 1024 * 1024 * 100) /* rotate every 100MB */
+    if (g_dbg_log_file && ftell(g_dbg_log_file) >= 1024 * 1024 * 100) /* rotate every 100MB */
     {
         char filename[MAX_PATH] = { 0 };
-        _snprintf(filename, sizeof(filename) - 1, "cnc-ddraw-%d.log", g_log_rotate ? 3 : 2);
+        _snprintf(filename, sizeof(filename) - 1, "cnc-ddraw-%d.log", g_dbg_log_rotate ? 3 : 2);
 
-        g_log_rotate = !g_log_rotate;
+        g_dbg_log_rotate = !g_dbg_log_rotate;
 
-        if (g_log_file = freopen(filename, "w", g_log_file))
+        if (g_dbg_log_file = freopen(filename, "w", g_dbg_log_file))
         {
-            setvbuf(g_log_file, NULL, _IOLBF, 1024);
+            setvbuf(g_dbg_log_file, NULL, _IOLBF, 1024);
         }
     }
 
-    if (g_log_file)
+    if (g_dbg_log_file)
     {
         va_list args;
         int ret;
@@ -209,7 +209,7 @@ void dbg_printf(const char* fmt, ...)
         GetLocalTime(&st);
 
         fprintf(
-            g_log_file,
+            g_dbg_log_file,
             "[%lu] %02d:%02d:%02d.%03d ",
             GetCurrentThreadId(),
             st.wHour,
@@ -218,10 +218,10 @@ void dbg_printf(const char* fmt, ...)
             st.wMilliseconds);
 
         va_start(args, fmt);
-        vfprintf(g_log_file, fmt, args);
+        vfprintf(g_dbg_log_file, fmt, args);
         va_end(args);
 
-        fflush(g_log_file);
+        fflush(g_dbg_log_file);
     }
 
     LeaveCriticalSection(&cs);
