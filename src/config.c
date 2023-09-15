@@ -370,6 +370,7 @@ static void cfg_create_ini()
             "non_anti_aliased_fonts=true\n"
             "custom_width=0\n"
             "custom_height=0\n"
+            "min_font_size=0\n"
             "\n"
             "\n"
             "\n"
