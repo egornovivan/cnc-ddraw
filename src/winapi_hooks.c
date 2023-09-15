@@ -910,7 +910,15 @@ HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA* lplf)
     LOGFONTA lf;
     memcpy(&lf, lplf, sizeof(lf));
 
-    if (cfg_get_bool("non_anti_aliased_fonts", TRUE))
+    int minFontSize = cfg_get_int("min_font_size", 0);
+    if (lf.lfHeight < 0) {
+        lf.lfHeight = min(-minFontSize, lf.lfHeight);
+    }
+    else {
+        lf.lfHeight = max(minFontSize, lf.lfHeight);
+    }
+
+    if (cfg_get_int("anti_aliased_fonts_min_size", 13) > abs(lf.lfHeight))
         lf.lfQuality = NONANTIALIASED_QUALITY;
 
     return real_CreateFontIndirectA(&lf);
@@ -932,9 +940,6 @@ HFONT WINAPI fake_CreateFontA(
     DWORD fdwPitchAndFamily,
     LPCTSTR lpszFace)
 {
-    if (cfg_get_bool("non_anti_aliased_fonts", TRUE))
-        fdwQuality = NONANTIALIASED_QUALITY;
-
     int minFontSize = cfg_get_int("min_font_size", 0);
     if (nHeight < 0) {
         nHeight = min(-minFontSize, nHeight);
@@ -942,6 +947,9 @@ HFONT WINAPI fake_CreateFontA(
     else {
         nHeight = max(minFontSize, nHeight);
     }
+
+    if (cfg_get_int("anti_aliased_fonts_min_size", 13) > abs(nHeight))
+        fdwQuality = NONANTIALIASED_QUALITY;
 
     return 
         real_CreateFontA(
