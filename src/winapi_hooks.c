@@ -935,6 +935,14 @@ HFONT WINAPI fake_CreateFontA(
     if (cfg_get_bool("non_anti_aliased_fonts", TRUE))
         fdwQuality = NONANTIALIASED_QUALITY;
 
+    int minFontSize = cfg_get_int("min_font_size", 0);
+    if (nHeight < 0) {
+        nHeight = min(-minFontSize, nHeight);
+    }
+    else {
+        nHeight = max(minFontSize, nHeight);
+    }
+
     return 
         real_CreateFontA(
             nHeight, 
