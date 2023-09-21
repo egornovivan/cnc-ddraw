@@ -197,7 +197,7 @@ void dbg_printf(const char* fmt, ...)
 
         g_dbg_log_rotate = !g_dbg_log_rotate;
 
-        if (g_dbg_log_file = freopen(filename, "w", g_dbg_log_file))
+        if ((g_dbg_log_file = freopen(filename, "w", g_dbg_log_file)))
         {
             setvbuf(g_dbg_log_file, NULL, _IOLBF, 1024);
         }
@@ -206,8 +206,6 @@ void dbg_printf(const char* fmt, ...)
     if (g_dbg_log_file)
     {
         va_list args;
-        int ret;
-
         SYSTEMTIME st;
         GetLocalTime(&st);
 
