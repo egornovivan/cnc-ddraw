@@ -17,6 +17,10 @@ static BOOL cfg_get_bool(LPCSTR key, BOOL default_value);
 static int cfg_get_int(LPCSTR key, int default_value);
 static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD out_size);
 
+#define GET_INT(a,b,c) a = cfg_get_int(b, c); TRACE("%s=%d\n", b, a)
+#define GET_BOOL(a,b,c) a = cfg_get_bool(b, c); TRACE("%s=%s\n", b, a ? "true" : "false")
+#define GET_STRING(a,b,c,d) cfg_get_string(a, b, c, d); TRACE("%s=%s\n", a, c)
+
 CNCDDRAWCONFIG g_config =
     { .window_rect = {.left = -32000, .top = -32000, .right = 0, .bottom = 0 }, .window_state = -1, .borderless_state = -1 };
 
@@ -26,39 +30,39 @@ void cfg_load()
 
     /* Optional settings */
 
-    g_config.window_rect.right = cfg_get_int("width", 0);
-    g_config.window_rect.bottom = cfg_get_int("height", 0);
-    g_config.fullscreen = cfg_get_bool("fullscreen", FALSE);
-    g_config.windowed = cfg_get_bool("windowed", FALSE);
-    g_config.maintas = cfg_get_bool("maintas", FALSE);
-    g_config.boxing = cfg_get_bool("boxing", FALSE);
-    g_config.maxfps = cfg_get_int("maxfps", -1);
-    g_config.vsync = cfg_get_bool("vsync", FALSE);
-    g_config.adjmouse = cfg_get_bool("adjmouse", TRUE) || !cfg_get_bool("handlemouse", TRUE);
-    cfg_get_string("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_config.shader, sizeof(g_config.shader));
-    g_config.window_rect.left = cfg_get_int("posX", -32000);
-    g_config.window_rect.top = cfg_get_int("posY", -32000);
-    cfg_get_string("renderer", "auto", g_config.renderer, sizeof(g_config.renderer));
-    g_config.devmode = cfg_get_bool("devmode", FALSE);
-    g_config.border = cfg_get_bool("border", TRUE);
-    g_config.save_settings = cfg_get_int("savesettings", 1);
-    g_config.resizable = cfg_get_bool("resizable", TRUE);
-    g_config.d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
-    g_config.vhack = cfg_get_bool("vhack", FALSE);
-    cfg_get_string("screenshotdir", ".\\Screenshots\\", g_config.screenshot_dir, sizeof(g_config.screenshot_dir));
-    g_config.toggle_borderless = cfg_get_bool("toggle_borderless", FALSE);
+    GET_INT(g_config.window_rect.right, "width", 0);
+    GET_INT(g_config.window_rect.bottom, "height", 0);
+    GET_BOOL(g_config.fullscreen, "fullscreen", FALSE);
+    GET_BOOL(g_config.windowed, "windowed", FALSE);
+    GET_BOOL(g_config.maintas, "maintas", FALSE);
+    GET_BOOL(g_config.boxing, "boxing", FALSE);
+    GET_INT(g_config.maxfps, "maxfps", -1);
+    GET_BOOL(g_config.vsync, "vsync", FALSE);
+    GET_BOOL(g_config.adjmouse, "adjmouse", TRUE);
+    GET_STRING("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_config.shader, sizeof(g_config.shader));
+    GET_INT(g_config.window_rect.left, "posX", -32000);
+    GET_INT(g_config.window_rect.top, "posY", -32000);
+    GET_STRING("renderer", "auto", g_config.renderer, sizeof(g_config.renderer));
+    GET_BOOL(g_config.devmode, "devmode", FALSE);
+    GET_BOOL(g_config.border, "border", TRUE);
+    GET_BOOL(g_config.save_settings, "savesettings", 1);
+    GET_BOOL(g_config.resizable, "resizable", TRUE);
+    GET_INT(g_config.d3d9_filter, "d3d9_filter", FILTER_CUBIC);
+    GET_BOOL(g_config.vhack, "vhack", FALSE);
+    GET_STRING("screenshotdir", ".\\Screenshots\\", g_config.screenshot_dir, sizeof(g_config.screenshot_dir));
+    GET_BOOL(g_config.toggle_borderless, "toggle_borderless", FALSE);
 
     /* Compatibility settings */
 
-    g_config.noactivateapp = cfg_get_bool("noactivateapp", FALSE);
-    g_config.maxgameticks = cfg_get_int("maxgameticks", 0);
-    g_config.nonexclusive = cfg_get_bool("nonexclusive", FALSE);
-    g_config.singlecpu = cfg_get_bool("singlecpu", TRUE);
-    g_config.resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
-    g_config.fixchilds = cfg_get_int("fixchilds", FIX_CHILDS_DETECT_PAINT);
-    g_config.hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
+    GET_BOOL(g_config.noactivateapp, "noactivateapp", FALSE);
+    GET_INT(g_config.maxgameticks, "maxgameticks", 0);
+    GET_BOOL(g_config.nonexclusive, "nonexclusive", FALSE);
+    GET_BOOL(g_config.singlecpu, "singlecpu", TRUE);
+    GET_INT(g_config.resolutions, "resolutions", RESLIST_NORMAL);
+    GET_INT(g_config.fixchilds, "fixchilds", FIX_CHILDS_DETECT_PAINT);
+    GET_BOOL(g_config.hook_peekmessage, "hook_peekmessage", FALSE);
 
-    g_config.minfps = cfg_get_int("minfps", 0);
+    GET_INT(g_config.minfps, "minfps", 0);
 
     if (g_config.minfps > 1000)
     {
@@ -72,42 +76,42 @@ void cfg_load()
 
     /* Undocumented settings */
 
-    g_config.releasealt = cfg_get_bool("releasealt", FALSE);
-    GameHandlesClose = cfg_get_bool("game_handles_close", FALSE);
-    g_config.fixnotresponding = cfg_get_bool("fixnotresponding", FALSE);
-    g_config.hook = cfg_get_int("hook", 4);
-    g_config.guard_lines = cfg_get_int("guard_lines", 200);
-    g_config.max_resolutions = cfg_get_int("max_resolutions", 0);
-    g_config.limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
-    g_config.lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
-    g_config.allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
-    g_config.flipclear = cfg_get_bool("flipclear", FALSE);
-    g_config.fixmousehook = cfg_get_bool("fixmousehook", FALSE);
-    g_config.rgb555 = cfg_get_bool("rgb555", FALSE);
-    g_config.no_dinput_hook = cfg_get_bool("no_dinput_hook", FALSE);
-    g_config.refresh_rate = cfg_get_int("refresh_rate", 0);
-    g_config.anti_aliased_fonts_min_size = cfg_get_int("anti_aliased_fonts_min_size", 13);
-    g_config.custom_width = cfg_get_int("custom_width", 0);
-    g_config.custom_height = cfg_get_int("custom_height", 0);
-    g_config.min_font_size = cfg_get_int("min_font_size", 0);
+    GET_BOOL(g_config.releasealt, "releasealt", FALSE);
+    GET_BOOL(GameHandlesClose, "game_handles_close", FALSE);
+    GET_BOOL(g_config.fixnotresponding, "fixnotresponding", FALSE);
+    GET_INT(g_config.hook, "hook", 4);
+    GET_INT(g_config.guard_lines, "guard_lines", 200);
+    GET_INT(g_config.max_resolutions, "max_resolutions", 0);
+    GET_BOOL(g_config.limit_bltfast, "limit_bltfast", FALSE);
+    GET_BOOL(g_config.lock_surfaces, "lock_surfaces", FALSE);
+    GET_BOOL(g_config.allow_wmactivate, "allow_wmactivate", FALSE);
+    GET_BOOL(g_config.flipclear, "flipclear", FALSE);
+    GET_BOOL(g_config.fixmousehook, "fixmousehook", FALSE);
+    GET_BOOL(g_config.rgb555, "rgb555", FALSE);
+    GET_BOOL(g_config.no_dinput_hook, "no_dinput_hook", FALSE);
+    GET_INT(g_config.refresh_rate, "refresh_rate", 0);
+    GET_INT(g_config.anti_aliased_fonts_min_size, "anti_aliased_fonts_min_size", 13);
+    GET_INT(g_config.custom_width, "custom_width", 0);
+    GET_INT(g_config.custom_height, "custom_height", 0);
+    GET_INT(g_config.min_font_size, "min_font_size", 0);
 
     /* Hotkeys */
 
-    g_config.hotkeys.toggle_fullscreen = cfg_get_int("keytogglefullscreen", VK_RETURN);
-    g_config.hotkeys.toggle_maximize = cfg_get_int("keytogglemaximize", VK_NEXT);
-    g_config.hotkeys.unlock_cursor1 = cfg_get_int("keyunlockcursor1", VK_TAB);
-    g_config.hotkeys.unlock_cursor2 = cfg_get_int("keyunlockcursor2", VK_RCONTROL);
-    g_config.hotkeys.screenshot = cfg_get_int("keyscreenshot", VK_SNAPSHOT);
+    GET_INT(g_config.hotkeys.toggle_fullscreen, "keytogglefullscreen", VK_RETURN);
+    GET_INT(g_config.hotkeys.toggle_maximize, "keytogglemaximize", VK_NEXT);
+    GET_INT(g_config.hotkeys.unlock_cursor1, "keyunlockcursor1", VK_TAB);
+    GET_INT(g_config.hotkeys.unlock_cursor2, "keyunlockcursor2", VK_RCONTROL);
+    GET_INT(g_config.hotkeys.screenshot, "keyscreenshot", VK_SNAPSHOT);
 
     /* Game specific settings */
 
-    g_config.remove_menu = cfg_get_bool("remove_menu", FALSE); /* Added for HoMM4 */
+    GET_BOOL(g_config.remove_menu, "remove_menu", FALSE); /* Added for HoMM4 */
     
-    g_config.armadahack = cfg_get_bool("armadahack", FALSE);
-    g_config.tshack = cfg_get_bool("tshack", FALSE);
-    g_config.infantryhack = cfg_get_bool("infantryhack", FALSE);
-    g_config.stronghold_hack = cfg_get_bool("stronghold_hack", FALSE);
-    g_config.mgs_hack = cfg_get_bool("mgs_hack", FALSE);
+    GET_BOOL(g_config.armadahack, "armadahack", FALSE);
+    GET_BOOL(g_config.tshack, "tshack", FALSE);
+    GET_BOOL(g_config.infantryhack, "infantryhack", FALSE);
+    GET_BOOL(g_config.stronghold_hack, "stronghold_hack", FALSE);
+    GET_BOOL(g_config.mgs_hack, "mgs_hack", FALSE);
 
     if (g_config.infantryhack)
     {
