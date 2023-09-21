@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "utils.h"
 #include "blt.h"
+#include "config.h"
 
 
 LONG g_dds_gdi_handles;
@@ -647,7 +648,7 @@ HRESULT dds_BltFast(
         {
             ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
 
-            if (g_ddraw->limit_bltfast && g_ddraw->ticks_limiter.tick_length > 0)
+            if (g_config.limit_bltfast && g_ddraw->ticks_limiter.tick_length > 0)
             {
                 g_ddraw->ticks_limiter.use_blt_or_flip = TRUE;
                 util_limit_game_ticks();
@@ -761,7 +762,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
         InterlockedExchangePointer(&backbuffer->hdc, dc);
         InterlockedExchangePointer(&backbuffer->mapping, map);
 
-        if (g_ddraw->flipclear)
+        if (g_config.flipclear)
         {
             blt_clear(buf, 0, backbuffer->size);
         }
@@ -782,7 +783,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
         ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
         SwitchToThread();
 
-        if ((g_ddraw->maxgameticks == 0 && (dwFlags & DDFLIP_WAIT)) || g_ddraw->maxgameticks == -2)
+        if ((g_config.maxgameticks == 0 && (dwFlags & DDFLIP_WAIT)) || g_config.maxgameticks == -2)
         {
             dd_WaitForVerticalBlank(DDWAITVB_BLOCKEND, NULL);
         }
@@ -949,12 +950,12 @@ HRESULT dds_Lock(
     DWORD dwFlags,
     HANDLE hEvent)
 {
-    if (g_ddraw && g_ddraw->lock_surfaces)
+    if (g_config.lock_surfaces)
         EnterCriticalSection(&This->cs);
 
     dbg_dump_dds_lock_flags(dwFlags);
 
-    if (g_ddraw && g_ddraw->fixnotresponding && !g_ddraw->wine)
+    if (g_ddraw && g_config.fixnotresponding && !g_ddraw->wine)
     {
         MSG msg; /* workaround for "Not Responding" window problem */
         real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE);
@@ -1126,7 +1127,7 @@ HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
     }
 
     /* Hack for Star Trek Armada */
-    hwnd = g_ddraw && g_ddraw->armadahack ? FindWindowEx(HWND_DESKTOP, NULL, "#32770", NULL) : NULL;
+    hwnd = g_ddraw && g_config.armadahack ? FindWindowEx(HWND_DESKTOP, NULL, "#32770", NULL) : NULL;
 
     if (hwnd && (This->caps & DDSCAPS_PRIMARYSURFACE))
     {
@@ -1180,7 +1181,7 @@ HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
         }
     }
 
-    if (g_ddraw && g_ddraw->lock_surfaces)
+    if (g_config.lock_surfaces)
         LeaveCriticalSection(&This->cs);
 
     return DD_OK;
@@ -1364,7 +1365,7 @@ HRESULT dd_CreateSurface(
     }
     else
     {
-        if (!(dst_surface->caps & DDSCAPS_SYSTEMMEMORY) || g_ddraw->tshack)
+        if (!(dst_surface->caps & DDSCAPS_SYSTEMMEMORY) || g_config.tshack)
         {
             dst_surface->caps |= DDSCAPS_VIDEOMEMORY;
         }
@@ -1390,12 +1391,12 @@ HRESULT dd_CreateSurface(
         DWORD aligned_width = dst_surface->pitch / dst_surface->bytes_pp;
 
         DWORD bmi_size = sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * 256;
-        DWORD bmp_size = dst_surface->pitch * (dst_surface->height + g_ddraw->guard_lines);
+        DWORD bmp_size = dst_surface->pitch * (dst_surface->height + g_config.guard_lines);
 
         dst_surface->bmi = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, bmi_size);
         dst_surface->bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         dst_surface->bmi->bmiHeader.biWidth = aligned_width;
-        dst_surface->bmi->bmiHeader.biHeight = -((int)dst_surface->height + g_ddraw->guard_lines);
+        dst_surface->bmi->bmiHeader.biHeight = -((int)dst_surface->height + g_config.guard_lines);
         dst_surface->bmi->bmiHeader.biPlanes = 1;
         dst_surface->bmi->bmiHeader.biBitCount = dst_surface->bpp;
         dst_surface->bmi->bmiHeader.biCompression = dst_surface->bpp == 8 ? BI_RGB : BI_BITFIELDS;
@@ -1420,7 +1421,7 @@ HRESULT dd_CreateSurface(
                 dst_surface->bmi->bmiColors[i].rgbReserved = 0;
             }
         }
-        else if (dst_surface->bpp == 16 && g_ddraw->rgb555)
+        else if (dst_surface->bpp == 16 && g_config.rgb555)
         {
             ((DWORD*)dst_surface->bmi->bmiColors)[0] = 0x7C00;
             ((DWORD*)dst_surface->bmi->bmiColors)[1] = 0x03E0;

@@ -3,17 +3,18 @@
 #include "dd.h"
 #include "debug.h"
 #include "hook.h"
+#include "config.h"
 
 FPSLIMITER g_fpsl;
 
 void fpsl_init()
 {
-    int max_fps = g_ddraw->render.maxfps;
+    int max_fps = g_config.maxfps;
 
     g_fpsl.tick_length_ns = 0;
     g_fpsl.tick_length = 0;
 
-    if (max_fps < 0 || g_ddraw->vsync)
+    if (max_fps < 0 || g_config.vsync)
         max_fps = g_ddraw->mode.dmDisplayFrequency;
 
     if (max_fps > 1000)
@@ -124,7 +125,7 @@ void fpsl_frame_start()
 
 void fpsl_frame_end()
 {
-    if (g_ddraw->render.maxfps < 0 || g_ddraw->vsync)
+    if (g_config.maxfps < 0 || g_config.vsync)
     {
         if (fpsl_dwm_flush() || fpsl_wait_for_vblank(TRUE))
             return;
@@ -134,7 +135,7 @@ void fpsl_frame_end()
     {
         if (g_fpsl.htimer)
         {
-            if (g_ddraw->vsync)
+            if (g_config.vsync)
             {
                 WaitForSingleObject(g_fpsl.htimer, g_fpsl.tick_length * 2);
                 LARGE_INTEGER due_time = { .QuadPart = -g_fpsl.tick_length_ns };

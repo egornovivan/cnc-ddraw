@@ -4,6 +4,7 @@
 #include "dd.h"
 #include "hook.h"
 #include "utils.h"
+#include "config.h"
 
 
 BOOL g_mouse_locked;
@@ -12,7 +13,7 @@ HOOKPROC g_mouse_proc;
 
 void mouse_lock()
 {
-    if (g_ddraw->devmode || g_ddraw->bnet_active || !g_ddraw->hwnd)
+    if (g_config.devmode || g_ddraw->bnet_active || !g_ddraw->hwnd)
         return;
 
     if (g_hook_active && !g_mouse_locked && !util_is_minimized(g_ddraw->hwnd))
@@ -41,8 +42,8 @@ void mouse_lock()
         int cur_y = InterlockedExchangeAdd((LONG*)&g_ddraw->cursor.y, 0);
 
         real_SetCursorPos(
-            g_ddraw->adjmouse ? (int)(rc.left + (cur_x * g_ddraw->mouse.scale_x)) : rc.left + cur_x,
-            g_ddraw->adjmouse ? (int)(rc.top + (cur_y * g_ddraw->mouse.scale_y)) : rc.top + cur_y);
+            g_config.adjmouse ? (int)(rc.left + (cur_x * g_ddraw->mouse.scale_x)) : rc.left + cur_x,
+            g_config.adjmouse ? (int)(rc.top + (cur_y * g_ddraw->mouse.scale_y)) : rc.top + cur_y);
 
         CopyRect(&rc, &g_ddraw->mouse.rc);
         real_MapWindowPoints(g_ddraw->hwnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
@@ -54,7 +55,7 @@ void mouse_lock()
 
 void mouse_unlock()
 {
-    if (g_ddraw->devmode || !g_hook_active || !g_ddraw->hwnd)
+    if (g_config.devmode || !g_hook_active || !g_ddraw->hwnd)
         return;
 
     if (g_mouse_locked)
@@ -87,7 +88,7 @@ LRESULT CALLBACK mouse_hook_proc(int Code, WPARAM wParam, LPARAM lParam)
     if (!g_ddraw)
         return g_mouse_proc(Code, wParam, lParam);
 
-    if (Code < 0 || (!g_ddraw->devmode && !g_mouse_locked))
+    if (Code < 0 || (!g_config.devmode && !g_mouse_locked))
         return CallNextHookEx(g_mouse_hook, Code, wParam, lParam);
 
     fake_GetCursorPos(&((MOUSEHOOKSTRUCT*)lParam)->pt);

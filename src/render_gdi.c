@@ -8,6 +8,7 @@
 #include "wndproc.h"
 #include "hook.h"
 #include "debug.h"
+#include "config.h"
 
 
 DWORD WINAPI gdi_render_main(void)
@@ -23,7 +24,7 @@ DWORD WINAPI gdi_render_main(void)
 
         warning_end_tick = timeGetTime() + (15 * 1000);
 
-        if (!g_ddraw->windowed)
+        if (!g_config.windowed)
             PostMessage(g_ddraw->hwnd, WM_AUTORENDERER, 0, 0);
 
         _snprintf(
@@ -37,10 +38,10 @@ DWORD WINAPI gdi_render_main(void)
 
     fpsl_init();
 
-    DWORD timeout = g_ddraw->render.minfps > 0 ? g_ddraw->render.minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_config.minfps_tick_len : INFINITE;
 
     while (g_ddraw->render.run &&
-        (g_ddraw->render.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
+        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
     {
 #if _DEBUG
         dbg_draw_frame_info_start();
@@ -56,7 +57,7 @@ DWORD WINAPI gdi_render_main(void)
             g_ddraw->primary->height == g_ddraw->height &&
             (g_ddraw->bpp == 16 || g_ddraw->bpp == 32 || g_ddraw->primary->palette))
         {
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 EnterCriticalSection(&g_ddraw->primary->cs);
 
             if (warning_end_tick)
@@ -75,12 +76,12 @@ DWORD WINAPI gdi_render_main(void)
                 }
             }
 
-            BOOL upscale_hack = g_ddraw->vhack && util_detect_low_res_screen();
+            BOOL upscale_hack = g_config.vhack && util_detect_low_res_screen();
 
-            if (g_ddraw->vhack)
+            if (g_config.vhack)
                 InterlockedExchange(&g_ddraw->upscale_hack_active, upscale_hack);
 
-            if (g_ddraw->fixchilds)
+            if (g_config.fixchilds)
             {
                 g_ddraw->child_window_exists = FALSE;
                 EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
@@ -154,7 +155,7 @@ DWORD WINAPI gdi_render_main(void)
                     DIB_RGB_COLORS);
             }
 
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 LeaveCriticalSection(&g_ddraw->primary->cs);
         }
 

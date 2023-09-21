@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "D3d9types.h"
 #include "hook.h"
+#include "config.h"
 
 
 static BOOL d3d9_create_resources();
@@ -38,7 +39,7 @@ BOOL d3d9_is_available()
 
 BOOL d3d9_create()
 {
-    if (g_d3d9.hwnd == g_ddraw->hwnd && d3d9_create_resources() && d3d9_reset(g_ddraw->windowed))
+    if (g_d3d9.hwnd == g_ddraw->hwnd && d3d9_create_resources() && d3d9_reset(g_config.windowed))
     {
         return TRUE;
     }
@@ -109,13 +110,13 @@ BOOL d3d9_create()
 
             memset(&g_d3d9.params, 0, sizeof(g_d3d9.params));
 
-            g_d3d9.params.Windowed = g_ddraw->windowed || g_ddraw->nonexclusive;
+            g_d3d9.params.Windowed = g_config.windowed || g_config.nonexclusive;
             g_d3d9.params.SwapEffect = D3DSWAPEFFECT_DISCARD;
             g_d3d9.params.hDeviceWindow = g_ddraw->hwnd;
-            g_d3d9.params.PresentationInterval = g_ddraw->vsync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
+            g_d3d9.params.PresentationInterval = g_config.vsync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
             g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
             g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
-            g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_ddraw->refresh_rate;
+            g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_config.refresh_rate;
             g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
             g_d3d9.params.BackBufferCount = 1;
 
@@ -150,7 +151,7 @@ BOOL d3d9_on_device_lost()
 {
     if (g_d3d9.device && IDirect3DDevice9_TestCooperativeLevel(g_d3d9.device) == D3DERR_DEVICENOTRESET)
     {
-        return d3d9_reset(g_ddraw->windowed);
+        return d3d9_reset(g_config.windowed);
     }
 
     return FALSE;
@@ -158,10 +159,10 @@ BOOL d3d9_on_device_lost()
 
 BOOL d3d9_reset(BOOL windowed)
 {
-    g_d3d9.params.Windowed = windowed || g_ddraw->nonexclusive;
+    g_d3d9.params.Windowed = windowed || g_config.nonexclusive;
     g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
     g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
-    g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_ddraw->refresh_rate;
+    g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_config.refresh_rate;
     g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
 
     if (g_d3d9.device && SUCCEEDED(IDirect3DDevice9_Reset(g_d3d9.device, &g_d3d9.params)))
@@ -281,7 +282,7 @@ static BOOL d3d9_create_resources()
                 g_d3d9.tex_height,
                 1,
                 0,
-                g_ddraw->bpp == 16 ? (g_ddraw->rgb555 ? D3DFMT_X1R5G5B5 : D3DFMT_R5G6B5) : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
+                g_ddraw->bpp == 16 ? (g_config.rgb555 ? D3DFMT_X1R5G5B5 : D3DFMT_R5G6B5) : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
                 D3DPOOL_MANAGED,
                 &g_d3d9.surface_tex[i],
                 0));
@@ -318,7 +319,7 @@ static BOOL d3d9_create_resources()
     }
     else
     {
-        if (g_ddraw->d3d9_filter == FILTER_LANCZOS)
+        if (g_config.d3d9_filter == FILTER_LANCZOS)
         {
             BOOL error = FAILED(
                 IDirect3DDevice9_CreatePixelShader(
@@ -328,11 +329,11 @@ static BOOL d3d9_create_resources()
 
             if (error || !g_d3d9.pixel_shader_upscale)
             {
-                g_ddraw->d3d9_filter = FILTER_CUBIC;
+                g_config.d3d9_filter = FILTER_CUBIC;
             }
         }
 
-        if (g_ddraw->d3d9_filter == FILTER_CUBIC)
+        if (g_config.d3d9_filter == FILTER_CUBIC)
         {
             IDirect3DDevice9_CreatePixelShader(
                 g_d3d9.device,
@@ -357,7 +358,7 @@ static BOOL d3d9_set_states()
         err = err || FAILED(IDirect3DDevice9_SetTexture(g_d3d9.device, 1, (IDirect3DBaseTexture9*)g_d3d9.palette_tex[0]));
         
         BOOL bilinear =
-            g_ddraw->d3d9_filter &&
+            g_config.d3d9_filter &&
             g_d3d9.pixel_shader_upscale &&
             (g_ddraw->render.viewport.width != g_ddraw->width || g_ddraw->render.viewport.height != g_ddraw->height);
 
@@ -374,9 +375,9 @@ static BOOL d3d9_set_states()
     }
     else
     {
-        if (g_ddraw->d3d9_filter)
+        if (g_config.d3d9_filter)
         {
-            if (g_ddraw->d3d9_filter == FILTER_LANCZOS &&
+            if (g_config.d3d9_filter == FILTER_LANCZOS &&
                 g_d3d9.pixel_shader_upscale &&
                 (g_ddraw->render.viewport.width != g_ddraw->width || 
                     g_ddraw->render.viewport.height != g_ddraw->height) &&
@@ -388,7 +389,7 @@ static BOOL d3d9_set_states()
             else if (
                 SUCCEEDED(IDirect3DDevice9_SetSamplerState(g_d3d9.device, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR)) &&
                 SUCCEEDED(IDirect3DDevice9_SetSamplerState(g_d3d9.device, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR)) &&
-                g_ddraw->d3d9_filter == FILTER_CUBIC &&
+                g_config.d3d9_filter == FILTER_CUBIC &&
                 g_d3d9.pixel_shader_upscale &&
                 (g_ddraw->render.viewport.width != g_ddraw->width || 
                     g_ddraw->render.viewport.height != g_ddraw->height) &&
@@ -453,10 +454,10 @@ DWORD WINAPI d3d9_render_main(void)
 
     BOOL needs_update = FALSE;
 
-    DWORD timeout = g_ddraw->render.minfps > 0 ? g_ddraw->render.minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_config.minfps_tick_len : INFINITE;
 
     while (g_ddraw->render.run &&
-        (g_ddraw->render.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
+        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
     {
 #if _DEBUG
         dbg_draw_frame_info_start();
@@ -474,10 +475,10 @@ DWORD WINAPI d3d9_render_main(void)
             g_ddraw->primary->height == g_ddraw->height &&
             (g_ddraw->bpp == 16 || g_ddraw->bpp == 32 || g_ddraw->primary->palette))
         {
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 EnterCriticalSection(&g_ddraw->primary->cs);
 
-            if (g_ddraw->vhack)
+            if (g_config.vhack)
             {
                 if (util_detect_low_res_screen())
                 {
@@ -493,7 +494,7 @@ DWORD WINAPI d3d9_render_main(void)
 
             D3DLOCKED_RECT lock_rc;
 
-            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_ddraw->render.minfps == -2)
+            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_config.minfps == -2)
             {
                 if (++tex_index >= D3D9_TEXTURE_COUNT)
                     tex_index = 0;
@@ -521,7 +522,7 @@ DWORD WINAPI d3d9_render_main(void)
             }
 
             if (g_ddraw->bpp == 8 &&
-                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_ddraw->render.minfps == -2))
+                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_config.minfps == -2))
             {
                 if (++pal_index >= D3D9_TEXTURE_COUNT)
                     pal_index = 0;
@@ -537,7 +538,7 @@ DWORD WINAPI d3d9_render_main(void)
                 }
             }
 
-            if (g_ddraw->fixchilds)
+            if (g_config.fixchilds)
             {
                 g_ddraw->child_window_exists = FALSE;
                 EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
@@ -559,7 +560,7 @@ DWORD WINAPI d3d9_render_main(void)
                 }
             }
 
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 LeaveCriticalSection(&g_ddraw->primary->cs);
         }
 
@@ -595,7 +596,7 @@ DWORD WINAPI d3d9_render_main(void)
         fpsl_frame_end();
     }
 
-    if (g_ddraw->vhack)
+    if (g_config.vhack)
         InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE);
 
     return 0;

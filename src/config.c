@@ -13,6 +13,9 @@
 
 static void cfg_init();
 static void cfg_create_ini();
+static BOOL cfg_get_bool(LPCSTR key, BOOL default_value);
+static int cfg_get_int(LPCSTR key, int default_value);
+static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD out_size);
 
 CNCDDRAWCONFIG g_config =
     { .window_rect = {.left = -32000, .top = -32000, .right = 0, .bottom = 0 }, .window_state = -1, .borderless_state = -1 };
@@ -21,171 +24,94 @@ void cfg_load()
 {
     cfg_init();
 
-    /* load settings from ini */
-    g_ddraw->windowed = cfg_get_bool("windowed", FALSE);
-    g_ddraw->fullscreen = cfg_get_bool("fullscreen", FALSE);
-    g_ddraw->border = cfg_get_bool("border", TRUE);
-    g_ddraw->boxing = cfg_get_bool("boxing", FALSE);
-    g_ddraw->maintas = cfg_get_bool("maintas", FALSE);
-    g_ddraw->adjmouse = cfg_get_bool("adjmouse", TRUE) || !cfg_get_bool("handlemouse", TRUE);
-    g_ddraw->devmode = cfg_get_bool("devmode", FALSE);
-    g_ddraw->vsync = cfg_get_bool("vsync", FALSE);
-    g_ddraw->noactivateapp = cfg_get_bool("noactivateapp", FALSE);
-    g_ddraw->vhack = cfg_get_bool("vhack", FALSE);
-    g_ddraw->resizable = cfg_get_bool("resizable", TRUE);
-    g_ddraw->toggle_borderless = cfg_get_bool("toggle_borderless", FALSE);
-    g_ddraw->nonexclusive = cfg_get_bool("nonexclusive", FALSE);
-    g_ddraw->fixchilds = cfg_get_int("fixchilds", FIX_CHILDS_DETECT_PAINT);
-    g_ddraw->flipclear = cfg_get_bool("flipclear", FALSE);
-    g_ddraw->fixnotresponding = cfg_get_bool("fixnotresponding", FALSE);
-    g_ddraw->lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
-    g_ddraw->releasealt = cfg_get_bool("releasealt", FALSE);
-    g_ddraw->d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
-    g_ddraw->resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
-    g_ddraw->allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
-    g_ddraw->guard_lines = cfg_get_int("guard_lines", 200);
-    g_ddraw->max_resolutions = cfg_get_int("max_resolutions", 0);
-    g_ddraw->refresh_rate = cfg_get_int("refresh_rate", 0);
-    g_ddraw->custom_width = cfg_get_int("custom_width", 0);
-    g_ddraw->custom_height = cfg_get_int("custom_height", 0);
-    g_ddraw->limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
-    g_ddraw->rgb555 = cfg_get_bool("rgb555", FALSE);
-    g_ddraw->hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
-    g_ddraw->remove_menu = cfg_get_bool("remove_menu", FALSE);
-    cfg_get_string("screenshotdir", ".\\Screenshots\\", g_ddraw->screenshot_dir, sizeof(g_ddraw->screenshot_dir));
-
-
-    g_ddraw->armadahack = cfg_get_bool("armadahack", FALSE);
-    g_ddraw->tshack = cfg_get_bool("tshack", FALSE);
-    g_ddraw->infantryhack = cfg_get_bool("infantryhack", FALSE);
-    g_ddraw->stronghold_hack = cfg_get_bool("stronghold_hack", FALSE);
-    g_ddraw->mgs_hack = cfg_get_bool("mgs_hack", FALSE);
-
-    if (cfg_get_bool("game_handles_close", FALSE) || g_ddraw->infantryhack)
-    {
-        GameHandlesClose = TRUE;
-    }
-
-    g_ddraw->hotkeys.toggle_fullscreen = cfg_get_int("keytogglefullscreen", VK_RETURN);
-    g_ddraw->hotkeys.toggle_maximize = cfg_get_int("keytogglemaximize", VK_NEXT);
-    g_ddraw->hotkeys.unlock_cursor1 = cfg_get_int("keyunlockcursor1", VK_TAB);
-    g_ddraw->hotkeys.unlock_cursor2 = cfg_get_int("keyunlockcursor2", VK_RCONTROL);
-    g_ddraw->hotkeys.screenshot = cfg_get_int("keyscreenshot", VK_SNAPSHOT);
+    /* Optional settings */
 
     g_config.window_rect.right = cfg_get_int("width", 0);
     g_config.window_rect.bottom = cfg_get_int("height", 0);
+    g_config.fullscreen = cfg_get_bool("fullscreen", FALSE);
+    g_config.windowed = cfg_get_bool("windowed", FALSE);
+    g_config.maintas = cfg_get_bool("maintas", FALSE);
+    g_config.boxing = cfg_get_bool("boxing", FALSE);
+    g_config.maxfps = cfg_get_int("maxfps", -1);
+    g_config.vsync = cfg_get_bool("vsync", FALSE);
+    g_config.adjmouse = cfg_get_bool("adjmouse", TRUE) || !cfg_get_bool("handlemouse", TRUE);
+    cfg_get_string("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_config.shader, sizeof(g_config.shader));
     g_config.window_rect.left = cfg_get_int("posX", -32000);
     g_config.window_rect.top = cfg_get_int("posY", -32000);
-
+    cfg_get_string("renderer", "auto", g_config.renderer, sizeof(g_config.renderer));
+    g_config.devmode = cfg_get_bool("devmode", FALSE);
+    g_config.border = cfg_get_bool("border", TRUE);
     g_config.save_settings = cfg_get_int("savesettings", 1);
+    g_config.resizable = cfg_get_bool("resizable", TRUE);
+    g_config.d3d9_filter = cfg_get_int("d3d9_filter", FILTER_CUBIC);
+    g_config.vhack = cfg_get_bool("vhack", FALSE);
+    cfg_get_string("screenshotdir", ".\\Screenshots\\", g_config.screenshot_dir, sizeof(g_config.screenshot_dir));
+    g_config.toggle_borderless = cfg_get_bool("toggle_borderless", FALSE);
 
-    g_ddraw->render.maxfps = cfg_get_int("maxfps", -1);
-    g_ddraw->render.minfps = cfg_get_int("minfps", 0);
+    /* Compatibility settings */
 
-    if (g_ddraw->render.minfps > 1000)
+    g_config.noactivateapp = cfg_get_bool("noactivateapp", FALSE);
+    g_config.maxgameticks = cfg_get_int("maxgameticks", 0);
+    g_config.nonexclusive = cfg_get_bool("nonexclusive", FALSE);
+    g_config.singlecpu = cfg_get_bool("singlecpu", TRUE);
+    g_config.resolutions = cfg_get_int("resolutions", RESLIST_NORMAL);
+    g_config.fixchilds = cfg_get_int("fixchilds", FIX_CHILDS_DETECT_PAINT);
+    g_config.hook_peekmessage = cfg_get_bool("hook_peekmessage", FALSE);
+
+    g_config.minfps = cfg_get_int("minfps", 0);
+
+    if (g_config.minfps > 1000)
     {
-        g_ddraw->render.minfps = 1000;
+        g_config.minfps = 1000;
     }
 
-    if (g_ddraw->render.minfps > 0)
+    if (g_config.minfps > 0)
     {
-        g_ddraw->render.minfps_tick_len = (DWORD)(1000.0f / g_ddraw->render.minfps);
+        g_config.minfps_tick_len = (DWORD)(1000.0f / g_config.minfps);
     }
 
-    /* can't fully set it up here due to missing g_ddraw->mode.dmDisplayFrequency  */
-    g_fpsl.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+    /* Undocumented settings */
 
-    g_ddraw->maxgameticks = cfg_get_int("maxgameticks", 0);
+    g_config.releasealt = cfg_get_bool("releasealt", FALSE);
+    GameHandlesClose = cfg_get_bool("game_handles_close", FALSE);
+    g_config.fixnotresponding = cfg_get_bool("fixnotresponding", FALSE);
+    g_config.hook = cfg_get_int("hook", 4);
+    g_config.guard_lines = cfg_get_int("guard_lines", 200);
+    g_config.max_resolutions = cfg_get_int("max_resolutions", 0);
+    g_config.limit_bltfast = cfg_get_bool("limit_bltfast", FALSE);
+    g_config.lock_surfaces = cfg_get_bool("lock_surfaces", FALSE);
+    g_config.allow_wmactivate = cfg_get_bool("allow_wmactivate", FALSE);
+    g_config.flipclear = cfg_get_bool("flipclear", FALSE);
+    g_config.fixmousehook = cfg_get_bool("fixmousehook", FALSE);
+    g_config.rgb555 = cfg_get_bool("rgb555", FALSE);
+    g_config.no_dinput_hook = cfg_get_bool("no_dinput_hook", FALSE);
+    g_config.refresh_rate = cfg_get_int("refresh_rate", 0);
+    g_config.anti_aliased_fonts_min_size = cfg_get_int("anti_aliased_fonts_min_size", 13);
+    g_config.custom_width = cfg_get_int("custom_width", 0);
+    g_config.custom_height = cfg_get_int("custom_height", 0);
+    g_config.min_font_size = cfg_get_int("min_font_size", 0);
 
-    if (g_ddraw->maxgameticks > 0 && g_ddraw->maxgameticks <= 1000)
+    /* Hotkeys */
+
+    g_config.hotkeys.toggle_fullscreen = cfg_get_int("keytogglefullscreen", VK_RETURN);
+    g_config.hotkeys.toggle_maximize = cfg_get_int("keytogglemaximize", VK_NEXT);
+    g_config.hotkeys.unlock_cursor1 = cfg_get_int("keyunlockcursor1", VK_TAB);
+    g_config.hotkeys.unlock_cursor2 = cfg_get_int("keyunlockcursor2", VK_RCONTROL);
+    g_config.hotkeys.screenshot = cfg_get_int("keyscreenshot", VK_SNAPSHOT);
+
+    /* Game specific settings */
+
+    g_config.remove_menu = cfg_get_bool("remove_menu", FALSE); /* Added for HoMM4 */
+    
+    g_config.armadahack = cfg_get_bool("armadahack", FALSE);
+    g_config.tshack = cfg_get_bool("tshack", FALSE);
+    g_config.infantryhack = cfg_get_bool("infantryhack", FALSE);
+    g_config.stronghold_hack = cfg_get_bool("stronghold_hack", FALSE);
+    g_config.mgs_hack = cfg_get_bool("mgs_hack", FALSE);
+
+    if (g_config.infantryhack)
     {
-        g_ddraw->ticks_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
-
-        float len = 1000.0f / g_ddraw->maxgameticks;
-        g_ddraw->ticks_limiter.tick_length_ns = (LONGLONG)(len * 10000);
-        g_ddraw->ticks_limiter.tick_length = (DWORD)(len + 0.5f);
-    }
-
-    if (g_ddraw->maxgameticks >= 0 || g_ddraw->maxgameticks == -2)
-    {
-        /* always using 60 fps for flip...  */
-        g_ddraw->flip_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
-
-        float flip_len = 1000.0f / 60;
-        g_ddraw->flip_limiter.tick_length_ns = (LONGLONG)(flip_len * 10000);
-        g_ddraw->flip_limiter.tick_length = (DWORD)(flip_len + 0.5f);
-    }
-
-    DWORD system_affinity;
-    DWORD proc_affinity;
-    HANDLE proc = GetCurrentProcess();
-
-    if (cfg_get_bool("singlecpu", TRUE))
-    {
-        SetProcessAffinityMask(proc, 1);
-    }
-    else if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
-    {
-        SetProcessAffinityMask(proc, system_affinity);
-    }
-
-    if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
-    {
-        TRACE("     proc_affinity=%08X, system_affinity=%08X\n", proc_affinity, system_affinity);
-    }
-
-    /* to do: read .glslp config file instead of the shader and apply the correct settings  */
-    cfg_get_string("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_ddraw->shader, sizeof(g_ddraw->shader));
-
-    char renderer[256] = {0};
-    cfg_get_string("renderer", "auto", renderer, sizeof(renderer));
-
-    TRACE("     Using %s renderer\n", renderer);
-
-    if (_strcmpi(renderer, "direct3d9on12") == 0)
-    {
-        g_ddraw->d3d9on12 = TRUE;
-    }
-    else if (_strcmpi(renderer, "openglcore") == 0)
-    {
-        g_ddraw->opengl_core = TRUE;
-    }
-
-    if (tolower(renderer[0]) == 'd') /* direct3d9 or direct3d9on12*/
-    {
-        g_ddraw->renderer = d3d9_render_main;
-    }
-    else if (tolower(renderer[0]) == 's' || tolower(renderer[0]) == 'g') /* gdi */
-    {
-        g_ddraw->renderer = gdi_render_main;
-    }
-    else if (tolower(renderer[0]) == 'o') /* opengl or openglcore */
-    {
-        if (oglu_load_dll())
-        {
-            g_ddraw->renderer = ogl_render_main;
-        }
-        else
-        {
-            g_ddraw->show_driver_warning = TRUE;
-            g_ddraw->renderer = gdi_render_main;
-        }
-    }
-    else /* auto */
-    {
-        if (!g_ddraw->wine && d3d9_is_available())
-        {
-            g_ddraw->renderer = d3d9_render_main;
-        }
-        else if (oglu_load_dll())
-        {
-            g_ddraw->renderer = ogl_render_main;
-        }
-        else
-        {
-            g_ddraw->show_driver_warning = TRUE;
-            g_ddraw->renderer = gdi_render_main;
-        }
+        GameHandlesClose = TRUE;
     }
 }
 
@@ -1161,7 +1087,7 @@ static void cfg_init()
     }
 }
 
-DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD out_size)
+static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD out_size)
 {
     if (!g_config.ini_path[0])
         cfg_init();
@@ -1186,7 +1112,7 @@ DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD o
     return GetPrivateProfileStringA("ddraw", key, default_value, out_string, out_size, g_config.ini_path);
 }
 
-BOOL cfg_get_bool(LPCSTR key, BOOL default_value)
+static BOOL cfg_get_bool(LPCSTR key, BOOL default_value)
 {
     char value[8];
     cfg_get_string(key, default_value ? "Yes" : "No", value, sizeof(value));
@@ -1194,7 +1120,7 @@ BOOL cfg_get_bool(LPCSTR key, BOOL default_value)
     return (_stricmp(value, "yes") == 0 || _stricmp(value, "true") == 0 || _stricmp(value, "1") == 0);
 }
 
-int cfg_get_int(LPCSTR key, int default_value)
+static int cfg_get_int(LPCSTR key, int default_value)
 {
     char def_value[20];
     _snprintf(def_value, sizeof(def_value), "%d", default_value);

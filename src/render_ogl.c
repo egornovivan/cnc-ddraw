@@ -45,7 +45,7 @@ DWORD WINAPI ogl_render_main(void)
         g_ogl.context = ogl_create_core_context(g_ddraw->render.hdc);
 
         if (oglu_ext_exists("WGL_EXT_swap_control", g_ddraw->render.hdc) && wglSwapIntervalEXT)
-            wglSwapIntervalEXT(g_ddraw->vsync ? 1 : 0);
+            wglSwapIntervalEXT(g_config.vsync ? 1 : 0);
 
         fpsl_init();
         ogl_build_programs();
@@ -141,7 +141,7 @@ static void ogl_build_programs()
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PALETTE_FRAG_SHADER, core_profile);
         }
-        else if (g_ddraw->bpp == 16 && g_ddraw->rgb555)
+        else if (g_ddraw->bpp == 16 && g_config.rgb555)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, RGB555_FRAG_SHADER, core_profile);
         }
@@ -156,20 +156,20 @@ static void ogl_build_programs()
         {
             char shader_path[MAX_PATH] = { 0 };
 
-            strncpy(shader_path, g_ddraw->shader, sizeof(shader_path) - 1);
+            strncpy(shader_path, g_config.shader, sizeof(shader_path) - 1);
 
             if (GetFileAttributes(shader_path) == INVALID_FILE_ATTRIBUTES)
             {
-                _snprintf(shader_path, sizeof(shader_path) - 1, "%s%s", g_config.game_path, g_ddraw->shader);
+                _snprintf(shader_path, sizeof(shader_path) - 1, "%s%s", g_config.game_path, g_config.shader);
             }
 
             /* detect common upscaling shaders and disable them if no upscaling is required */
 
             BOOL is_upscaler =
-                strstr(g_ddraw->shader, "catmull-rom-bilinear.glsl") != NULL ||
-                strstr(g_ddraw->shader, "lanczos2-sharp.glsl") != NULL ||
-                strstr(g_ddraw->shader, "xbr-lv2-noblend.glsl") != NULL ||
-                strstr(g_ddraw->shader, "xbrz-freescale.glsl") != NULL;
+                strstr(g_config.shader, "catmull-rom-bilinear.glsl") != NULL ||
+                strstr(g_config.shader, "lanczos2-sharp.glsl") != NULL ||
+                strstr(g_config.shader, "xbr-lv2-noblend.glsl") != NULL ||
+                strstr(g_config.shader, "xbrz-freescale.glsl") != NULL;
 
             if (!is_upscaler ||
                 g_ddraw->render.viewport.width != g_ddraw->width ||
@@ -183,19 +183,19 @@ static void ogl_build_programs()
                 {
                     g_ogl.scale_program = 
                         oglu_build_program(
-                            _stricmp(g_ddraw->shader, "xBR-lv2") == 0 ? XBR_LV2_VERT_SHADER :
+                            _stricmp(g_config.shader, "xBR-lv2") == 0 ? XBR_LV2_VERT_SHADER :
                             PASSTHROUGH_VERT_SHADER, 
-                            _stricmp(g_ddraw->shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
-                            _stricmp(g_ddraw->shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
-                            _stricmp(g_ddraw->shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER :
-                            _stricmp(g_ddraw->shader, "xBR-lv2") == 0 ? XBR_LV2_FRAG_SHADER :
+                            _stricmp(g_config.shader, "Nearest neighbor") == 0 ? PASSTHROUGH_FRAG_SHADER :
+                            _stricmp(g_config.shader, "Bilinear") == 0 ? PASSTHROUGH_FRAG_SHADER :
+                            _stricmp(g_config.shader, "Lanczos") == 0 ? LANCZOS2_FRAG_SHADER :
+                            _stricmp(g_config.shader, "xBR-lv2") == 0 ? XBR_LV2_FRAG_SHADER :
                             CATMULL_ROM_FRAG_SHADER, 
                             core_profile);
 
                     bilinear =
-                        _stricmp(g_ddraw->shader, "Nearest neighbor") != 0 && 
-                        _stricmp(g_ddraw->shader, "Lanczos") != 0 &&
-                        _stricmp(g_ddraw->shader, "xBR-lv2") != 0;
+                        _stricmp(g_config.shader, "Nearest neighbor") != 0 && 
+                        _stricmp(g_config.shader, "Lanczos") != 0 &&
+                        _stricmp(g_config.shader, "xBR-lv2") != 0;
                 }
             }
         }
@@ -204,7 +204,7 @@ static void ogl_build_programs()
             g_oglu_got_version3 = FALSE;
         }
 
-        g_ogl.filter_bilinear = strstr(g_ddraw->shader, "bilinear.glsl") != NULL || bilinear;
+        g_ogl.filter_bilinear = strstr(g_config.shader, "bilinear.glsl") != NULL || bilinear;
     }
 
     if (g_oglu_got_version2 && !g_ogl.main_program)
@@ -259,7 +259,7 @@ static void ogl_create_textures(int width, int height)
                 g_ogl.surface_type = GL_UNSIGNED_BYTE,
                 0);
         }
-        else if (g_ddraw->bpp == 16 && g_ddraw->rgb555)
+        else if (g_ddraw->bpp == 16 && g_config.rgb555)
         {
             if (g_oglu_got_version3)
             {
@@ -662,10 +662,10 @@ static void ogl_render()
         glEnable(GL_TEXTURE_2D);
     }
 
-    DWORD timeout = g_ddraw->render.minfps > 0 ? g_ddraw->render.minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_config.minfps_tick_len : INFINITE;
 
     while (g_ogl.use_opengl && g_ddraw->render.run &&
-        (g_ddraw->render.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
+        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
     {
 #if _DEBUG
         dbg_draw_frame_info_start();
@@ -688,10 +688,10 @@ static void ogl_render()
             g_ddraw->primary->height == g_ddraw->height &&
             (g_ddraw->bpp == 16 || g_ddraw->bpp == 32 || g_ddraw->primary->palette))
         {
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 EnterCriticalSection(&g_ddraw->primary->cs);
 
-            if (g_ddraw->vhack)
+            if (g_config.vhack)
             {
                 if (util_detect_low_res_screen())
                 {
@@ -709,7 +709,7 @@ static void ogl_render()
             }
 
             if (g_ddraw->bpp == 8 &&
-                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_ddraw->render.minfps == -2))
+                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_config.minfps == -2))
             {
                 if (++pal_index >= TEXTURE_COUNT)
                     pal_index = 0;
@@ -728,7 +728,7 @@ static void ogl_render()
                     g_ddraw->primary->palette->data_bgr);
             }
 
-            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_ddraw->render.minfps == -2)
+            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_config.minfps == -2)
             {
                 if (++tex_index >= TEXTURE_COUNT)
                     tex_index = 0;
@@ -767,7 +767,7 @@ static void ogl_render()
                     g_ogl.use_opengl = FALSE;
             }
 
-            if (g_ddraw->fixchilds)
+            if (g_config.fixchilds)
             {
                 g_ddraw->child_window_exists = FALSE;
                 EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
@@ -797,7 +797,7 @@ static void ogl_render()
                 }
             }
 
-            if (g_ddraw->lock_surfaces)
+            if (g_config.lock_surfaces)
                 LeaveCriticalSection(&g_ddraw->primary->cs);
         }
 
@@ -928,7 +928,7 @@ static void ogl_render()
         fpsl_frame_end();
     }
 
-    if (g_ddraw->vhack)
+    if (g_config.vhack)
         InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE);
 }
 

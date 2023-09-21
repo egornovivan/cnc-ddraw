@@ -31,13 +31,13 @@ BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
     realpt.x = pt.x;
     realpt.y = pt.y;
 
-    if (g_mouse_locked && (!g_ddraw->windowed || real_ScreenToClient(g_ddraw->hwnd, &pt)))
+    if (g_mouse_locked && (!g_config.windowed || real_ScreenToClient(g_ddraw->hwnd, &pt)))
     {
         /* fallback solution for possible ClipCursor failure */
         int diffx = 0, diffy = 0;
 
-        int max_width = g_ddraw->adjmouse ? g_ddraw->render.viewport.width : g_ddraw->width;
-        int max_height = g_ddraw->adjmouse ? g_ddraw->render.viewport.height : g_ddraw->height;
+        int max_width = g_config.adjmouse ? g_ddraw->render.viewport.width : g_ddraw->width;
+        int max_height = g_config.adjmouse ? g_ddraw->render.viewport.height : g_ddraw->height;
 
         pt.x -= g_ddraw->mouse.x_adjust;
         pt.y -= g_ddraw->mouse.y_adjust;
@@ -72,7 +72,7 @@ BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
         int x = 0;
         int y = 0;
 
-        if (g_ddraw->adjmouse)
+        if (g_config.adjmouse)
         {
             x = min((DWORD)(roundf(pt.x * g_ddraw->mouse.unscale_x)), g_ddraw->width - 1);
             y = min((DWORD)(roundf(pt.y * g_ddraw->mouse.unscale_y)), g_ddraw->height - 1);
@@ -83,7 +83,7 @@ BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
             y = min(pt.y, g_ddraw->height - 1);
         }
 
-        if (g_ddraw->vhack && InterlockedExchangeAdd(&g_ddraw->upscale_hack_active, 0))
+        if (g_config.vhack && InterlockedExchangeAdd(&g_ddraw->upscale_hack_active, 0))
         {
             diffx = 0;
             diffy = 0;
@@ -149,7 +149,7 @@ BOOL WINAPI fake_ClipCursor(const RECT* lpRect)
         if (lpRect)
             CopyRect(&dst_rc, lpRect);
 
-        if (g_ddraw->adjmouse)
+        if (g_config.adjmouse)
         {
             dst_rc.left = (LONG)(roundf(dst_rc.left * g_ddraw->render.scale_w));
             dst_rc.top = (LONG)(roundf(dst_rc.top * g_ddraw->render.scale_h));
@@ -157,8 +157,8 @@ BOOL WINAPI fake_ClipCursor(const RECT* lpRect)
             dst_rc.right = (LONG)(roundf(dst_rc.right * g_ddraw->render.scale_w));
         }
 
-        int max_width = g_ddraw->adjmouse ? g_ddraw->render.viewport.width : g_ddraw->width;
-        int max_height = g_ddraw->adjmouse ? g_ddraw->render.viewport.height : g_ddraw->height;
+        int max_width = g_config.adjmouse ? g_ddraw->render.viewport.width : g_ddraw->width;
+        int max_height = g_config.adjmouse ? g_ddraw->render.viewport.height : g_ddraw->height;
 
         dst_rc.bottom = min(dst_rc.bottom, max_height);
         dst_rc.right = min(dst_rc.right, max_width);
@@ -185,7 +185,7 @@ int WINAPI fake_ShowCursor(BOOL bShow)
 {
     if (g_ddraw && g_ddraw->hwnd)
     {
-        if (g_mouse_locked || g_ddraw->devmode)
+        if (g_mouse_locked || g_config.devmode)
         {
             int count = real_ShowCursor(bShow);
             InterlockedExchange((LONG*)&g_ddraw->show_cursor_count, count);
@@ -208,7 +208,7 @@ HCURSOR WINAPI fake_SetCursor(HCURSOR hCursor)
     {
         HCURSOR cursor = (HCURSOR)InterlockedExchange((LONG*)&g_ddraw->old_cursor, (LONG)hCursor);
 
-        if (!g_mouse_locked && !g_ddraw->devmode)
+        if (!g_mouse_locked && !g_config.devmode)
             return cursor;
     }
 
@@ -220,7 +220,7 @@ BOOL WINAPI fake_GetWindowRect(HWND hWnd, LPRECT lpRect)
     if (lpRect &&
         g_ddraw &&
         g_ddraw->hwnd &&
-        (g_hook_method != 2 || g_ddraw->renderer == gdi_render_main))
+        (g_config.hook != 2 || g_ddraw->renderer == gdi_render_main))
     {
         if (g_ddraw->hwnd == hWnd)
         {
@@ -252,7 +252,7 @@ BOOL WINAPI fake_GetClientRect(HWND hWnd, LPRECT lpRect)
     if (lpRect &&
         g_ddraw &&
         g_ddraw->hwnd == hWnd &&
-        (g_hook_method != 2 || g_ddraw->renderer == gdi_render_main))
+        (g_config.hook != 2 || g_ddraw->renderer == gdi_render_main))
     {
         lpRect->bottom = g_ddraw->height;
         lpRect->left = 0;
@@ -292,12 +292,12 @@ BOOL WINAPI fake_SetCursorPos(int X, int Y)
     if (!g_ddraw || !g_ddraw->hwnd || !g_ddraw->width)
         return real_SetCursorPos(X, Y);
 
-    if (!g_mouse_locked && !g_ddraw->devmode)
+    if (!g_mouse_locked && !g_config.devmode)
         return TRUE;
 
     POINT pt = { X, Y };
 
-    if (g_ddraw->adjmouse)
+    if (g_config.adjmouse)
     {
         pt.x = (LONG)(roundf(pt.x * g_ddraw->mouse.scale_x));
         pt.y = (LONG)(roundf(pt.y * g_ddraw->mouse.scale_y));
@@ -426,7 +426,7 @@ LRESULT WINAPI fake_SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
 
-        if (g_ddraw->adjmouse)
+        if (g_config.adjmouse)
         {
             x = (int)(roundf(x * g_ddraw->mouse.scale_x));
             y = (int)(roundf(y * g_ddraw->mouse.scale_y));
@@ -435,7 +435,7 @@ LRESULT WINAPI fake_SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
         lParam = MAKELPARAM(x + g_ddraw->mouse.x_adjust, y + g_ddraw->mouse.y_adjust);
     }
 
-    if (g_ddraw->hwnd == hWnd && Msg == WM_SIZE && g_hook_method != 2)
+    if (g_ddraw->hwnd == hWnd && Msg == WM_SIZE && g_config.hook != 2)
     {
         Msg = WM_SIZE_DDRAW;
     }
@@ -538,7 +538,7 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow)
         if (nCmdShow == SW_MAXIMIZE)
             nCmdShow = SW_NORMAL;
 
-        if (nCmdShow == SW_MINIMIZE && g_hook_method != 2)
+        if (nCmdShow == SW_MINIMIZE && g_config.hook != 2)
             return TRUE;
     }
 
@@ -547,7 +547,7 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow)
 
 HWND WINAPI fake_GetTopWindow(HWND hWnd)
 {
-    if (g_ddraw && g_ddraw->windowed && g_ddraw->hwnd && !hWnd)
+    if (g_ddraw && g_config.windowed && g_ddraw->hwnd && !hWnd)
     {
         return g_ddraw->hwnd;
     }
@@ -557,7 +557,7 @@ HWND WINAPI fake_GetTopWindow(HWND hWnd)
 
 HWND WINAPI fake_GetForegroundWindow()
 {
-    if (g_ddraw && g_ddraw->windowed && g_ddraw->hwnd)
+    if (g_ddraw && g_config.windowed && g_ddraw->hwnd)
     {
         return g_ddraw->hwnd;
     }
@@ -584,7 +584,7 @@ HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, D
         return NULL;
     }
 
-    if (idHook == WH_MOUSE && lpfn && !hmod && !g_mouse_hook && cfg_get_bool("fixmousehook", FALSE))
+    if (idHook == WH_MOUSE && lpfn && !hmod && !g_mouse_hook && g_config.fixmousehook)
     {
         g_mouse_proc = lpfn;
         return g_mouse_hook = real_SetWindowsHookExA(idHook, mouse_hook_proc, hmod, dwThreadId);
@@ -597,7 +597,7 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
 {
     BOOL result = real_PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
 
-    if (result && g_ddraw && g_ddraw->width && g_ddraw->hook_peekmessage)
+    if (result && g_ddraw && g_ddraw->width && g_config.hook_peekmessage)
     {
         switch (lpMsg->message)
         {
@@ -605,7 +605,7 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
         case WM_RBUTTONUP:
         case WM_MBUTTONUP:
         {
-            if (!g_ddraw->devmode && !g_mouse_locked)
+            if (!g_config.devmode && !g_mouse_locked)
             {
                 int x = GET_X_LPARAM(lpMsg->lParam);
                 int y = GET_Y_LPARAM(lpMsg->lParam);
@@ -646,7 +646,7 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
         case WM_MBUTTONDOWN:
         case WM_MOUSEMOVE:
         {
-            if (!g_ddraw->devmode && !g_mouse_locked)
+            if (!g_config.devmode && !g_mouse_locked)
             {
                 // Does not work with 'New Robinson'
                 //return FALSE;
@@ -655,9 +655,9 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
             int x = max(GET_X_LPARAM(lpMsg->lParam) - g_ddraw->mouse.x_adjust, 0);
             int y = max(GET_Y_LPARAM(lpMsg->lParam) - g_ddraw->mouse.y_adjust, 0);
 
-            if (g_ddraw->adjmouse)
+            if (g_config.adjmouse)
             {
-                if (g_ddraw->vhack && !g_ddraw->devmode)
+                if (g_config.vhack && !g_config.devmode)
                 {
                     POINT pt = { 0, 0 };
                     fake_GetCursorPos(&pt);
@@ -695,7 +695,7 @@ int WINAPI fake_GetDeviceCaps(HDC hdc, int index)
     if (g_ddraw &&
         g_ddraw->bpp &&
         index == BITSPIXEL &&
-        (g_hook_method != 2 || g_ddraw->renderer == gdi_render_main))
+        (g_config.hook != 2 || g_ddraw->renderer == gdi_render_main))
     {
         return g_ddraw->bpp;
     }
@@ -703,7 +703,7 @@ int WINAPI fake_GetDeviceCaps(HDC hdc, int index)
     if (g_ddraw &&
         g_ddraw->bpp == 8 &&
         index == RASTERCAPS &&
-        (g_hook_method != 2 || g_ddraw->renderer == gdi_render_main))
+        (g_config.hook != 2 || g_ddraw->renderer == gdi_render_main))
     {
         return RC_PALETTE | real_GetDeviceCaps(hdc, index);
     }
@@ -735,8 +735,8 @@ BOOL WINAPI fake_StretchBlt(
 
     if (g_ddraw && g_ddraw->hwnd &&
         (hwnd == g_ddraw->hwnd ||
-            (g_ddraw->fixchilds && IsChild(g_ddraw->hwnd, hwnd) &&
-                (g_ddraw->fixchilds == FIX_CHILDS_DETECT_HIDE ||
+            (g_config.fixchilds && IsChild(g_ddraw->hwnd, hwnd) &&
+                (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE ||
                     strcmp(class_name, "AVIWnd32") == 0 ||
                     strcmp(class_name, "MCIWndClass") == 0))))
     {
@@ -910,15 +910,14 @@ HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA* lplf)
     LOGFONTA lf;
     memcpy(&lf, lplf, sizeof(lf));
 
-    int minFontSize = cfg_get_int("min_font_size", 0);
     if (lf.lfHeight < 0) {
-        lf.lfHeight = min(-minFontSize, lf.lfHeight);
+        lf.lfHeight = min(-g_config.min_font_size, lf.lfHeight);
     }
     else {
-        lf.lfHeight = max(minFontSize, lf.lfHeight);
+        lf.lfHeight = max(g_config.min_font_size, lf.lfHeight);
     }
 
-    if (cfg_get_int("anti_aliased_fonts_min_size", 13) > abs(lf.lfHeight))
+    if (g_config.anti_aliased_fonts_min_size > abs(lf.lfHeight))
         lf.lfQuality = NONANTIALIASED_QUALITY;
 
     return real_CreateFontIndirectA(&lf);
@@ -940,15 +939,14 @@ HFONT WINAPI fake_CreateFontA(
     DWORD fdwPitchAndFamily,
     LPCTSTR lpszFace)
 {
-    int minFontSize = cfg_get_int("min_font_size", 0);
     if (nHeight < 0) {
-        nHeight = min(-minFontSize, nHeight);
+        nHeight = min(-g_config.min_font_size, nHeight);
     }
     else {
-        nHeight = max(minFontSize, nHeight);
+        nHeight = max(g_config.min_font_size, nHeight);
     }
 
-    if (cfg_get_int("anti_aliased_fonts_min_size", 13) > abs(nHeight))
+    if (g_config.anti_aliased_fonts_min_size > abs(nHeight))
         fdwQuality = NONANTIALIASED_QUALITY;
 
     return 
@@ -1077,7 +1075,7 @@ FARPROC WINAPI fake_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 
     FARPROC proc = real_GetProcAddress(hModule, lpProcName);
 
-    if (g_hook_method != 3 || !hModule || !HIWORD(lpProcName))
+    if (g_config.hook != 3 || !hModule || !HIWORD(lpProcName))
         return proc;
 
     for (int i = 0; g_hook_hooklist[i].module_name[0]; i++)
@@ -1153,7 +1151,7 @@ BOOL WINAPI fake_DestroyWindow(HWND hWnd)
             SetFocus(g_ddraw->hwnd);
             mouse_lock();
 
-            if (g_ddraw->windowed)
+            if (g_config.windowed)
             {
                 g_ddraw->bnet_pos.x = g_ddraw->bnet_pos.y = 0;
                 real_ClientToScreen(g_ddraw->hwnd, &g_ddraw->bnet_pos);
@@ -1176,11 +1174,11 @@ BOOL WINAPI fake_DestroyWindow(HWND hWnd)
                         flags);
                 }
 
-                g_ddraw->fullscreen = g_ddraw->bnet_was_upscaled;
+                g_config.fullscreen = g_ddraw->bnet_was_upscaled;
 
                 SetTimer(g_ddraw->hwnd, IDT_TIMER_LEAVE_BNET, 1000, (TIMERPROC)NULL);
 
-                g_ddraw->resizable = TRUE;
+                g_config.resizable = TRUE;
             }
         }
     }
@@ -1220,10 +1218,10 @@ HWND WINAPI fake_CreateWindowExA(
     {
         if (!g_ddraw->bnet_active)
         {
-            g_ddraw->bnet_was_upscaled = g_ddraw->fullscreen;
-            g_ddraw->fullscreen = FALSE;
+            g_ddraw->bnet_was_upscaled = g_config.fullscreen;
+            g_config.fullscreen = FALSE;
 
-            if (!g_ddraw->windowed && !g_ddraw->bnet_was_fullscreen)
+            if (!g_config.windowed && !g_ddraw->bnet_was_fullscreen)
             {
                 int ws = g_config.window_state;
                 util_toggle_fullscreen();
@@ -1246,7 +1244,7 @@ HWND WINAPI fake_CreateWindowExA(
             int dst_height = g_config.window_rect.bottom ? g_ddraw->height : 0;
 
             util_set_window_rect(x, y, dst_width, dst_height, flags);
-            g_ddraw->resizable = FALSE;
+            g_config.resizable = FALSE;
 
             g_ddraw->bnet_active = TRUE;
             mouse_unlock();

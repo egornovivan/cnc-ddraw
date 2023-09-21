@@ -66,13 +66,13 @@ HRESULT dd_EnumDisplayModes(
         max_h = reg_m.dmPelsHeight;
     }
 
-    if (g_ddraw->stronghold_hack && max_w && (max_w % 8))
+    if (g_config.stronghold_hack && max_w && (max_w % 8))
     {
         while (--max_w % 8);
     }
 
-    BOOL rlf = g_ddraw->resolutions == RESLIST_FULL;
-    BOOL rlm = g_ddraw->resolutions == RESLIST_MINI;
+    BOOL rlf = g_config.resolutions == RESLIST_FULL;
+    BOOL rlm = g_config.resolutions == RESLIST_MINI;
 
     SIZE resolutions[] =
     {
@@ -107,7 +107,7 @@ HRESULT dd_EnumDisplayModes(
         { rlf ? 1720 : 0, rlf ? 720 : 0 },
         { rlf ? 2560 : 0, rlf ? 1080 : 0 },
         /* Inject custom resolution */
-        { g_ddraw->custom_width, g_ddraw->custom_height },
+        { g_config.custom_width, g_config.custom_height },
         { max_w, max_h },
     };
     
@@ -120,7 +120,7 @@ HRESULT dd_EnumDisplayModes(
         }
     }
 
-    if ((g_ddraw->bpp && g_ddraw->resolutions == RESLIST_NORMAL) || g_ddraw->resolutions == RESLIST_FULL)
+    if ((g_ddraw->bpp && g_config.resolutions == RESLIST_NORMAL) || g_config.resolutions == RESLIST_FULL)
     {
         TRACE("     g_ddraw->bpp=%u\n", g_ddraw->bpp);
 
@@ -174,15 +174,15 @@ HRESULT dd_EnumDisplayModes(
                 flags == m.dmDisplayFlags &&
                 fixed_output == m.dmDisplayFixedOutput)
             {
-                if (g_ddraw->stronghold_hack && m.dmPelsWidth && (m.dmPelsWidth % 8))
+                if (g_config.stronghold_hack && m.dmPelsWidth && (m.dmPelsWidth % 8))
                 {
                     while (--m.dmPelsWidth % 8);
                 }
 
-                if (i == 0 && g_ddraw->custom_width && g_ddraw->custom_height)
+                if (i == 0 && g_config.custom_width && g_config.custom_height)
                 {
-                    m.dmPelsWidth = g_ddraw->custom_width;
-                    m.dmPelsHeight = g_ddraw->custom_height;
+                    m.dmPelsWidth = g_config.custom_width;
+                    m.dmPelsHeight = g_config.custom_height;
                 }
 
                 TRACE(
@@ -208,9 +208,9 @@ HRESULT dd_EnumDisplayModes(
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->bpp == 8 || g_ddraw->resolutions == RESLIST_FULL)
+                    if (g_ddraw->bpp == 8 || g_config.resolutions == RESLIST_FULL)
                     {
-                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                         {
                             TRACE("     resolution limit reached, stopping\n");
                             return DD_OK;
@@ -233,9 +233,9 @@ HRESULT dd_EnumDisplayModes(
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->bpp == 16 || g_ddraw->resolutions == RESLIST_FULL)
+                    if (g_ddraw->bpp == 16 || g_config.resolutions == RESLIST_FULL)
                     {
-                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                         {
                             TRACE("     resolution limit reached, stopping\n");
                             return DD_OK;
@@ -258,9 +258,9 @@ HRESULT dd_EnumDisplayModes(
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
-                    if (g_ddraw->bpp == 32 || g_ddraw->resolutions == RESLIST_FULL)
+                    if (g_ddraw->bpp == 32 || g_config.resolutions == RESLIST_FULL)
                     {
-                        if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                        if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                         {
                             TRACE("     resolution limit reached, stopping\n");
                             return DD_OK;
@@ -290,14 +290,14 @@ HRESULT dd_EnumDisplayModes(
         }
     }
 
-    if (!g_ddraw->bpp || g_ddraw->resolutions != RESLIST_NORMAL)
+    if (!g_ddraw->bpp || g_config.resolutions != RESLIST_NORMAL)
     {
         for (i = 0; i < sizeof(resolutions) / sizeof(resolutions[0]); i++)
         {
             if (!resolutions[i].cx || !resolutions[i].cy)
                 continue;
 
-            if (!(resolutions[i].cx == g_ddraw->custom_width && resolutions[i].cy == g_ddraw->custom_height) &&
+            if (!(resolutions[i].cx == g_config.custom_width && resolutions[i].cy == g_config.custom_height) &&
                 ((max_w && resolutions[i].cx > max_w) || (max_h && resolutions[i].cy > max_h)))
             {
                 DEVMODE m;
@@ -327,7 +327,7 @@ HRESULT dd_EnumDisplayModes(
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                 {
                     TRACE("     resolution limit reached, stopping\n");
                     return DD_OK;
@@ -349,7 +349,7 @@ HRESULT dd_EnumDisplayModes(
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                 {
                     TRACE("     resolution limit reached, stopping\n");
                     return DD_OK;
@@ -362,7 +362,7 @@ HRESULT dd_EnumDisplayModes(
                 }
             }
 
-            if (g_ddraw->resolutions == RESLIST_MINI)
+            if (g_config.resolutions == RESLIST_MINI)
                 continue;
 
             s.ddpfPixelFormat.dwFlags = DDPF_RGB;
@@ -374,7 +374,7 @@ HRESULT dd_EnumDisplayModes(
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
-                if (g_ddraw->max_resolutions && res_count++ >= g_ddraw->max_resolutions)
+                if (g_config.max_resolutions && res_count++ >= g_config.max_resolutions)
                 {
                     TRACE("     resolution limit reached, stopping\n");
                     return DD_OK;
@@ -531,9 +531,9 @@ HRESULT dd_RestoreDisplayMode()
         }
     }
 
-    if (!g_ddraw->windowed)
+    if (!g_config.windowed)
     {
-        if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
+        if (g_ddraw->renderer == d3d9_render_main && !g_config.nonexclusive)
         {
             if (!d3d9_reset(TRUE))
                 d3d9_release();
@@ -552,7 +552,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     if (dwBPP != 8 && dwBPP != 16 && dwBPP != 32)
         return DDERR_INVALIDMODE;
 
-    if (g_ddraw->mgs_hack && dwHeight == 480) dwHeight -= 32; /* Remove black bar in Metal Gear Solid */
+    if (g_config.mgs_hack && dwHeight == 480) dwHeight -= 32; /* Remove black bar in Metal Gear Solid */
 
     if (g_ddraw->render.thread)
     {
@@ -583,7 +583,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
             if (!g_ddraw->mode.dmPelsWidth || !g_ddraw->mode.dmPelsHeight)
             {
-                g_ddraw->fullscreen = FALSE;
+                g_config.fullscreen = FALSE;
             }
         }
     }
@@ -592,7 +592,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.height = g_config.window_rect.bottom;
 
     /* temporary fix: center window for games that keep changing their resolution */
-    if ((g_ddraw->width || g_ddraw->infantryhack) &&
+    if ((g_ddraw->width || g_config.infantryhack) &&
         (g_ddraw->width != dwWidth || g_ddraw->height != dwHeight) &&
         (dwWidth > g_config.window_rect.right || dwHeight > g_config.window_rect.bottom))
     {
@@ -607,15 +607,15 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     InterlockedExchange((LONG*)&g_ddraw->cursor.x, dwWidth / 2);
     InterlockedExchange((LONG*)&g_ddraw->cursor.y, dwHeight / 2);
 
-    BOOL border = g_ddraw->border;
+    BOOL border = g_config.border;
     BOOL nonexclusive = FALSE;
 
-    if (g_ddraw->fullscreen)
+    if (g_config.fullscreen)
     {
         g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
         g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
 
-        if (g_ddraw->windowed) /* windowed-fullscreen aka borderless */
+        if (g_config.windowed) /* windowed-fullscreen aka borderless */
         {
             border = FALSE;
 
@@ -645,14 +645,14 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     memset(&g_ddraw->render.mode, 0, sizeof(DEVMODE));
     g_ddraw->render.mode.dmSize = sizeof(DEVMODE);
 
-    if (g_ddraw->refresh_rate)
+    if (g_config.refresh_rate)
     {
         g_ddraw->render.mode.dmFields |= DM_DISPLAYFREQUENCY;
-        g_ddraw->render.mode.dmDisplayFrequency = g_ddraw->refresh_rate;
+        g_ddraw->render.mode.dmDisplayFrequency = g_config.refresh_rate;
 
         if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
         {
-            g_ddraw->refresh_rate = 0;
+            g_config.refresh_rate = 0;
 
             g_ddraw->render.mode.dmFields = 0;
             g_ddraw->render.mode.dmDisplayFrequency = 0;
@@ -663,7 +663,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.mode.dmPelsWidth = g_ddraw->render.width;
     g_ddraw->render.mode.dmPelsHeight = g_ddraw->render.height;
 
-    if (!g_ddraw->windowed)
+    if (!g_config.windowed)
     {
         /* Making sure the chosen resolution is valid */
         if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
@@ -724,7 +724,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                             g_ddraw->height > g_ddraw->mode.dmPelsHeight)
                         {
                             /* Downscaling requires adjmouse to be enabled */
-                            g_ddraw->adjmouse = TRUE;
+                            g_config.adjmouse = TRUE;
                         }
 
                         /* try current display settings */
@@ -739,8 +739,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                             /* everything failed, use borderless mode instead */
                             ChangeDisplaySettings(NULL, 0);
 
-                            g_ddraw->windowed = TRUE;
-                            g_ddraw->fullscreen = TRUE;
+                            g_config.windowed = TRUE;
+                            g_config.fullscreen = TRUE;
                             border = FALSE;
 
                             /* prevent OpenGL from going automatically into fullscreen exclusive mode */
@@ -755,13 +755,13 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     }
     
     /* Support downscaling in borderless mode */
-    if (g_ddraw->windowed && g_ddraw->fullscreen)
+    if (g_config.windowed && g_config.fullscreen)
     {
         if (g_ddraw->width > g_ddraw->mode.dmPelsWidth ||
             g_ddraw->height > g_ddraw->mode.dmPelsHeight)
         {
             /* Downscaling requires adjmouse to be enabled */
-            g_ddraw->adjmouse = TRUE;
+            g_config.adjmouse = TRUE;
 
             g_ddraw->render.width = g_ddraw->mode.dmPelsWidth;
             g_ddraw->render.height = g_ddraw->mode.dmPelsHeight;
@@ -776,7 +776,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->render.viewport.x = 0;
     g_ddraw->render.viewport.y = 0;
 
-    if (g_ddraw->boxing)
+    if (g_config.boxing)
     {
         g_ddraw->render.viewport.width = g_ddraw->width;
         g_ddraw->render.viewport.height = g_ddraw->height;
@@ -794,7 +794,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         g_ddraw->render.viewport.y = g_ddraw->render.height / 2 - g_ddraw->render.viewport.height / 2;
         g_ddraw->render.viewport.x = g_ddraw->render.width / 2 - g_ddraw->render.viewport.width / 2;
     }
-    else if (g_ddraw->maintas)
+    else if (g_config.maintas)
     {
         g_ddraw->render.viewport.width = g_ddraw->render.width;
         g_ddraw->render.viewport.height =
@@ -830,13 +830,13 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     g_ddraw->mouse.rc.right = g_ddraw->width + g_ddraw->mouse.x_adjust;
     g_ddraw->mouse.rc.bottom = g_ddraw->height + g_ddraw->mouse.y_adjust;
 
-    if (g_ddraw->adjmouse)
+    if (g_config.adjmouse)
     {
         g_ddraw->mouse.rc.right = g_ddraw->render.viewport.width + g_ddraw->mouse.x_adjust;
         g_ddraw->mouse.rc.bottom = g_ddraw->render.viewport.height + g_ddraw->mouse.y_adjust;
     }
 
-    if (nonexclusive || (g_ddraw->nonexclusive && !g_ddraw->windowed && g_ddraw->renderer == ogl_render_main))
+    if (nonexclusive || (g_config.nonexclusive && !g_config.windowed && g_ddraw->renderer == ogl_render_main))
     {
         g_ddraw->render.height++;
         g_ddraw->render.opengl_y_align = 1;
@@ -846,9 +846,9 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         g_ddraw->render.opengl_y_align = 0;
     }
 
-    if (g_ddraw->windowed)
+    if (g_config.windowed)
     {
-        if (g_ddraw->remove_menu && GetMenu(g_ddraw->hwnd))
+        if (g_config.remove_menu && GetMenu(g_ddraw->hwnd))
             SetMenu(g_ddraw->hwnd, NULL);
 
         if (!g_ddraw->wine)
@@ -898,7 +898,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         int x = (g_config.window_rect.left != -32000) ? g_config.window_rect.left : (cy / 2) - (g_ddraw->render.width / 2);
         int y = (g_config.window_rect.top != -32000) ? g_config.window_rect.top : (cx / 2) - (g_ddraw->render.height / 2);
 
-        if (g_ddraw->fullscreen)
+        if (g_config.fullscreen)
         {
             x = y = 0;
         }
@@ -942,7 +942,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             }
         }
 
-        if (lock_mouse || (g_ddraw->fullscreen && real_GetForegroundWindow() == g_ddraw->hwnd))
+        if (lock_mouse || (g_config.fullscreen && real_GetForegroundWindow() == g_ddraw->hwnd))
             mouse_lock();
     }
     else
@@ -975,7 +975,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
         if (g_ddraw->renderer == d3d9_render_main)
         {
-            if (g_ddraw->nonexclusive)
+            if (g_config.nonexclusive)
             {
                 if (util_is_minimized(g_ddraw->hwnd))
                     real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
@@ -1002,12 +1002,12 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             }
         }
 
-        if ((!d3d9_active || g_ddraw->nonexclusive) &&
+        if ((!d3d9_active || g_config.nonexclusive) &&
             ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
         {
             g_ddraw->render.run = FALSE;
-            g_ddraw->windowed = TRUE;
-            g_ddraw->fullscreen = TRUE;
+            g_config.windowed = TRUE;
+            g_config.fullscreen = TRUE;
             return dd_SetDisplayMode(dwWidth, dwHeight, dwBPP, dwFlags);
         }
 
@@ -1031,7 +1031,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             g_ddraw->render.height,
             swp_flags);
 
-        if (d3d9_active && g_ddraw->nonexclusive)
+        if (d3d9_active && g_config.nonexclusive)
             d3d9_reset(TRUE);
 
         g_ddraw->last_set_window_pos_tick = timeGetTime();
@@ -1056,7 +1056,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         SetThreadPriority(g_ddraw->render.thread, THREAD_PRIORITY_ABOVE_NORMAL);
     }
 
-    if ((dwFlags & SDM_MODE_SET_BY_GAME) && !g_ddraw->infantryhack)
+    if ((dwFlags & SDM_MODE_SET_BY_GAME) && !g_config.infantryhack)
     {
         real_SendMessageA(g_ddraw->hwnd, WM_SIZE_DDRAW, 0, MAKELPARAM(g_ddraw->width, g_ddraw->height));
         real_SendMessageA(g_ddraw->hwnd, WM_MOVE_DDRAW, 0, MAKELPARAM(0, 0));
@@ -1106,7 +1106,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
             SetPixelFormat(g_ddraw->render.hdc, ChoosePixelFormat(g_ddraw->render.hdc, &pfd), &pfd);
         }
 
-        if (!g_ddraw->devmode)
+        if (!g_config.devmode)
         {
             HCURSOR cursor = real_SetCursor(LoadCursor(NULL, IDC_ARROW));
 
@@ -1119,13 +1119,13 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         real_ShowCursor(FALSE);
 
         /* Make sure the cursor is visible in windowed mode initially */
-        if (g_ddraw->windowed && !g_ddraw->fullscreen && !g_ddraw->devmode && cursor_count < 0)
+        if (g_config.windowed && !g_config.fullscreen && !g_config.devmode && cursor_count < 0)
         {
             while (real_ShowCursor(TRUE) < 0);
         }
 
         /* Starcraft locks the cursor before ddraw.dll was loaded */
-        if (g_ddraw->windowed)
+        if (g_config.windowed)
         {
             real_ClipCursor(NULL);
         }
@@ -1147,31 +1147,31 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
             g_ddraw->upscale_hack_height = 400;
         }
 
-        if (g_ddraw->vhack && !g_ddraw->isredalert && !g_ddraw->iscnc1 && !g_ddraw->iskkndx)
+        if (g_config.vhack && !g_ddraw->isredalert && !g_ddraw->iscnc1 && !g_ddraw->iskkndx)
         {
-            g_ddraw->vhack = 0;
+            g_config.vhack = 0;
         }
     }
 
     /* Infantry Online Zone List Window */
-    if (g_ddraw->infantryhack)
+    if (g_config.infantryhack)
     {
         static BOOL windowed, fullscreen;
 
         if (dwFlags & DDSCL_FULLSCREEN)
         {
-            g_ddraw->windowed = windowed;
-            g_ddraw->fullscreen = fullscreen;
+            g_config.windowed = windowed;
+            g_config.fullscreen = fullscreen;
         }
         else if (dwFlags & DDSCL_NOWINDOWCHANGES)
         {
-            windowed = g_ddraw->windowed;
-            fullscreen = g_ddraw->fullscreen;
+            windowed = g_config.windowed;
+            fullscreen = g_config.fullscreen;
 
             if (GetMenu(g_ddraw->hwnd) != NULL)
             {
-                g_ddraw->windowed = TRUE;
-                g_ddraw->fullscreen = FALSE;
+                g_config.windowed = TRUE;
+                g_config.fullscreen = FALSE;
             }
 
             dd_SetDisplayMode(640, 480, 16, SDM_MODE_SET_BY_GAME);
@@ -1183,9 +1183,9 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
 HRESULT dd_WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
 {
-    if (g_ddraw->maxgameticks == -2)
+    if (g_config.maxgameticks == -2)
     {
-        if (fpsl_dwm_flush() || fpsl_wait_for_vblank(g_ddraw->render.maxfps >= 0 && !g_ddraw->vsync))
+        if (fpsl_dwm_flush() || fpsl_wait_for_vblank(g_config.maxfps >= 0 && !g_config.vsync))
             return DD_OK;
     }
 
@@ -1267,9 +1267,9 @@ ULONG dd_Release()
             }
         }
 
-        if (!g_ddraw->windowed)
+        if (!g_config.windowed)
         {
-            if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
+            if (g_ddraw->renderer == d3d9_render_main && !g_config.nonexclusive)
             {
                 if (!d3d9_reset(TRUE))
                     d3d9_release();
@@ -1378,7 +1378,94 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         g_ddraw->wine = real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
         g_blt_use_avx = util_is_avx_supported();
 
-        cfg_load();
+        /* can't fully set it up here due to missing g_ddraw->mode.dmDisplayFrequency  */
+        g_fpsl.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+
+        if (g_config.maxgameticks > 0 && g_config.maxgameticks <= 1000)
+        {
+            g_ddraw->ticks_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+
+            float len = 1000.0f / g_config.maxgameticks;
+            g_ddraw->ticks_limiter.tick_length_ns = (LONGLONG)(len * 10000);
+            g_ddraw->ticks_limiter.tick_length = (DWORD)(len + 0.5f);
+        }
+
+        if (g_config.maxgameticks >= 0 || g_config.maxgameticks == -2)
+        {
+            /* always using 60 fps for flip...  */
+            g_ddraw->flip_limiter.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
+
+            float flip_len = 1000.0f / 60;
+            g_ddraw->flip_limiter.tick_length_ns = (LONGLONG)(flip_len * 10000);
+            g_ddraw->flip_limiter.tick_length = (DWORD)(flip_len + 0.5f);
+        }
+
+
+        DWORD system_affinity;
+        DWORD proc_affinity;
+        HANDLE proc = GetCurrentProcess();
+
+        if (g_config.singlecpu)
+        {
+            SetProcessAffinityMask(proc, 1);
+        }
+        else if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
+        {
+            SetProcessAffinityMask(proc, system_affinity);
+        }
+
+        if (GetProcessAffinityMask(proc, &proc_affinity, &system_affinity))
+        {
+            TRACE("     proc_affinity=%08X, system_affinity=%08X\n", proc_affinity, system_affinity);
+        }
+
+
+        if (_strcmpi(g_config.renderer, "direct3d9on12") == 0)
+        {
+            g_ddraw->d3d9on12 = TRUE;
+        }
+        else if (_strcmpi(g_config.renderer, "openglcore") == 0)
+        {
+            g_ddraw->opengl_core = TRUE;
+        }
+
+        if (tolower(g_config.renderer[0]) == 'd') /* direct3d9 or direct3d9on12*/
+        {
+            g_ddraw->renderer = d3d9_render_main;
+        }
+        else if (tolower(g_config.renderer[0]) == 's' || tolower(g_config.renderer[0]) == 'g') /* gdi */
+        {
+            g_ddraw->renderer = gdi_render_main;
+        }
+        else if (tolower(g_config.renderer[0]) == 'o') /* opengl or openglcore */
+        {
+            if (oglu_load_dll())
+            {
+                g_ddraw->renderer = ogl_render_main;
+            }
+            else
+            {
+                g_ddraw->show_driver_warning = TRUE;
+                g_ddraw->renderer = gdi_render_main;
+            }
+        }
+        else /* auto */
+        {
+            if (!g_ddraw->wine && d3d9_is_available())
+            {
+                g_ddraw->renderer = d3d9_render_main;
+            }
+            else if (oglu_load_dll())
+            {
+                g_ddraw->renderer = ogl_render_main;
+            }
+            else
+            {
+                g_ddraw->show_driver_warning = TRUE;
+                g_ddraw->renderer = gdi_render_main;
+            }
+        }
+
         g_ddraw->ref--;
     }
 

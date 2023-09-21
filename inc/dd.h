@@ -65,13 +65,11 @@ typedef struct CNCDDRAW
     DWORD width;
     DWORD height;
     DWORD bpp;
-    BOOL windowed;
-    BOOL border;
-    BOOL boxing;
+    
     DEVMODE mode;
     struct IDirectDrawSurfaceImpl* primary;
     char title[128];
-    char screenshot_dir[MAX_PATH];
+    
     CRITICAL_SECTION cs;
 
     /* real export from system32\ddraw.dll */
@@ -81,9 +79,6 @@ typedef struct CNCDDRAW
 
     struct
     {
-        int maxfps;
-        int minfps;
-        DWORD minfps_tick_len;
         int width;
         int height;
         int opengl_y_align;
@@ -119,63 +114,20 @@ typedef struct CNCDDRAW
         RECT rc;
     } mouse;
 
-    struct
-    {
-        int toggle_fullscreen;
-        int toggle_maximize;
-        int unlock_cursor1;
-        int unlock_cursor2;
-        int screenshot;
-    } hotkeys;
-
+    DWORD(WINAPI* renderer)(void);
     HWND hwnd;
     WNDPROC wndproc;
     struct { DWORD x; DWORD y; } cursor;
-    BOOL adjmouse;
-    BOOL devmode;
-    BOOL vsync;
-    BOOL vhack;
     int upscale_hack_width;
     int upscale_hack_height;
     BOOL isredalert;
     BOOL iscnc1;
     BOOL iskkndx;
     LONG upscale_hack_active;
-    DWORD(WINAPI* renderer)(void);
-    BOOL fullscreen;
-    BOOL maintas;
-    BOOL noactivateapp;
-    char shader[MAX_PATH];
     BOOL wine;
     HCURSOR old_cursor;
     int show_cursor_count;
-    BOOL allow_wmactivate;
-    BOOL opengl_core;
-    BOOL resizable;
-    BOOL toggle_borderless;
-    BOOL nonexclusive;
-    int fixchilds;
-    BOOL fixnotresponding;
-    BOOL flipclear;
-    BOOL lock_surfaces;
-    int d3d9_filter;
-    BOOL d3d9on12;
-    int guard_lines;
-    int resolutions;
-    int max_resolutions;
-    int refresh_rate;
-    int custom_width;
-    int custom_height;
-    BOOL limit_bltfast;
-    BOOL armadahack;
-    BOOL tshack;
-    BOOL infantryhack;
-    BOOL stronghold_hack;
-    BOOL mgs_hack;
-    BOOL remove_menu;
-    int maxgameticks;
     BOOL alt_key_down;
-    BOOL releasealt;
     BOOL bnet_active;
     BOOL bnet_was_fullscreen;
     BOOL bnet_was_upscaled;
@@ -186,12 +138,12 @@ typedef struct CNCDDRAW
     BOOL child_window_exists;
     BOOL got_child_windows;
     DWORD last_set_window_pos_tick; /* WINE hack */
-    BOOL show_driver_warning;
     SPEEDLIMITER ticks_limiter;
     SPEEDLIMITER flip_limiter;
     DWORD gui_thread_id;
-    BOOL rgb555;
-    BOOL hook_peekmessage;
+    BOOL show_driver_warning;
+    BOOL d3d9on12;
+    BOOL opengl_core;
 
 } CNCDDRAW;
 

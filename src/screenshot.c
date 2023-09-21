@@ -7,6 +7,7 @@
 #include "ddsurface.h"
 #include "lodepng.h"
 #include "blt.h"
+#include "config.h"
 
 
 static BOOL ss_screenshot_8bit(char* filename, IDirectDrawSurfaceImpl* src)
@@ -58,7 +59,7 @@ static BOOL ss_screenshot_16bit(char* filename, IDirectDrawSurfaceImpl* src)
 
     if (buf)
     {
-        if (g_ddraw->rgb555)
+        if (g_config.rgb555)
         {
             blt_rgb555_to_rgba8888(
                 buf,
@@ -146,10 +147,10 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
         }
     }
 
-    CreateDirectoryA(g_ddraw->screenshot_dir, NULL);
+    CreateDirectoryA(g_config.screenshot_dir, NULL);
 
     strftime(str_time, sizeof(str_time), "%Y-%m-%d-%H_%M_%S", localtime(&t));
-    _snprintf(filename, sizeof(filename), "%s%s-%s.png", g_ddraw->screenshot_dir, title, str_time);
+    _snprintf(filename, sizeof(filename), "%s%s-%s.png", g_config.screenshot_dir, title, str_time);
 
     if (src->bpp == 8 && src->palette)
     {

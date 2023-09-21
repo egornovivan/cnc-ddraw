@@ -15,7 +15,6 @@
 #endif
 
 BOOL g_hook_active;
-int g_hook_method = 4;
 
 GETCURSORPOSPROC real_GetCursorPos = GetCursorPos;
 CLIPCURSORPROC real_ClipCursor = ClipCursor;
@@ -410,7 +409,7 @@ BOOL hook_got_ddraw_import()
 void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 {
 #ifdef _MSC_VER
-    if ((g_hook_method == 2) && initial_hook)
+    if ((g_config.hook == 2) && initial_hook)
     {
         for (int i = 0; hooks[i].module_name[0]; i++)
         {
@@ -428,7 +427,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
     }
 #endif
 
-    if (g_hook_method == 3 || g_hook_method == 4)
+    if (g_config.hook == 3 || g_config.hook == 4)
     {
         char game_exe_path[MAX_PATH] = { 0 };
         char game_dir[MAX_PATH] = { 0 };
@@ -486,7 +485,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
         }
     }
 
-    if (g_hook_method == 1)
+    if (g_config.hook == 1)
     {
         hook_patch_iat_list(GetModuleHandle(NULL), FALSE, hooks);
     }
@@ -495,7 +494,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 void hook_revert(HOOKLIST* hooks)
 {
 #ifdef _MSC_VER
-    if (g_hook_method == 2)
+    if (g_config.hook == 2)
     {
         for (int i = 0; hooks[i].module_name[0]; i++)
         {
@@ -513,7 +512,7 @@ void hook_revert(HOOKLIST* hooks)
     }
 #endif
 
-    if (g_hook_method == 3 || g_hook_method == 4)
+    if (g_config.hook == 3 || g_config.hook == 4)
     {
         char game_exe_path[MAX_PATH] = { 0 };
         char game_dir[MAX_PATH] = { 0 };
@@ -560,7 +559,7 @@ void hook_revert(HOOKLIST* hooks)
         }
     }
 
-    if (g_hook_method == 1)
+    if (g_config.hook == 1)
     {
         hook_patch_iat_list(GetModuleHandle(NULL), TRUE, hooks);
     }
@@ -570,16 +569,14 @@ void hook_init(BOOL initial_hook)
 {
     if (initial_hook)
     {
-        g_hook_method = cfg_get_int("hook", 4);
-
-        if (g_hook_method == 4 && hook_got_ddraw_import())
+        if (g_config.hook == 4 && hook_got_ddraw_import())
         {
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
-            g_hook_method = 3;
+            g_config.hook = 3;
         }
     }
 
-    if (!g_hook_active || g_hook_method == 3 || g_hook_method == 4)
+    if (!g_hook_active || g_config.hook == 3 || g_config.hook == 4)
     {
 #if defined(_DEBUG) && defined(_MSC_VER)
         if (initial_hook)

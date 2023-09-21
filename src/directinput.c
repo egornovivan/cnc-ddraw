@@ -47,7 +47,7 @@ static HRESULT WINAPI fake_did_SetCooperativeLevel(IDirectInputDeviceA* This, HW
 
     if (This == g_mouse_device && g_ddraw && (dwFlags & DISCL_EXCLUSIVE))
     {
-        if (g_mouse_locked || g_ddraw->devmode)
+        if (g_mouse_locked || g_config.devmode)
         {
             while (real_ShowCursor(FALSE) >= 0);
         }
@@ -202,7 +202,7 @@ HRESULT WINAPI fake_DirectInputCreateA(
 
     HRESULT result = real_DirectInputCreateA(hinst, dwVersion, lplpDirectInput, punkOuter);
 
-    if (SUCCEEDED(result) && !real_di_CreateDevice && !cfg_get_bool("no_dinput_hook", FALSE))
+    if (SUCCEEDED(result) && !real_di_CreateDevice && !g_config.no_dinput_hook)
     {
         real_di_CreateDevice =
             (DICREATEDEVICEPROC)hook_func((PROC*)&(*lplpDirectInput)->lpVtbl->CreateDevice, (PROC)fake_di_CreateDevice);
@@ -238,7 +238,7 @@ HRESULT WINAPI fake_DirectInputCreateW(
 
     HRESULT result = real_DirectInputCreateW(hinst, dwVersion, lplpDirectInput, punkOuter);
 
-    if (SUCCEEDED(result) && !real_di_CreateDevice && !cfg_get_bool("no_dinput_hook", FALSE))
+    if (SUCCEEDED(result) && !real_di_CreateDevice && !g_config.no_dinput_hook)
     {
         real_di_CreateDevice =
             (DICREATEDEVICEPROC)hook_func((PROC*)&(*lplpDirectInput)->lpVtbl->CreateDevice, (PROC)fake_di_CreateDevice);
@@ -275,7 +275,7 @@ HRESULT WINAPI fake_DirectInputCreateEx(
 
     HRESULT result = real_DirectInputCreateEx(hinst, dwVersion, riidltf, ppvOut, punkOuter);
 
-    if (SUCCEEDED(result) && !real_di_CreateDevice && !cfg_get_bool("no_dinput_hook", FALSE))
+    if (SUCCEEDED(result) && !real_di_CreateDevice && !g_config.no_dinput_hook)
     {
         real_di_CreateDevice =
             (DICREATEDEVICEPROC)hook_func((PROC*)&(*ppvOut)->lpVtbl->CreateDevice, (PROC)fake_di_CreateDevice);
@@ -285,7 +285,7 @@ HRESULT WINAPI fake_DirectInputCreateEx(
         !real_di_CreateDeviceEx &&
         riidltf &&
         (IsEqualGUID(&IID_IDirectInput7A, riidltf) || IsEqualGUID(&IID_IDirectInput7W, riidltf)) 
-        && !cfg_get_bool("no_dinput_hook", FALSE))
+        && !g_config.no_dinput_hook)
     {
         real_di_CreateDeviceEx =
             (DICREATEDEVICEEXPROC)hook_func((PROC*)&(*ppvOut)->lpVtbl->CreateDeviceEx, (PROC)fake_di_CreateDeviceEx);
@@ -322,7 +322,7 @@ HRESULT WINAPI fake_DirectInput8Create(
 
     HRESULT result = real_DirectInput8Create(hinst, dwVersion, riidltf, ppvOut, punkOuter);
 
-    if (SUCCEEDED(result) && !real_di_CreateDevice && !cfg_get_bool("no_dinput_hook", FALSE))
+    if (SUCCEEDED(result) && !real_di_CreateDevice && !g_config.no_dinput_hook)
     {
         real_di_CreateDevice =
             (DICREATEDEVICEPROC)hook_func((PROC*)&(*ppvOut)->lpVtbl->CreateDevice, (PROC)fake_di_CreateDevice);

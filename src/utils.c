@@ -271,7 +271,7 @@ void util_toggle_maximize()
 
             AdjustWindowRectEx(&dst_rc, style, got_menu, exstyle);
         }
-        else if (g_ddraw->boxing)
+        else if (g_config.boxing)
         {
             dst_rc.left = 0;
             dst_rc.top = 0;
@@ -290,7 +290,7 @@ void util_toggle_maximize()
 
             AdjustWindowRectEx(&dst_rc, style, got_menu, exstyle);
         }
-        else if (g_ddraw->maintas)
+        else if (g_config.maintas)
         {
             util_unadjust_window_rect(&dst_rc, style, got_menu, exstyle);
 
@@ -334,13 +334,13 @@ void util_toggle_fullscreen()
     if (g_ddraw->bnet_active)
         return;
 
-    if (g_ddraw->toggle_borderless && g_ddraw->windowed)
+    if (g_config.toggle_borderless && g_config.windowed)
     {
-        if (!g_ddraw->fullscreen)
+        if (!g_config.fullscreen)
         {
             mouse_unlock();
 
-            g_config.borderless_state = g_ddraw->fullscreen = TRUE;
+            g_config.borderless_state = g_config.fullscreen = TRUE;
             dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
 
             mouse_lock();
@@ -349,7 +349,7 @@ void util_toggle_fullscreen()
         {
             mouse_unlock();
 
-            g_config.borderless_state = g_ddraw->fullscreen = FALSE;
+            g_config.borderless_state = g_config.fullscreen = FALSE;
             dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
 
             //mouse_lock();
@@ -357,11 +357,11 @@ void util_toggle_fullscreen()
     }
     else 
     {
-        if (g_ddraw->windowed)
+        if (g_config.windowed)
         {
             mouse_unlock();
 
-            g_config.window_state = g_ddraw->windowed = FALSE;
+            g_config.window_state = g_config.windowed = FALSE;
             dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, SDM_LEAVE_WINDOWED);
             util_update_bnet_pos(0, 0);
 
@@ -370,11 +370,11 @@ void util_toggle_fullscreen()
         else
         {
             mouse_unlock();
-            g_config.window_state = g_ddraw->windowed = TRUE;
+            g_config.window_state = g_config.windowed = TRUE;
 
-            if (g_ddraw->renderer == d3d9_render_main && !g_ddraw->nonexclusive)
+            if (g_ddraw->renderer == d3d9_render_main && !g_config.nonexclusive)
             {
-                d3d9_reset(g_ddraw->windowed);
+                d3d9_reset(g_config.windowed);
             }
             else
             {
@@ -418,7 +418,7 @@ BOOL util_unadjust_window_rect(LPRECT prc, DWORD dwStyle, BOOL fMenu, DWORD dwEx
 
 void util_set_window_rect(int x, int y, int width, int height, UINT flags)
 {
-    if (g_ddraw->windowed)
+    if (g_config.windowed)
     {
         if (g_ddraw->render.thread)
         {
@@ -470,7 +470,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
 
         //TRACE_EXT("     AVIWINDOW class=%s\n", class_name);
 
-        if (g_ddraw->fixchilds == FIX_CHILDS_DETECT_HIDE || 
+        if (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE || 
             strcmp(class_name, "VideoRenderer") == 0 ||
             strcmp(class_name, "AVIWnd32") == 0 || 
             strcmp(class_name, "MCIWndClass") == 0)
@@ -496,7 +496,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
         {
             g_ddraw->got_child_windows = g_ddraw->child_window_exists = TRUE;
 
-            if (g_ddraw->fixchilds == FIX_CHILDS_DETECT_PAINT)
+            if (g_config.fixchilds == FIX_CHILDS_DETECT_PAINT)
             {
                 HDC dst_dc = GetDC(hwnd);
                 HDC src_dc;

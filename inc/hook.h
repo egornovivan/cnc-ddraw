@@ -103,7 +103,6 @@ extern GETDISKFREESPACEAPROC real_GetDiskFreeSpaceA;
 extern COCREATEINSTANCEPROC real_CoCreateInstance;
 extern SETUNHANDLEDEXCEPTIONFILTERPROC real_SetUnhandledExceptionFilter;
 
-extern int g_hook_method;
 extern BOOL g_hook_active;
 extern HOOKLIST g_hook_hooklist[];
 
