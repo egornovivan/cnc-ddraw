@@ -266,6 +266,9 @@
     <ClInclude Include="inc\blt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ddraw.rc">

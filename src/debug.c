@@ -7,6 +7,7 @@
 #include "wndproc.h"
 #include "debug.h"
 #include "hook.h"
+#include "version.h"
 
 
 double g_dbg_frame_time = 0;
@@ -102,6 +103,8 @@ void dbg_init()
 
         g_dbg_log_file = fopen("cnc-ddraw-1.log", "w");
         setvbuf(g_dbg_log_file, NULL, _IOLBF, 1024);
+
+        TRACE("cnc-ddraw version = %d.%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_BUILD, VERSION_REVISION);
 
         HKEY hkey;
         LONG status =
