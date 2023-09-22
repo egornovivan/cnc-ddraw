@@ -45,7 +45,7 @@ void cfg_load()
     GET_STRING("renderer", "auto", g_config.renderer, sizeof(g_config.renderer));
     GET_BOOL(g_config.devmode, "devmode", FALSE);
     GET_BOOL(g_config.border, "border", TRUE);
-    GET_BOOL(g_config.save_settings, "savesettings", 1);
+    GET_INT(g_config.save_settings, "savesettings", 1);
     GET_BOOL(g_config.resizable, "resizable", TRUE);
     GET_INT(g_config.d3d9_filter, "d3d9_filter", FILTER_CUBIC);
     GET_BOOL(g_config.vhack, "vhack", FALSE);
