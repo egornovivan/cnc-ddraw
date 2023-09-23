@@ -140,6 +140,7 @@ typedef struct CNCDDRAW
     DWORD last_set_window_pos_tick; /* WINE hack */
     SPEEDLIMITER ticks_limiter;
     SPEEDLIMITER flip_limiter;
+    DWORD minfps_tick_len;
     DWORD gui_thread_id;
     BOOL show_driver_warning;
     BOOL d3d9on12;

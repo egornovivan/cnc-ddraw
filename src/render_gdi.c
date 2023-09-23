@@ -38,7 +38,7 @@ DWORD WINAPI gdi_render_main(void)
 
     fpsl_init();
 
-    DWORD timeout = g_config.minfps > 0 ? g_config.minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_ddraw->minfps_tick_len : INFINITE;
 
     while (g_ddraw->render.run &&
         (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))

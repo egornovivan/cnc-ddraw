@@ -56,23 +56,12 @@ void cfg_load()
 
     GET_BOOL(g_config.noactivateapp, "noactivateapp", FALSE);
     GET_INT(g_config.maxgameticks, "maxgameticks", 0);
+    GET_INT(g_config.minfps, "minfps", 0);
     GET_BOOL(g_config.nonexclusive, "nonexclusive", FALSE);
     GET_BOOL(g_config.singlecpu, "singlecpu", TRUE);
     GET_INT(g_config.resolutions, "resolutions", RESLIST_NORMAL);
     GET_INT(g_config.fixchilds, "fixchilds", FIX_CHILDS_DETECT_PAINT);
     GET_BOOL(g_config.hook_peekmessage, "hook_peekmessage", FALSE);
-
-    GET_INT(g_config.minfps, "minfps", 0);
-
-    if (g_config.minfps > 1000)
-    {
-        g_config.minfps = 1000;
-    }
-
-    if (g_config.minfps > 0)
-    {
-        g_config.minfps_tick_len = (DWORD)(1000.0f / g_config.minfps);
-    }
 
     /* Undocumented settings */
 
@@ -113,10 +102,7 @@ void cfg_load()
     GET_BOOL(g_config.stronghold_hack, "stronghold_hack", FALSE);
     GET_BOOL(g_config.mgs_hack, "mgs_hack", FALSE);
 
-    if (g_config.infantryhack)
-    {
-        GameHandlesClose = TRUE;
-    }
+    GameHandlesClose = GameHandlesClose || g_config.infantryhack;
 }
 
 void cfg_save()

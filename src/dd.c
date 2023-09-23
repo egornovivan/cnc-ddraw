@@ -1378,6 +1378,12 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         g_ddraw->wine = real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
         g_blt_use_avx = util_is_avx_supported();
 
+        if (g_config.minfps > 1000)
+            g_config.minfps = 1000;
+
+        if (g_config.minfps > 0)
+            g_ddraw->minfps_tick_len = (DWORD)(1000.0f / g_config.minfps);
+
         /* can't fully set it up here due to missing g_ddraw->mode.dmDisplayFrequency  */
         g_fpsl.htimer = CreateWaitableTimer(NULL, TRUE, NULL);
 

@@ -39,13 +39,12 @@ typedef struct CNCDDRAWCONFIG
 
     BOOL noactivateapp;
     int maxgameticks;
+    int minfps;
     BOOL nonexclusive;
     BOOL singlecpu;
     int resolutions;
     int fixchilds;
     BOOL hook_peekmessage;
-    int minfps;
-    DWORD minfps_tick_len;
 
     /* Undocumented settings */
 
