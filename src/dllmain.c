@@ -22,13 +22,15 @@ HMODULE g_ddraw_module;
 
 BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 {
-    if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
-        return TRUE;
-
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
     {
+        cfg_load();
+
+        if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
+            return TRUE;
+
 #ifdef _DEBUG 
         dbg_init();
         TRACE("cnc-ddraw = %p\n", hDll);
@@ -104,14 +106,15 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
                 set_aware();
         }
 
-        cfg_load();
-
         timeBeginPeriod(1);
         hook_init(TRUE);
         break;
     }
     case DLL_PROCESS_DETACH:
     {
+        if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
+            return TRUE;
+
         TRACE("cnc-ddraw DLL_PROCESS_DETACH\n");
 
         cfg_save();
