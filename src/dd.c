@@ -146,7 +146,11 @@ HRESULT dd_EnumDisplayModes(
                 m.dmDisplayFlags,
                 m.dmDisplayFixedOutput);
 
-            if (refresh_rate != 60 && m.dmDisplayFrequency >= 50)
+            if (refresh_rate != 60 && refresh_rate < 120 && m.dmDisplayFrequency >= 50)
+                refresh_rate = m.dmDisplayFrequency;
+
+            /* Some setups with 144hz monitors only contain a very few 60hz resolutions so we can't use 60hz as filter */
+            if (m.dmDisplayFrequency > refresh_rate && m.dmDisplayFrequency >= 120)
                 refresh_rate = m.dmDisplayFrequency;
 
             if (bpp != 32 && m.dmBitsPerPel >= 16)
