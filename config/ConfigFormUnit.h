@@ -121,6 +121,7 @@ private:	// Benutzer-Deklarationen
 	void ApplyTranslation(TIniFile *ini);
 	System::UnicodeString GetKeyText(WORD key);
 	WORD GetKeyCode(System::UnicodeString key);
+	System::UnicodeString TranslateShortCut(System::UnicodeString text);
 	void DisableGameUX();
 	void AddDllOverride();
 public:		// Benutzer-Deklarationen
