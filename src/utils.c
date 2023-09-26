@@ -488,7 +488,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
                     0,
                     0,
                     0,
-                    SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER
+                    SWP_ASYNCWINDOWPOS | SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER
                 );
             }
         }

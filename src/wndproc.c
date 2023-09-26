@@ -854,9 +854,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
         }
 
-        EnterCriticalSection(&g_ddraw->cs);
         ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
-        LeaveCriticalSection(&g_ddraw->cs);
         break;
     }
     case WM_ERASEBKGND:
