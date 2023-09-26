@@ -5,7 +5,8 @@
 #include <windows.h>
 
 
-#define SKIP_HOOK2 0x00000001l
+#define HOOK_SKIP_2 0x00000001l
+#define HOOK_LOCAL_ONLY 0x00000002l
 
 typedef struct HOOKLISTDATA { char function_name[32]; PROC new_function; PROC* function; DWORD flags; } HOOKLISTDATA;
 typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[30]; } HOOKLIST;
@@ -109,7 +110,7 @@ extern HOOKLIST g_hook_hooklist[];
 void hook_init(BOOL initial_hook);
 void hook_exit();
 void hook_patch_iat(HMODULE hmod, BOOL unhook, char* module_name, char* function_name, PROC new_function);
-void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks);
+void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_local);
 void hook_create(HOOKLIST* hooks, BOOL initial_hook);
 void hook_revert(HOOKLIST* hooks);
 

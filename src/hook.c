@@ -98,33 +98,33 @@ HOOKLIST g_hook_hooklist[] =
     {
         "ole32.dll",
         {
-            { "CoCreateInstance", (PROC)fake_CoCreateInstance, (PROC*)&real_CoCreateInstance, SKIP_HOOK2 },
+            { "CoCreateInstance", (PROC)fake_CoCreateInstance, (PROC*)&real_CoCreateInstance, HOOK_SKIP_2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "dinput.dll",
         {
-            { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, SKIP_HOOK2 },
-            //{ "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, SKIP_HOOK2 },
-            { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, SKIP_HOOK2 },
+            { "DirectInputCreateA", (PROC)fake_DirectInputCreateA, (PROC*)&real_DirectInputCreateA, HOOK_SKIP_2 },
+            //{ "DirectInputCreateW", (PROC)fake_DirectInputCreateW, (PROC*)&real_DirectInputCreateW, HOOK_SKIP_2 },
+            { "DirectInputCreateEx", (PROC)fake_DirectInputCreateEx, (PROC*)&real_DirectInputCreateEx, HOOK_SKIP_2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "dinput8.dll",
         {
-            { "DirectInput8Create", (PROC)fake_DirectInput8Create, (PROC*)&real_DirectInput8Create, SKIP_HOOK2 },
+            { "DirectInput8Create", (PROC)fake_DirectInput8Create, (PROC*)&real_DirectInput8Create, HOOK_SKIP_2 },
             { "", NULL, NULL, 0 }
         }
     },
     {
         "gdi32.dll",
         {
-            { "StretchBlt", (PROC)fake_StretchBlt, (PROC*)&real_StretchBlt, SKIP_HOOK2 },
-            { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, SKIP_HOOK2 },
-            { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, SKIP_HOOK2 },
-            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, 0 },
+            { "StretchBlt", (PROC)fake_StretchBlt, (PROC*)&real_StretchBlt, HOOK_SKIP_2 },
+            { "SetDIBitsToDevice", (PROC)fake_SetDIBitsToDevice, (PROC*)&real_SetDIBitsToDevice, HOOK_SKIP_2 },
+            { "StretchDIBits", (PROC)fake_StretchDIBits, (PROC*)&real_StretchDIBits, HOOK_SKIP_2 },
+            { "GetDeviceCaps", (PROC)fake_GetDeviceCaps, (PROC*)&real_GetDeviceCaps, HOOK_LOCAL_ONLY },
             { "CreateFontA", (PROC)fake_CreateFontA, (PROC*)&real_CreateFontA, 0 },
             { "CreateFontIndirectA", (PROC)fake_CreateFontIndirectA, (PROC*)&real_CreateFontIndirectA, 0 },
             { "", NULL, NULL, 0 }
@@ -133,12 +133,12 @@ HOOKLIST g_hook_hooklist[] =
     {
         "kernel32.dll",
         {
-            { "LoadLibraryA", (PROC)fake_LoadLibraryA, (PROC*)&real_LoadLibraryA, SKIP_HOOK2 },
-            { "LoadLibraryW", (PROC)fake_LoadLibraryW, (PROC*)&real_LoadLibraryW, SKIP_HOOK2 },
-            { "LoadLibraryExA", (PROC)fake_LoadLibraryExA, (PROC*)&real_LoadLibraryExA, SKIP_HOOK2 },
-            { "LoadLibraryExW", (PROC)fake_LoadLibraryExW, (PROC*)&real_LoadLibraryExW, SKIP_HOOK2 },
-            { "GetProcAddress", (PROC)fake_GetProcAddress, (PROC*)&real_GetProcAddress, SKIP_HOOK2 },
-            { "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA, (PROC*)&real_GetDiskFreeSpaceA, SKIP_HOOK2 },
+            { "LoadLibraryA", (PROC)fake_LoadLibraryA, (PROC*)&real_LoadLibraryA, HOOK_SKIP_2 },
+            { "LoadLibraryW", (PROC)fake_LoadLibraryW, (PROC*)&real_LoadLibraryW, HOOK_SKIP_2 },
+            { "LoadLibraryExA", (PROC)fake_LoadLibraryExA, (PROC*)&real_LoadLibraryExA, HOOK_SKIP_2 },
+            { "LoadLibraryExW", (PROC)fake_LoadLibraryExW, (PROC*)&real_LoadLibraryExW, HOOK_SKIP_2 },
+            { "GetProcAddress", (PROC)fake_GetProcAddress, (PROC*)&real_GetProcAddress, HOOK_SKIP_2 },
+            { "GetDiskFreeSpaceA", (PROC)fake_GetDiskFreeSpaceA, (PROC*)&real_GetDiskFreeSpaceA, HOOK_SKIP_2 },
             { "", NULL, NULL, 0 }
         }
     },
@@ -160,10 +160,10 @@ void hook_patch_iat(HMODULE hmod, BOOL unhook, char* module_name, char* function
     strncpy(hooks[0].module_name, module_name, sizeof(hooks[0].module_name) - 1);
     strncpy(hooks[0].data[0].function_name, function_name, sizeof(hooks[0].data[0].function_name) - 1);
 
-    hook_patch_iat_list(hmod, unhook, (HOOKLIST*)&hooks);
+    hook_patch_iat_list(hmod, unhook, (HOOKLIST*)&hooks, FALSE);
 }
 
-void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
+void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_local)
 {
     if (!hmod || hmod == INVALID_HANDLE_VALUE || !hooks)
         return;
@@ -210,6 +210,9 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
                                     hooks[i].data[x].function_name);
 
                             if (!hooks[i].data[x].new_function || !org_function)
+                                continue;
+
+                            if (!is_local && (hooks[i].data[x].flags & HOOK_LOCAL_ONLY))
                                 continue;
 
                             if (unhook)
@@ -268,9 +271,9 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
     }
 }
 
-void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
+void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_local)
 {
-    hook_patch_obfuscated_iat_list(hmod, unhook, hooks);
+    hook_patch_obfuscated_iat_list(hmod, unhook, hooks, is_local);
 
     if (!hmod || hmod == INVALID_HANDLE_VALUE || !hooks)
         return;
@@ -315,6 +318,9 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks)
                             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
                             {
                                 if (!unhook && !hooks[i].data[x].new_function)
+                                    continue;
+
+                                if (!is_local && (hooks[i].data[x].flags & HOOK_LOCAL_ONLY))
                                     continue;
 
                                 if (_stricmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
@@ -415,7 +421,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
         {
             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
             {
-                if ((hooks[i].data[x].flags & SKIP_HOOK2))
+                if ((hooks[i].data[x].flags & HOOK_SKIP_2))
                     continue;
 
                 DetourTransactionBegin();
@@ -470,12 +476,14 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
                         _strcmpi(mod_filename, "Shw32") == 0)
                         continue;
 
-                    if (_strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0 ||
+                    BOOL is_local = _strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0;
+
+                    if (is_local ||
                         _strcmpi(mod_filename, "MSVFW32") == 0 ||
                         _strcmpi(mod_filename, "quartz") == 0 ||
                         _strcmpi(mod_filename, "winmm") == 0)
                     {
-                        hook_patch_iat_list(hmod, FALSE, hooks);
+                        hook_patch_iat_list(hmod, FALSE, hooks, is_local);
                     }
                 }
             }
@@ -487,7 +495,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
 
     if (g_config.hook == 1)
     {
-        hook_patch_iat_list(GetModuleHandle(NULL), FALSE, hooks);
+        hook_patch_iat_list(GetModuleHandle(NULL), FALSE, hooks, TRUE);
     }
 }
 
@@ -500,7 +508,7 @@ void hook_revert(HOOKLIST* hooks)
         {
             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
             {
-                if ((hooks[i].data[x].flags & SKIP_HOOK2))
+                if ((hooks[i].data[x].flags & HOOK_SKIP_2))
                     continue;
 
                 DetourTransactionBegin();
@@ -544,12 +552,14 @@ void hook_revert(HOOKLIST* hooks)
                 {
                     _splitpath(mod_path, NULL, mod_dir, mod_filename, NULL);
 
-                    if (_strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0 ||
+                    BOOL is_local = _strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0;
+
+                    if (is_local ||
                         _strcmpi(mod_filename, "MSVFW32") == 0 ||
                         _strcmpi(mod_filename, "quartz") == 0 ||
                         _strcmpi(mod_filename, "winmm") == 0)
                     {
-                        hook_patch_iat_list(hmod, TRUE, hooks);
+                        hook_patch_iat_list(hmod, TRUE, hooks, is_local);
                     }
                 }
             }
@@ -561,7 +571,7 @@ void hook_revert(HOOKLIST* hooks)
 
     if (g_config.hook == 1)
     {
-        hook_patch_iat_list(GetModuleHandle(NULL), TRUE, hooks);
+        hook_patch_iat_list(GetModuleHandle(NULL), TRUE, hooks, TRUE);
     }
 }
 
