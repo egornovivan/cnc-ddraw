@@ -126,7 +126,7 @@ void fpsl_frame_start()
 void fpsl_frame_end()
 {
     if (g_config.maxfps < 0 || 
-        (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency))
+        (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency)))
     {
         if (fpsl_dwm_flush() || fpsl_wait_for_vblank(TRUE))
             return;
@@ -136,7 +136,7 @@ void fpsl_frame_end()
     {
         if (g_fpsl.htimer)
         {
-            if (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency)
+            if (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency))
             {
                 WaitForSingleObject(g_fpsl.htimer, g_fpsl.tick_length * 2);
                 LARGE_INTEGER due_time = { .QuadPart = -g_fpsl.tick_length_ns };

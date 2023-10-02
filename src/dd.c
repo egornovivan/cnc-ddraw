@@ -1191,7 +1191,7 @@ HRESULT dd_WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
     {
         BOOL open = 
             !(g_config.maxfps < 0 || 
-                (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency));
+                (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency)));
 
         if (fpsl_dwm_flush() || fpsl_wait_for_vblank(open))
             return DD_OK;
