@@ -323,6 +323,23 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                 if (!is_local && (hooks[i].data[x].flags & HOOK_LOCAL_ONLY))
                                     continue;
 
+                                /* avoid exceptions with obfuscated binaries in debug build */
+#if defined(_DEBUG)
+                                MEMORY_BASIC_INFORMATION mbi = { 0 };
+                                if (VirtualQuery((void*)import->Name, & mbi, sizeof(mbi)))
+                                {
+                                    DWORD mask = (PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY);
+                                    BOOL b = !(mbi.Protect & mask);
+                                    // check the page is not a guard page
+                                    if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) b = TRUE;
+
+                                    if (b)
+                                        continue;
+                                }
+                                else
+                                    continue;
+#endif
+
                                 if (_stricmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
                                 {
                                     DWORD op;
