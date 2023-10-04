@@ -1296,7 +1296,7 @@ HRESULT dd_CreateSurface(
     if (lpDDSurfaceDesc->ddsCaps.dwCaps & DDSCAPS_OVERLAY)
         return DDERR_UNSUPPORTED;
 
-    if (!(lpDDSurfaceDesc->ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE) && 
+    if (!(lpDDSurfaceDesc->ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE) &&
         (lpDDSurfaceDesc->dwWidth > 16384 || lpDDSurfaceDesc->dwHeight > 16384))
     {
         return DDERR_INVALIDPARAMS;
@@ -1327,6 +1327,12 @@ HRESULT dd_CreateSurface(
     dst_surface->flags = lpDDSurfaceDesc->dwFlags;
     dst_surface->caps = lpDDSurfaceDesc->ddsCaps.dwCaps;
     dst_surface->ddraw = This;
+
+    if (dst_surface->flags & DDSD_CKSRCBLT)
+    {
+        dst_surface->color_key.dwColorSpaceHighValue = lpDDSurfaceDesc->ddckCKSrcBlt.dwColorSpaceHighValue;
+        dst_surface->color_key.dwColorSpaceLowValue = lpDDSurfaceDesc->ddckCKSrcBlt.dwColorSpaceLowValue;
+    }
 
     if (dst_surface->flags & DDSD_PIXELFORMAT)
     {

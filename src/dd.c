@@ -653,7 +653,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     {
         g_ddraw->render.mode.dmFields |= DM_DISPLAYFREQUENCY;
         g_ddraw->render.mode.dmDisplayFrequency = g_config.refresh_rate;
-
+        
         if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
         {
             g_config.refresh_rate = 0;
