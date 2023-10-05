@@ -1034,8 +1034,16 @@ HRESULT dds_SetColorKey(IDirectDrawSurfaceImpl* This, DWORD dwFlags, LPDDCOLORKE
 
     if (lpColorKey)
     {
-        This->color_key.dwColorSpaceHighValue = lpColorKey->dwColorSpaceHighValue;
         This->color_key.dwColorSpaceLowValue = lpColorKey->dwColorSpaceLowValue;
+
+        if (dwFlags & DDCKEY_COLORSPACE)
+        {
+            This->color_key.dwColorSpaceHighValue = lpColorKey->dwColorSpaceHighValue;
+        }
+        else
+        {
+            This->color_key.dwColorSpaceHighValue = lpColorKey->dwColorSpaceLowValue;
+        }
     }
 
     return DD_OK;
