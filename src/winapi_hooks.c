@@ -652,6 +652,13 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
                 //return FALSE;
             }
 
+            if (lpMsg->message == WM_MOUSEWHEEL)
+            {
+                POINT pt = { GET_X_LPARAM(lpMsg->lParam), GET_Y_LPARAM(lpMsg->lParam) };
+                real_ScreenToClient(g_ddraw->hwnd, &pt);
+                lpMsg->lParam = MAKELPARAM(pt.x, pt.y);
+            }
+
             int x = max(GET_X_LPARAM(lpMsg->lParam) - g_ddraw->mouse.x_adjust, 0);
             int y = max(GET_Y_LPARAM(lpMsg->lParam) - g_ddraw->mouse.y_adjust, 0);
 

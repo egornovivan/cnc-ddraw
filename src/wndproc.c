@@ -789,6 +789,13 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             return 0;
         }
 
+        if (uMsg == WM_MOUSEWHEEL)
+        {
+            POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+            real_ScreenToClient(g_ddraw->hwnd, &pt);
+            lParam = MAKELPARAM(pt.x, pt.y);
+        }
+
         int x = max(GET_X_LPARAM(lParam) - g_ddraw->mouse.x_adjust, 0);
         int y = max(GET_Y_LPARAM(lParam) - g_ddraw->mouse.y_adjust, 0);
 
