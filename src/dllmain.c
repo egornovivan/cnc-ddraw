@@ -26,16 +26,20 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
     {
-        cfg_load();
-
         if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
+        {
+            cfg_load();
             return TRUE;
+        }
 
 #ifdef _DEBUG 
         dbg_init();
         TRACE("cnc-ddraw = %p\n", hDll);
         g_dbg_exception_filter = real_SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)dbg_exception_handler);
 #endif
+
+        cfg_load();
+
         g_ddraw_module = hDll;
 
         char buf[1024];
