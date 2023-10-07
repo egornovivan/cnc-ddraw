@@ -62,6 +62,7 @@ void cfg_load()
     GET_INT(g_config.resolutions, "resolutions", RESLIST_NORMAL);
     GET_INT(g_config.fixchilds, "fixchilds", FIX_CHILDS_DETECT_PAINT);
     GET_BOOL(g_config.hook_peekmessage, "hook_peekmessage", FALSE);
+    GET_BOOL(g_config.hook_getmessage, "hook_getmessage", FALSE);
 
     /* Undocumented settings */
 
@@ -264,8 +265,9 @@ static void cfg_create_ini()
             "; Note: Disables upscaling if a child window was detected (to ensure the game is fully playable, may look weird though)\n"
             "fixchilds=2\n"
             "\n"
-            "; Enable the following setting if your cursor doesn't work properly when upscaling is enabled\n"
+            "; Enable one of the following settings if your cursor doesn't work properly when upscaling is enabled\n"
             "hook_peekmessage=false\n"
+            "hook_getmessage=false\n"
             "\n"
             "\n"
             "; Undocumented settings - You may or may not change these (You should rather focus on the settings above)\n"

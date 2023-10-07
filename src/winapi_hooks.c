@@ -593,11 +593,9 @@ HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, D
     return real_SetWindowsHookExA(idHook, lpfn, hmod, dwThreadId);
 }
 
-BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+BOOL HandleMessage(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax)
 {
-    BOOL result = real_PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-
-    if (result && g_ddraw && g_ddraw->width && g_config.hook_peekmessage)
+    if (g_ddraw && g_ddraw->width)
     {
         switch (lpMsg->message)
         {
@@ -690,9 +688,29 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
 
             break;
         }
-            
+
         }
     }
+
+    return TRUE;
+}
+
+BOOL WINAPI fake_GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax)
+{
+    BOOL result = real_GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+
+    if (result && g_config.hook_getmessage)
+        HandleMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+
+    return result;
+}
+
+BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+{
+    BOOL result = real_PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+
+    if (result && g_config.hook_peekmessage)
+        HandleMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
 
     return result;
 }

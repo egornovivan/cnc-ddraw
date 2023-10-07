@@ -47,6 +47,7 @@ STRETCHDIBITSPROC real_StretchDIBits = StretchDIBits;
 SETFOREGROUNDWINDOWPROC real_SetForegroundWindow = SetForegroundWindow;
 SETWINDOWSHOOKEXAPROC real_SetWindowsHookExA = SetWindowsHookExA;
 PEEKMESSAGEAPROC real_PeekMessageA = PeekMessageA;
+GETMESSAGEAPROC real_GetMessageA = GetMessageA;
 GETDEVICECAPSPROC real_GetDeviceCaps = GetDeviceCaps;
 CREATEFONTINDIRECTAPROC real_CreateFontIndirectA = CreateFontIndirectA;
 CREATEFONTAPROC real_CreateFontA = CreateFontA;
@@ -90,6 +91,7 @@ HOOKLIST g_hook_hooklist[] =
             { "GetTopWindow", (PROC)fake_GetTopWindow, (PROC*)&real_GetTopWindow, 0 },
             { "GetForegroundWindow", (PROC)fake_GetForegroundWindow, (PROC*)&real_GetForegroundWindow, 0 },
             { "PeekMessageA", (PROC)fake_PeekMessageA, (PROC*)&real_PeekMessageA, 0 },
+            { "GetMessageA", (PROC)fake_GetMessageA, (PROC*)&real_GetMessageA, 0 },
             { "SetForegroundWindow", (PROC)fake_SetForegroundWindow, (PROC*)&real_SetForegroundWindow, 0 },
             { "SetWindowsHookExA", (PROC)fake_SetWindowsHookExA, (PROC*)&real_SetWindowsHookExA, 0 },
             { "", NULL, NULL, 0 }
