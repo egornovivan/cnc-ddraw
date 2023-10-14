@@ -858,6 +858,16 @@ static void cfg_create_ini()
             "renderer=direct3d9\n"
             "nonexclusive=false\n"
             "windowed=false\n"
+            "maxgameticks=-1\n"
+            "\n"
+            "; Nox Reloaded\n"
+            "[NoxReloaded]\n"
+            "maxgameticks=-1\n"
+            "\n"
+            "; Nox GOG\n"
+            "[Game/2]\n"
+            "checkfile=.\\nox.cfg\n"
+            "maxgameticks=-1\n"
             "\n"
             "; Outlaws\n"
             "[olwin]\n"
@@ -1091,18 +1101,52 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
     DWORD s = GetPrivateProfileStringA(
         g_config.process_file_name, key, "", out_string, out_size, g_config.ini_path);
 
+    char buf[MAX_PATH] = { 0 };
+
     if (s > 0)
     {
-        char buf[MAX_PATH] = { 0 };
-
         if (GetPrivateProfileStringA(
             g_config.process_file_name, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
         {
-            if (GetFileAttributes(buf) != INVALID_FILE_ATTRIBUTES)
+            if (FILE_EXISTS(buf))
+            {
                 return s;
+            }
+            else
+            {
+                char section[MAX_PATH] = { 0 };
+                _snprintf(section, sizeof(section), "%s?%d", g_config.process_file_name, 2);
+
+                s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
+
+                if (s > 0)
+                {
+                    if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+                    {
+                        if (FILE_EXISTS(buf))
+                            return s;
+                    }
+                }
+            }
         }
         else
             return s;
+    }
+    else
+    {
+        char section[MAX_PATH] = { 0 };
+        _snprintf(section, sizeof(section), "%s/%d", g_config.process_file_name, 2);
+
+        s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
+
+        if (s > 0)
+        {
+            if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+            {
+                if (FILE_EXISTS(buf))
+                    return s;
+            }
+        }
     }
 
     return GetPrivateProfileStringA("ddraw", key, default_value, out_string, out_size, g_config.ini_path);
