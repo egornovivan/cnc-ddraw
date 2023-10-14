@@ -1115,7 +1115,7 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
             else
             {
                 char section[MAX_PATH] = { 0 };
-                _snprintf(section, sizeof(section) - 1, "%s?%d", g_config.process_file_name, 2);
+                _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, 2);
 
                 s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
 
