@@ -1115,7 +1115,7 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
             else
             {
                 char section[MAX_PATH] = { 0 };
-                _snprintf(section, sizeof(section), "%s?%d", g_config.process_file_name, 2);
+                _snprintf(section, sizeof(section) - 1, "%s?%d", g_config.process_file_name, 2);
 
                 s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
 
@@ -1135,7 +1135,7 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
     else
     {
         char section[MAX_PATH] = { 0 };
-        _snprintf(section, sizeof(section), "%s/%d", g_config.process_file_name, 2);
+        _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, 2);
 
         s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
 
@@ -1162,8 +1162,8 @@ static BOOL cfg_get_bool(LPCSTR key, BOOL default_value)
 
 static int cfg_get_int(LPCSTR key, int default_value)
 {
-    char def_value[20];
-    _snprintf(def_value, sizeof(def_value), "%d", default_value);
+    char def_value[24];
+    _snprintf(def_value, sizeof(def_value) - 1, "%d", default_value);
 
     char value[20];
     cfg_get_string(key, def_value, value, sizeof(value));

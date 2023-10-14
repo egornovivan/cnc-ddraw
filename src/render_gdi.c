@@ -29,7 +29,7 @@ DWORD WINAPI gdi_render_main(void)
 
         _snprintf(
             warning_text, 
-            sizeof(warning_text),
+            sizeof(warning_text) - 1,
             "-WARNING- Using slow software rendering, please update your graphics card driver (%s)",
             strlen(g_oglu_version) > 10 ? "" : g_oglu_version);
     }

@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 
                     _snprintf(
                         mes,
-                        sizeof(mes),
+                        sizeof(mes) - 1,
                         "Please disable the '%s' compatibility mode for all game executables and "
                         "then try to start the game again.",
                         s);
