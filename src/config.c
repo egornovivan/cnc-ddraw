@@ -10,6 +10,7 @@
 #include "hook.h"
 #include "debug.h"
 #include "dllmain.h"
+#include "ini.h"
 
 static void cfg_init();
 static void cfg_create_ini();
@@ -1098,37 +1099,42 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
     if (!g_config.ini_path[0])
         cfg_init();
 
-    DWORD s = GetPrivateProfileStringA(
-        g_config.process_file_name, key, "", out_string, out_size, g_config.ini_path);
-
     char buf[MAX_PATH] = { 0 };
 
-    if (s > 0)
+    if (ini_section_exists(g_config.process_file_name))
     {
-        if (GetPrivateProfileStringA(
-            g_config.process_file_name, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+        DWORD s = GetPrivateProfileStringA(
+            g_config.process_file_name, key, "", out_string, out_size, g_config.ini_path);   
+
+        if (s > 0)
         {
-            if (FILE_EXISTS(buf))
+            if (GetPrivateProfileStringA(
+                g_config.process_file_name, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+            {
+                if (FILE_EXISTS(buf))
+                    return s;
+            }
+            else
                 return s;
         }
-        else
-            return s;
     }
 
-    /* Only checking 1 additional section for now (it may be too slow otherwise) */
-    for (int i = 2; i < 3; i++)
+    for (int i = 2; i < 10; i++)
     {
         char section[MAX_PATH] = { 0 };
         _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, i);
 
-        s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
-
-        if (s > 0)
+        if (ini_section_exists(section))
         {
-            if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+            DWORD s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
+
+            if (s > 0)
             {
-                if (FILE_EXISTS(buf))
-                    return s;
+                if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
+                {
+                    if (FILE_EXISTS(buf))
+                        return s;
+                }
             }
         }
     }

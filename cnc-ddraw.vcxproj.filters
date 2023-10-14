@@ -156,6 +156,9 @@
     <ClCompile Include="src\blt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ini.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\debug.h">
@@ -267,6 +270,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\ini.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
