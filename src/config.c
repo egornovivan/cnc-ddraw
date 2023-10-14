@@ -1109,33 +1109,17 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
             g_config.process_file_name, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
         {
             if (FILE_EXISTS(buf))
-            {
                 return s;
-            }
-            else
-            {
-                char section[MAX_PATH] = { 0 };
-                _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, 2);
-
-                s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
-
-                if (s > 0)
-                {
-                    if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
-                    {
-                        if (FILE_EXISTS(buf))
-                            return s;
-                    }
-                }
-            }
         }
         else
             return s;
     }
-    else
+
+    /* Only checking 1 additional section for now (it may be too slow otherwise) */
+    for (int i = 2; i < 3; i++)
     {
         char section[MAX_PATH] = { 0 };
-        _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, 2);
+        _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, i);
 
         s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
 
