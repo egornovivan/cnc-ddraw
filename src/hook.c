@@ -326,14 +326,22 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                     continue;
 
                                 /* avoid exceptions with obfuscated binaries in debug build */
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(__GNUC__)
                                 MEMORY_BASIC_INFORMATION mbi = { 0 };
-                                if (VirtualQuery((void*)import->Name, & mbi, sizeof(mbi)))
+                                if (VirtualQuery((void*)import->Name, &mbi, sizeof(mbi)))
                                 {
-                                    DWORD mask = (PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY);
+                                    DWORD mask = (
+                                        PAGE_READONLY | 
+                                        PAGE_READWRITE | 
+                                        PAGE_WRITECOPY | 
+                                        PAGE_EXECUTE_READ | 
+                                        PAGE_EXECUTE_READWRITE | 
+                                        PAGE_EXECUTE_WRITECOPY);
+                                    
                                     BOOL b = !(mbi.Protect & mask);
-                                    // check the page is not a guard page
-                                    if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) b = TRUE;
+
+                                    if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) 
+                                        b = TRUE;
 
                                     if (b)
                                         continue;
@@ -603,6 +611,13 @@ void hook_init(BOOL initial_hook)
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
             g_config.hook = 3;
         }
+
+#if defined(__GNUC__)
+        if (g_config.hook == 4)
+        {
+            g_config.hook = 3;
+        }
+#endif
     }
 
     if (!g_hook_active || g_config.hook == 3 || g_config.hook == 4)
