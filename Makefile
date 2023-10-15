@@ -16,6 +16,7 @@ FILES = src/IDirect3D/IDirect3D.c \
         src/IDirectDraw/IDirectDrawGammaControl.c \
         src/IAMMediaStream/IAMMediaStream.c \
         src/crc32.c \
+        src/ini.c \
         src/blt.c \
         src/dd.c \
         src/ddpalette.c \
