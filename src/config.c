@@ -85,6 +85,7 @@ void cfg_load()
     GET_INT(g_config.custom_width, "custom_width", 0);
     GET_INT(g_config.custom_height, "custom_height", 0);
     GET_INT(g_config.min_font_size, "min_font_size", 0);
+    GET_BOOL(g_config.direct3d_passthrough, "direct3d_passthrough", FALSE);
 
     /* Hotkeys */
 
@@ -290,6 +291,7 @@ static void cfg_create_ini()
             "custom_width=0\n"
             "custom_height=0\n"
             "min_font_size=0\n"
+            "direct3d_passthrough=false\n"
             "\n"
             "\n"
             "\n"
@@ -803,6 +805,10 @@ static void cfg_create_ini()
             "fixmousehook=true\n"
             "noactivateapp=true\n"
             "releasealt=true\n"
+            "\n"
+            "; Jedi Knight Dark Forces 2\n"
+            "[JK]\n"
+            "direct3d_passthrough=true\n"
             "\n"
             "; Kings Quest 8\n"
             "[Mask]\n"

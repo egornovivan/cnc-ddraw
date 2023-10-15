@@ -8,6 +8,7 @@
 #include "ddsurface.h"
 #include "debug.h"
 #include "hook.h"
+#include "config.h"
 
 
 HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid, LPVOID FAR* ppvObj)
@@ -50,7 +51,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
 
             ret = S_OK;
         }
-        else if (IsEqualGUID(&IID_IDirect3D, riid))
+        else if (IsEqualGUID(&IID_IDirect3D, riid) && !g_config.direct3d_passthrough)
         {
             IDirect3DImpl* d3d =
                 (IDirect3DImpl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IDirect3DImpl));
@@ -64,7 +65,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
 
             ret = S_OK;
         }
-        else if (IsEqualGUID(&IID_IDirect3D2, riid))
+        else if (IsEqualGUID(&IID_IDirect3D2, riid) && !g_config.direct3d_passthrough)
         {
             IDirect3D2Impl* d3d =
                 (IDirect3D2Impl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IDirect3D2Impl));
@@ -78,7 +79,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
 
             ret = S_OK;
         }
-        else if (IsEqualGUID(&IID_IDirect3D3, riid))
+        else if (IsEqualGUID(&IID_IDirect3D3, riid) && !g_config.direct3d_passthrough)
         {
             IDirect3D3Impl* d3d =
                 (IDirect3D3Impl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IDirect3D3Impl));
@@ -92,7 +93,7 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
 
             ret = S_OK;
         }
-        else if (IsEqualGUID(&IID_IDirect3D7, riid))
+        else if (IsEqualGUID(&IID_IDirect3D7, riid) && !g_config.direct3d_passthrough)
         {
             IDirect3D7Impl* d3d =
                 (IDirect3D7Impl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IDirect3D7Impl));
