@@ -475,7 +475,10 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
             strcmp(class_name, "AVIWnd32") == 0 || 
             strcmp(class_name, "MCIWndClass") == 0)
         {
-            InterlockedExchangePointer(&g_ddraw->video_window_hwnd, hwnd);
+            if (g_config.fixchilds != FIX_CHILDS_DETECT_HIDE)
+            {
+                InterlockedExchangePointer(&g_ddraw->video_window_hwnd, hwnd);
+            }  
 
             LONG style = real_GetWindowLongA(hwnd, GWL_EXSTYLE);
 
