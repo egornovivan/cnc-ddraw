@@ -729,12 +729,26 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
+        {
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
+        }
+
         break;
     }
     case WM_KEYUP:
     {
         if (g_config.hotkeys.screenshot && wParam == g_config.hotkeys.screenshot)
             ss_take_screenshot(g_ddraw->primary);
+
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
+        {
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
+        }
 
         break;
     }
@@ -823,6 +837,13 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);
 
         lParam = MAKELPARAM(x, y);
+
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
+        {
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
+        }
 
         break;
     }
