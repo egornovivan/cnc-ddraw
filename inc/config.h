@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include "ini.h"
 
 #define FILE_EXISTS(a) (GetFileAttributes(a) != INVALID_FILE_ATTRIBUTES)
 
@@ -15,6 +15,7 @@ typedef struct CNCDDRAWCONFIG
     char game_path[MAX_PATH];
     char process_file_name[MAX_PATH];
     char process_file_ext[MAX_PATH];
+    INIFILE ini;
     
     /* Optional settings */
 

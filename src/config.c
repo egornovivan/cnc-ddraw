@@ -106,6 +106,8 @@ void cfg_load()
     GET_BOOL(g_config.mgs_hack, "mgs_hack", FALSE);
 
     GameHandlesClose = GameHandlesClose || g_config.infantryhack;
+
+    ini_free(&g_config.ini);
 }
 
 void cfg_save()
@@ -1098,31 +1100,25 @@ static void cfg_init()
     {
         cfg_create_ini();
     }
+
+    ini_create(&g_config.ini, g_config.ini_path);
 }
 
 static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, DWORD out_size)
 {
-    if (!g_config.ini_path[0])
-        cfg_init();
-
     char buf[MAX_PATH] = { 0 };
 
-    if (ini_section_exists(g_config.process_file_name))
-    {
-        DWORD s = GetPrivateProfileStringA(
-            g_config.process_file_name, key, "", out_string, out_size, g_config.ini_path);   
+    DWORD s = ini_get_string(&g_config.ini, g_config.process_file_name, key, "", out_string, out_size);
 
-        if (s > 0)
+    if (s > 0)
+    {
+        if (ini_get_string(&g_config.ini, g_config.process_file_name, "checkfile", "", buf, sizeof(buf)) > 0)
         {
-            if (GetPrivateProfileStringA(
-                g_config.process_file_name, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
-            {
-                if (FILE_EXISTS(buf))
-                    return s;
-            }
-            else
+            if (FILE_EXISTS(buf))
                 return s;
         }
+        else
+            return s;
     }
 
     for (int i = 2; i < 10; i++)
@@ -1130,22 +1126,19 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
         char section[MAX_PATH] = { 0 };
         _snprintf(section, sizeof(section) - 1, "%s/%d", g_config.process_file_name, i);
 
-        if (ini_section_exists(section))
-        {
-            DWORD s = GetPrivateProfileStringA(section, key, "", out_string, out_size, g_config.ini_path);
+        DWORD s = ini_get_string(&g_config.ini, section, key, "", out_string, out_size);
 
-            if (s > 0)
+        if (s > 0)
+        {
+            if (ini_get_string(&g_config.ini, section, "checkfile", "", buf, sizeof(buf)) > 0)
             {
-                if (GetPrivateProfileStringA(section, "checkfile", "", buf, sizeof(buf), g_config.ini_path) > 0)
-                {
-                    if (FILE_EXISTS(buf))
-                        return s;
-                }
+                if (FILE_EXISTS(buf))
+                    return s;
             }
         }
     }
 
-    return GetPrivateProfileStringA("ddraw", key, default_value, out_string, out_size, g_config.ini_path);
+    return ini_get_string(&g_config.ini, "ddraw", key, default_value, out_string, out_size);
 }
 
 static BOOL cfg_get_bool(LPCSTR key, BOOL default_value)
