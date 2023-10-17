@@ -37,7 +37,7 @@ void ini_create(INIFILE* ini, char* filename)
                     char* buf = malloc(BUF_SIZE);
                     if (buf)
                     {
-                        DWORD size = GetPrivateProfileSectionA(name, buf, BUF_SIZE, ini->filename);
+                        DWORD size = GetPrivateProfileSectionA(name, buf, BUF_SIZE, filename);
                         if (size > 0)
                         {
                             ini->sections[i].data = malloc(size + 2);
