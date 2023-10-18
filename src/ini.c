@@ -155,6 +155,17 @@ int ini_get_int(INIFILE* ini, LPCSTR section, LPCSTR key, int def)
     }
 }
 
+float ini_get_float(INIFILE* ini, LPCSTR section, LPCSTR key, float def)
+{
+    char def_str[32];
+    _snprintf(def_str, sizeof(def_str) - 1, "%f", def);
+
+    char value[32];
+    ini_get_string(ini, section, key, def_str, value, sizeof(value));
+
+    return (float)atof(value);
+}
+
 void ini_free(INIFILE* ini)
 {
     if (!ini)
