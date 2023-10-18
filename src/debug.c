@@ -1502,6 +1502,8 @@ char* dbg_mes_to_str(int id)
     case WM_D3D9DEVICELOST: return "WM_D3D9DEVICELOST";
     case WM_WINEFULLSCREEN: return "WM_WINEFULLSCREEN";
     case WM_AUTORENDERER: return "WM_AUTORENDERER";
+    case WM_TOGGLE_FULLSCREEN: return "WM_TOGGLE_FULLSCREEN";
+    case WM_TOGGLE_MAXIMIZE: return "WM_TOGGLE_MAXIMIZE";
     }
 
     return 0;

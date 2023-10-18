@@ -652,6 +652,32 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         mouse_lock();
         return 0;
     }
+    case WM_TOGGLE_FULLSCREEN:
+    {
+        if (!g_config.fullscreen || (g_config.windowed && g_config.toggle_borderless))
+        {
+            /* Check if we are fullscreen/borderless already */
+            if (wParam == CNC_DDRAW_SET_FULLSCREEN && (!g_config.windowed || g_config.fullscreen))
+                return 0;
+
+            /* Check if we are windowed already */
+            if (wParam == CNC_DDRAW_SET_WINDOWED && g_config.windowed && !g_config.fullscreen)
+                return 0;
+
+            util_toggle_fullscreen();
+        }
+
+        return 0;
+    }
+    case WM_TOGGLE_MAXIMIZE:
+    {
+        if (g_config.resizable)
+        {
+            util_toggle_maximize();
+        }
+
+        return 0;
+    }
     case WM_NCLBUTTONDBLCLK:
     {
         if (g_config.resizable)
