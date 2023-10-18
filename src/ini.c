@@ -17,6 +17,7 @@ void ini_create(INIFILE* ini, char* filename)
     if (ini->sections)
     {
         strncpy(ini->filename, filename, sizeof(ini->filename) - 1);
+        ini->filename[sizeof(ini->filename) - 1] = 0;
 
         char* names = calloc(BUF_SIZE, 1);
         if (names)
@@ -156,6 +157,11 @@ int ini_get_int(INIFILE* ini, LPCSTR section, LPCSTR key, int def)
 
 void ini_free(INIFILE* ini)
 {
+    if (!ini)
+        return;
+
+    ini->filename[0] = 0;
+
     if (ini->sections)
     {
         for (int i = 0; ini->sections[i].hash; i++)
