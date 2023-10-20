@@ -479,7 +479,7 @@ HRESULT dd_GetDisplayMode(LPDDSURFACEDESC lpDDSurfaceDesc)
         lpDDSurfaceDesc->lPitch = 
             ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
 
-        if (g_ddraw->bpp == 32)
+        if (g_ddraw->bpp == 32 || g_config.vermeer_hack)
         {
             lpDDSurfaceDesc->ddpfPixelFormat.dwFlags = DDPF_RGB;
             lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount = 32;
@@ -1184,7 +1184,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
     if (dwFlags & DDSCL_NORMAL)
     {
-        if (g_config.vermeer_hack)
+        if (0)
         {
             dd_SetDisplayMode(640, 480, 16, 0);
         }
