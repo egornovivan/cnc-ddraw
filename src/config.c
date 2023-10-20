@@ -344,8 +344,6 @@ static void cfg_create_ini()
             "\n"
             "; Atrox\n"
             "[Atrox]\n"
-            "renderer=gdi\n"
-            "hook=2\n"
             "fixchilds=0\n"
             "allow_wmactivate=true\n"
             "\n"
