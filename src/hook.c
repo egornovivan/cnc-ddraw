@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "dllmain.h"
 #include "config.h"
+#include "utils.h"
 
 #ifdef _MSC_VER
 #include "detours.h"
@@ -196,14 +197,13 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
 
             for (int i = 0; hooks[i].module_name[0]; i++)
             {
-                char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
+                char* imp_module_name = (char*)((DWORD)dos_header + import_desc->Name);
 
                 if (_stricmp(imp_module_name, hooks[i].module_name) == 0)
                 {
                     HMODULE cur_mod = GetModuleHandleA(hooks[i].module_name);
 
-                    PIMAGE_THUNK_DATA first_thunk =
-                        (PIMAGE_THUNK_DATA)((DWORD)dos_header + (DWORD)import_desc->FirstThunk);
+                    PIMAGE_THUNK_DATA first_thunk = (void*)((DWORD)dos_header + import_desc->FirstThunk);
 
                     while (first_thunk->u1.Function)
                     {
@@ -264,6 +264,8 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
 
                         first_thunk++;
                     }
+
+                    break;
                 }
             }
 
@@ -308,22 +310,25 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
 
             for (int i = 0; hooks[i].module_name[0]; i++)
             {
-                char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
+                char* imp_module_name = (char*)((DWORD)dos_header + import_desc->Name);
 
                 if (_stricmp(imp_module_name, hooks[i].module_name) == 0)
                 {
-                    PIMAGE_THUNK_DATA first_thunk =
-                        (PIMAGE_THUNK_DATA)((DWORD)dos_header + (DWORD)import_desc->FirstThunk);
+                    PIMAGE_THUNK_DATA first_thunk = (void*)((DWORD)dos_header + import_desc->FirstThunk);
+                    PIMAGE_THUNK_DATA o_first_thunk = (void*)((DWORD)dos_header + import_desc->OriginalFirstThunk);
 
-                    PIMAGE_THUNK_DATA original_first_thunk =
-                        (PIMAGE_THUNK_DATA)((DWORD)dos_header + (DWORD)import_desc->OriginalFirstThunk);
-
-                    while (first_thunk->u1.Function && original_first_thunk->u1.AddressOfData)
+                    while (first_thunk->u1.Function)
                     {
-                        PIMAGE_IMPORT_BY_NAME import =
-                            (PIMAGE_IMPORT_BY_NAME)((DWORD)dos_header + original_first_thunk->u1.AddressOfData);
+                        if (!o_first_thunk->u1.AddressOfData)
+                        {
+                            first_thunk++;
+                            o_first_thunk++;
+                            continue;
+                        }
 
-                        if ((original_first_thunk->u1.Ordinal & IMAGE_ORDINAL_FLAG) == 0)
+                        PIMAGE_IMPORT_BY_NAME import = (void*)((DWORD)dos_header + o_first_thunk->u1.AddressOfData);
+
+                        if ((o_first_thunk->u1.Ordinal & IMAGE_ORDINAL_FLAG) == 0)
                         {
                             for (int x = 0; hooks[i].data[x].function_name[0]; x++)
                             {
@@ -336,7 +341,7 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                 if (util_is_bad_read_ptr((void*)import->Name))
                                     continue;
 
-                                if (_stricmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
+                                if (strcmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
                                 {
                                     DWORD op;
 
@@ -373,8 +378,10 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                         }
 
                         first_thunk++;
-                        original_first_thunk++;
+                        o_first_thunk++;
                     }
+
+                    break;
                 }
             }
 
@@ -408,7 +415,13 @@ BOOL hook_got_ddraw_import()
 
         while (import_desc->FirstThunk)
         {
-            char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
+            if (!import_desc->Name)
+            {
+                import_desc++;
+                continue;
+            }
+
+            char* imp_module_name = (char*)((DWORD)dos_header + import_desc->Name);
 
             if (_stricmp(imp_module_name, "ddraw.dll") == 0)
             {
