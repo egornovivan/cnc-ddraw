@@ -188,19 +188,22 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
 
         while (import_desc->FirstThunk)
         {
+            if (!import_desc->Name)
+            {
+                import_desc++;
+                continue;
+            }
+
             for (int i = 0; hooks[i].module_name[0]; i++)
             {
                 char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
 
                 if (_stricmp(imp_module_name, hooks[i].module_name) == 0)
                 {
-                    HMODULE cur_mod = GetModuleHandle(hooks[i].module_name);
+                    HMODULE cur_mod = GetModuleHandleA(hooks[i].module_name);
 
                     PIMAGE_THUNK_DATA first_thunk =
                         (PIMAGE_THUNK_DATA)((DWORD)dos_header + (DWORD)import_desc->FirstThunk);
-
-                    PIMAGE_THUNK_DATA original_first_thunk =
-                        (PIMAGE_THUNK_DATA)((DWORD)dos_header + (DWORD)import_desc->OriginalFirstThunk);
 
                     while (first_thunk->u1.Function)
                     {
@@ -260,7 +263,6 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
                         }
 
                         first_thunk++;
-                        original_first_thunk++;
                     }
                 }
             }
@@ -298,6 +300,12 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
 
         while (import_desc->FirstThunk)
         {
+            if (!import_desc->OriginalFirstThunk || !import_desc->Name)
+            {
+                import_desc++;
+                continue;
+            }
+
             for (int i = 0; hooks[i].module_name[0]; i++)
             {
                 char* imp_module_name = (char*)((DWORD)dos_header + (DWORD)(import_desc->Name));
@@ -325,30 +333,8 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                 if (!is_local && (hooks[i].data[x].flags & HOOK_LOCAL_ONLY))
                                     continue;
 
-                                /* avoid exceptions with obfuscated binaries in debug build */
-#if defined(_DEBUG) || defined(__GNUC__)
-                                MEMORY_BASIC_INFORMATION mbi = { 0 };
-                                if (VirtualQuery((void*)import->Name, &mbi, sizeof(mbi)))
-                                {
-                                    DWORD mask = (
-                                        PAGE_READONLY | 
-                                        PAGE_READWRITE | 
-                                        PAGE_WRITECOPY | 
-                                        PAGE_EXECUTE_READ | 
-                                        PAGE_EXECUTE_READWRITE | 
-                                        PAGE_EXECUTE_WRITECOPY);
-                                    
-                                    BOOL b = !(mbi.Protect & mask);
-
-                                    if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) 
-                                        b = TRUE;
-
-                                    if (b)
-                                        continue;
-                                }
-                                else
+                                if (util_is_bad_read_ptr((void*)import->Name))
                                     continue;
-#endif
 
                                 if (_stricmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
                                 {

@@ -5,6 +5,7 @@
 #include <windows.h>
 
 
+BOOL util_is_bad_read_ptr(void* p);
 BOOL util_is_minimized(HWND hwnd);
 BOOL util_is_avx_supported();
 void util_limit_game_ticks();

@@ -11,6 +11,31 @@
 #include "config.h"
 
 
+BOOL util_is_bad_read_ptr(void* p)
+{
+    MEMORY_BASIC_INFORMATION mbi = { 0 };
+    if (VirtualQuery(p, &mbi, sizeof(mbi)))
+    {
+        DWORD mask = (
+            PAGE_READONLY |
+            PAGE_READWRITE |
+            PAGE_WRITECOPY |
+            PAGE_EXECUTE_READ |
+            PAGE_EXECUTE_READWRITE |
+            PAGE_EXECUTE_WRITECOPY);
+
+        BOOL b = !(mbi.Protect & mask);
+
+        if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS))
+            b = TRUE;
+
+        if (!b)
+            return b;
+    }
+
+    return TRUE;
+}
+
 BOOL util_is_minimized(HWND hwnd)
 {
     RECT rc = { 0 };
