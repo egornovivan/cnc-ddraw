@@ -29,8 +29,7 @@ BOOL util_is_bad_read_ptr(void* p)
         if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS))
             b = TRUE;
 
-        if (!b)
-            return b;
+        return b;
     }
 
     return TRUE;
