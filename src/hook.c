@@ -338,8 +338,10 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                 if (!is_local && (hooks[i].data[x].flags & HOOK_LOCAL_ONLY))
                                     continue;
 
+#if defined(__GNUC__)
                                 if (util_is_bad_read_ptr((void*)import->Name))
                                     continue;
+#endif
 
                                 if (strcmp((const char*)import->Name, hooks[i].data[x].function_name) == 0)
                                 {
