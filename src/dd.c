@@ -1182,6 +1182,14 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         }
     }
 
+    if (dwFlags & DDSCL_NORMAL)
+    {
+        if (g_config.vermeer_hack)
+        {
+            dd_SetDisplayMode(640, 480, 16, 0);
+        }
+    }
+
     return DD_OK;
 }
 

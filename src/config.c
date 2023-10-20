@@ -104,6 +104,7 @@ void cfg_load()
     GET_BOOL(g_config.infantryhack, "infantryhack", FALSE);
     GET_BOOL(g_config.stronghold_hack, "stronghold_hack", FALSE);
     GET_BOOL(g_config.mgs_hack, "mgs_hack", FALSE);
+    GET_BOOL(g_config.vermeer_hack, "vermeer_hack", FALSE);
 
     GameHandlesClose = GameHandlesClose || g_config.infantryhack;
 
@@ -1027,6 +1028,10 @@ static void cfg_create_ini()
             "[Uprising 2]\n"
             "renderer=opengl\n"
             "adjmouse=true\n"
+            "\n"
+            "; Vermeer\n"
+            "[vermeer]\n"
+            "vermeer_hack=true\n"
             "\n"
             "; Wizardry 8\n"
             "[Wiz8]\n"

@@ -90,6 +90,7 @@ typedef struct CNCDDRAWCONFIG
     BOOL infantryhack;
     BOOL stronghold_hack;
     BOOL mgs_hack;
+    BOOL vermeer_hack;
 
 } CNCDDRAWCONFIG;
 
