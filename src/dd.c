@@ -1441,7 +1441,7 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
             TRACE("     proc_affinity=%08X, system_affinity=%08X\n", proc_affinity, system_affinity);
         }
 
-
+        
         if (_strcmpi(g_config.renderer, "direct3d9on12") == 0)
         {
             g_ddraw->d3d9on12 = TRUE;

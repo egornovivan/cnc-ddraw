@@ -275,17 +275,49 @@ static BOOL d3d9_create_resources()
 
     for (int i = 0; i < D3D9_TEXTURE_COUNT; i++)
     {
-        err = err || FAILED(
-            IDirect3DDevice9_CreateTexture(
-                g_d3d9.device,
-                g_d3d9.tex_width,
-                g_d3d9.tex_height,
-                1,
-                0,
-                g_ddraw->bpp == 16 ? (g_config.rgb555 ? D3DFMT_X1R5G5B5 : D3DFMT_R5G6B5) : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
-                D3DPOOL_MANAGED,
-                &g_d3d9.surface_tex[i],
-                0));
+        if (g_ddraw->bpp == 16 && g_config.rgb555)
+        {
+            BOOL error = FAILED(
+                IDirect3DDevice9_CreateTexture(
+                    g_d3d9.device,
+                    g_d3d9.tex_width,
+                    g_d3d9.tex_height,
+                    1,
+                    0,
+                    D3DFMT_X1R5G5B5,
+                    D3DPOOL_MANAGED,
+                    &g_d3d9.surface_tex[i],
+                    0));
+
+            if (error)
+            {
+                err = err || FAILED(
+                    IDirect3DDevice9_CreateTexture(
+                        g_d3d9.device,
+                        g_d3d9.tex_width,
+                        g_d3d9.tex_height,
+                        1,
+                        0,
+                        D3DFMT_A1R5G5B5,
+                        D3DPOOL_MANAGED,
+                        &g_d3d9.surface_tex[i],
+                        0));
+            }
+        }
+        else
+        {
+            err = err || FAILED(
+                IDirect3DDevice9_CreateTexture(
+                    g_d3d9.device,
+                    g_d3d9.tex_width,
+                    g_d3d9.tex_height,
+                    1,
+                    0,
+                    g_ddraw->bpp == 16 ? D3DFMT_R5G6B5 : g_ddraw->bpp == 32 ? D3DFMT_X8R8G8B8 : D3DFMT_L8,
+                    D3DPOOL_MANAGED,
+                    &g_d3d9.surface_tex[i],
+                    0));
+        }
 
         err = err || !g_d3d9.surface_tex[i];
 
