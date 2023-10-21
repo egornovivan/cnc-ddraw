@@ -9,6 +9,7 @@
 #include "blt.h"
 #include "config.h"
 
+static BOOL ss_screenshot_bmp(char* filename, IDirectDrawSurfaceImpl* src);
 
 static BOOL ss_screenshot_8bit(char* filename, IDirectDrawSurfaceImpl* src)
 {
@@ -154,16 +155,93 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
 
     if (src->bpp == 8 && src->palette)
     {
-        return ss_screenshot_8bit(filename, src);
+        if (!ss_screenshot_8bit(filename, src))
+            return ss_screenshot_bmp(filename, src);
+
+        return TRUE;
     }
     else if (src->bpp == 16)
     {
-        return ss_screenshot_16bit(filename, src);
+        if (!ss_screenshot_bmp(filename, src))
+            return ss_screenshot_bmp(filename, src);
+
+        return TRUE;
     }
     else if (src->bpp == 32)
     {
-        return ss_screenshot_32bit(filename, src);
+        if (!ss_screenshot_32bit(filename, src))
+            return ss_screenshot_bmp(filename, src);
+
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+
+static BOOL ss_screenshot_bmp(char* filename, IDirectDrawSurfaceImpl* src)
+{
+    BOOL result = TRUE;
+
+    // make sure file extension is correct
+    char* ext = filename + strlen(filename) - 4;
+
+    if (_strcmpi(ext, ".png") == 0)
+    {
+        strncpy(ext, ".bmp", 4);
     }
 
-    return FALSE;
+    // Create the .BMP file.  
+    HANDLE hf = CreateFile(
+        filename,
+        GENERIC_READ | GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        (HANDLE)NULL);
+
+    if (hf == INVALID_HANDLE_VALUE)
+        return FALSE;
+
+    PBITMAPINFOHEADER pbih = (PBITMAPINFOHEADER)src->bmi;
+    BITMAPFILEHEADER hdr;
+
+    hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"  
+    // Compute the size of the entire file.  
+    hdr.bfSize = (DWORD)(sizeof(BITMAPFILEHEADER) + pbih->biSize + pbih->biClrUsed * sizeof(RGBQUAD) + pbih->biSizeImage);
+    hdr.bfReserved1 = 0;
+    hdr.bfReserved2 = 0;
+
+    // Compute the offset to the array of color indices.  
+    hdr.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + pbih->biSize + pbih->biClrUsed * sizeof(RGBQUAD);
+
+    // Copy the BITMAPFILEHEADER into the .BMP file.  
+    DWORD tmp;
+    if (!WriteFile(hf, (LPVOID)&hdr, sizeof(BITMAPFILEHEADER), (LPDWORD)&tmp, NULL))
+    {
+        result = FALSE;
+    }
+
+    // Copy the BITMAPINFOHEADER and RGBQUAD array into the file.  
+    if (!WriteFile(hf, (LPVOID)pbih, sizeof(BITMAPINFOHEADER) + pbih->biClrUsed * sizeof(RGBQUAD), (LPDWORD)&tmp, (NULL)))
+    {
+        result = FALSE;
+    }
+
+    // Copy the array of color indices into the .BMP file.  
+    DWORD cb = pbih->biSizeImage;
+    DWORD total = pbih->biSizeImage;
+
+    if (!WriteFile(hf, (LPSTR)dds_GetBuffer(src), (int)cb, (LPDWORD)&tmp, NULL))
+    {
+        result = FALSE;
+    }     
+
+    // Close the .BMP file.  
+    if (!CloseHandle(hf))
+    {
+        result = FALSE;
+    }
+
+    return result;
 }
