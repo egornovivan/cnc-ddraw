@@ -230,8 +230,6 @@ static BOOL ss_screenshot_bmp(char* filename, IDirectDrawSurfaceImpl* src)
 
     // Copy the array of color indices into the .BMP file.  
     DWORD cb = pbih->biSizeImage;
-    DWORD total = pbih->biSizeImage;
-
     if (!WriteFile(hf, (LPSTR)dds_GetBuffer(src), (int)cb, (LPDWORD)&tmp, NULL))
     {
         result = FALSE;
