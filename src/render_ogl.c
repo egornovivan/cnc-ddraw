@@ -935,7 +935,9 @@ static void ogl_render()
 
 static void ogl_delete_context(HGLRC context)
 {
-    HeapFree(GetProcessHeap(), 0, g_ogl.surface_tex);
+    if (g_ogl.surface_tex)
+        HeapFree(GetProcessHeap(), 0, g_ogl.surface_tex);
+
     glDeleteTextures(TEXTURE_COUNT, g_ogl.surface_tex_ids);
 
     if (g_ddraw->bpp == 8)
@@ -985,6 +987,9 @@ static void ogl_delete_context(HGLRC context)
 
 static BOOL ogl_texture_upload_test()
 {
+    if (!g_ogl.surface_tex)
+        return TRUE;
+
     static char test_data[] = { 0,1,2,0,0,2,3,0,0,4,5,0,0,6,7,0,0,8,9,0 };
 
     int i;
@@ -1043,6 +1048,9 @@ static BOOL ogl_texture_upload_test()
 
 static BOOL ogl_shader_test()
 {
+    if (!g_ogl.surface_tex)
+        return TRUE;
+
     BOOL result = TRUE;
 
     if (g_ddraw->bpp != 8)
