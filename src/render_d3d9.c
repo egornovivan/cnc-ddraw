@@ -288,7 +288,7 @@ static BOOL d3d9_create_resources()
                     D3DPOOL_MANAGED,
                     &g_d3d9.surface_tex[i],
                     0));
-
+            
             if (error)
             {
                 err = err || FAILED(
@@ -352,7 +352,7 @@ static BOOL d3d9_create_resources()
 
         if (g_ddraw->bpp == 8)
         {
-            err = err || FAILED(
+            BOOL error = FAILED(
                 IDirect3DDevice9_CreateTexture(
                     g_d3d9.device,
                     256,
@@ -363,6 +363,21 @@ static BOOL d3d9_create_resources()
                     D3DPOOL_MANAGED,
                     &g_d3d9.palette_tex[i],
                     0));
+
+            if (error)
+            {
+                err = err || FAILED(
+                    IDirect3DDevice9_CreateTexture(
+                        g_d3d9.device,
+                        256,
+                        256,
+                        1,
+                        0,
+                        D3DFMT_A8R8G8B8,
+                        D3DPOOL_MANAGED,
+                        &g_d3d9.palette_tex[i],
+                        0));
+            }
 
             err = err || !g_d3d9.palette_tex[i];
         }
