@@ -501,7 +501,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
         {
             if (g_config.fixchilds != FIX_CHILDS_DETECT_HIDE)
             {
-                InterlockedExchangePointer(&g_ddraw->video_window_hwnd, hwnd);
+                InterlockedExchangePointer((void*)&g_ddraw->video_window_hwnd, hwnd);
             }  
 
             LONG style = real_GetWindowLongA(hwnd, GWL_EXSTYLE);

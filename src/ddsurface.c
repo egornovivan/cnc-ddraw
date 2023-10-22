@@ -753,13 +753,13 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
         IDirectDrawSurfaceImpl* backbuffer = lpDDSurfaceTargetOverride ? lpDDSurfaceTargetOverride : This->backbuffer;
 
         void* buf = InterlockedExchangePointer(&This->surface, backbuffer->surface);
-        HBITMAP bitmap = (HBITMAP)InterlockedExchangePointer(&This->bitmap, backbuffer->bitmap);
-        HDC dc = (HDC)InterlockedExchangePointer(&This->hdc, backbuffer->hdc);
+        HBITMAP bitmap = (HBITMAP)InterlockedExchangePointer((void*)&This->bitmap, backbuffer->bitmap);
+        HDC dc = (HDC)InterlockedExchangePointer((void*)&This->hdc, backbuffer->hdc);
         HANDLE map = (HANDLE)InterlockedExchangePointer(&This->mapping, backbuffer->mapping);
 
         InterlockedExchangePointer(&backbuffer->surface, buf);
-        InterlockedExchangePointer(&backbuffer->bitmap, bitmap);
-        InterlockedExchangePointer(&backbuffer->hdc, dc);
+        InterlockedExchangePointer((void*)&backbuffer->bitmap, bitmap);
+        InterlockedExchangePointer((void*)&backbuffer->hdc, dc);
         InterlockedExchangePointer(&backbuffer->mapping, map);
 
         if (g_config.flipclear)

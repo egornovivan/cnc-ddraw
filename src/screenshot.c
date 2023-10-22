@@ -162,7 +162,7 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
     }
     else if (src->bpp == 16)
     {
-        if (!ss_screenshot_bmp(filename, src))
+        if (!ss_screenshot_16bit(filename, src))
             return ss_screenshot_bmp(filename, src);
 
         return TRUE;
@@ -187,7 +187,7 @@ static BOOL ss_screenshot_bmp(char* filename, IDirectDrawSurfaceImpl* src)
 
     if (_strcmpi(ext, ".png") == 0)
     {
-        strncpy(ext, ".bmp", 4);
+        strncpy(ext, ".bmp", 5);
     }
 
     // Create the .BMP file.  

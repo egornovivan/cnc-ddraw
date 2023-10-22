@@ -16,11 +16,12 @@ LPTOP_LEVEL_EXCEPTION_FILTER g_dbg_exception_filter;
 
 static LONGLONG g_dbg_counter_start_time = 0;
 static double g_dbg_counter_freq = 0.0;
-static int g_dbg_crash_count = 0;
 static FILE* g_dbg_log_file;
 static BOOL g_dbg_log_rotate;
 
-#if _DEBUG 
+#ifdef _DEBUG 
+static int g_dbg_crash_count = 0;
+
 int dbg_exception_handler(EXCEPTION_POINTERS* exception)
 {
     g_dbg_crash_count++;

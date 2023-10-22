@@ -159,7 +159,13 @@ ULONG __stdcall IDirectDraw__AddRef(IDirectDrawImpl* This)
 {
     TRACE("-> %s(This=%p)\n", __FUNCTION__, This);
     ULONG ret = ++This->ref;
+
+#ifdef _DEBUG 
     ULONG glob_ref = dd_AddRef();
+#else
+    dd_AddRef();
+#endif
+
     TRACE("<- %s(This ref=%u, global ref=%u)\n", __FUNCTION__, ret, glob_ref);
     return ret;
 }
@@ -177,7 +183,11 @@ ULONG __stdcall IDirectDraw__Release(IDirectDrawImpl* This)
         HeapFree(GetProcessHeap(), 0, This);
     }
 
+#ifdef _DEBUG 
     ULONG glob_ref = dd_Release();
+#else
+    dd_Release();
+#endif
 
     TRACE("<- %s(This ref=%u, global ref=%u)\n", __FUNCTION__, ret, glob_ref);
     return ret;
