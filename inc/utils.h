@@ -5,6 +5,7 @@
 #include <windows.h>
 
 
+HMODULE WINAPI util_enumerate_modules(_In_opt_ HMODULE hModuleLast);
 BOOL util_is_bad_read_ptr(void* p);
 BOOL util_is_minimized(HWND hwnd);
 BOOL util_is_avx_supported();

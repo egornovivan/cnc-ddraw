@@ -474,17 +474,8 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
             char mod_dir[MAX_PATH] = { 0 };
             char mod_filename[MAX_PATH] = { 0 };
             HMODULE hmod = NULL;
-            HANDLE process = NULL;
 
-#ifndef _MSC_VER
-            HMODULE mods[512];
-            memset(mods, 0, sizeof(mods));
-            process = GetCurrentProcess();
-            EnumProcessModules(process, mods, sizeof(mods) - sizeof(mods[0]), NULL);
-            for (int i = 0; i < sizeof(mods) / sizeof(mods[0]) && (hmod = mods[i]); i++)
-#else
-            while (hmod = DetourEnumerateModules(hmod))
-#endif
+            while ((hmod = util_enumerate_modules(hmod)))
             {
                 if (hmod == g_ddraw_module)
                     continue;
@@ -515,9 +506,6 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
                     }
                 }
             }
-
-            if (process)
-                CloseHandle(process);
         }
     }
 
@@ -561,17 +549,8 @@ void hook_revert(HOOKLIST* hooks)
             char mod_dir[MAX_PATH] = { 0 };
             char mod_filename[MAX_PATH] = { 0 };
             HMODULE hmod = NULL;
-            HANDLE process = NULL;
 
-#ifndef _MSC_VER
-            HMODULE mods[512];
-            memset(mods, 0, sizeof(mods));
-            process = GetCurrentProcess();
-            EnumProcessModules(process, mods, sizeof(mods) - sizeof(mods[0]), NULL);
-            for (int i = 0; i < sizeof(mods) / sizeof(mods[0]) && (hmod = mods[i]); i++)
-#else
-            while (hmod = DetourEnumerateModules(hmod))
-#endif
+            while ((hmod = util_enumerate_modules(hmod)))
             {
                 if (hmod == g_ddraw_module)
                     continue;
@@ -591,9 +570,6 @@ void hook_revert(HOOKLIST* hooks)
                     }
                 }
             }
-
-            if (process)
-                CloseHandle(process);
         }
     }
 

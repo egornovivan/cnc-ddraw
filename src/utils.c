@@ -11,6 +11,63 @@
 #include "config.h"
 
 
+/*
+    The following code is licensed under the MIT license:
+    DetourEnumerateModules
+    Copyright (c) Microsoft Corporation
+    https://github.com/microsoft/Detours
+*/
+#define MM_ALLOCATION_GRANULARITY 0x10000
+
+HMODULE WINAPI util_enumerate_modules(_In_opt_ HMODULE hModuleLast)
+{
+    PBYTE pbLast = (PBYTE)hModuleLast + MM_ALLOCATION_GRANULARITY;
+
+    MEMORY_BASIC_INFORMATION mbi;
+    ZeroMemory(&mbi, sizeof(mbi));
+
+    // Find the next memory region that contains a mapped PE image.
+    //
+    for (;; pbLast = (PBYTE)mbi.BaseAddress + mbi.RegionSize) {
+        if (VirtualQuery(pbLast, &mbi, sizeof(mbi)) <= 0) {
+            break;
+        }
+
+        // Skip uncommitted regions and guard pages.
+        //
+        if ((mbi.State != MEM_COMMIT) ||
+            ((mbi.Protect & 0xff) == PAGE_NOACCESS) ||
+            (mbi.Protect & PAGE_GUARD)) {
+            continue;
+        }
+
+        __try {
+            PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pbLast;
+            if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE ||
+                (DWORD)pDosHeader->e_lfanew > mbi.RegionSize ||
+                (DWORD)pDosHeader->e_lfanew < sizeof(*pDosHeader)) {
+                continue;
+            }
+
+            PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)((PBYTE)pDosHeader +
+                pDosHeader->e_lfanew);
+            if (pNtHeader->Signature != IMAGE_NT_SIGNATURE) {
+                continue;
+            }
+
+            return (HMODULE)pDosHeader;
+        }
+#if defined(_MSC_VER)
+#pragma prefast(suppress:28940, "A bad pointer means this probably isn't a PE header.")
+#endif
+        __except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ?
+            EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {
+            continue;
+        }
+    }
+    return NULL;
+}
+
 BOOL util_is_bad_read_ptr(void* p)
 {
     MEMORY_BASIC_INFORMATION mbi = { 0 };
