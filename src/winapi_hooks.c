@@ -994,96 +994,112 @@ HFONT WINAPI fake_CreateFontA(
 
 HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
 {
+    HMODULE hmod_old = GetModuleHandleA(lpLibFileName);
     HMODULE hmod = real_LoadLibraryA(lpLibFileName);
 
 #ifdef _DEBUG
     char mod_path[MAX_PATH] = { 0 };
-    if (hmod && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
+    if (hmod && hmod != hmod_old && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
     {
         TRACE("LoadLibraryA Module %s = %p (%s)\n", mod_path, hmod, lpLibFileName);
     }
 #endif
 
-    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
-        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
-            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    if (hmod && hmod != hmod_old)
     {
-        dinput_hook_init();
-    }
+        if (hmod != g_ddraw_module && lpLibFileName &&
+            (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+                _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+        {
+            dinput_hook_init();
+        }
 
-    hook_init(FALSE);
+        hook_init(FALSE);
+    }
 
     return hmod;
 }
 
 HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName)
 {
+    HMODULE hmod_old = GetModuleHandleW(lpLibFileName);
     HMODULE hmod = real_LoadLibraryW(lpLibFileName);
 
 #ifdef _DEBUG
     char mod_path[MAX_PATH] = { 0 };
-    if (hmod && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
+    if (hmod && hmod != hmod_old && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
     {
         TRACE("LoadLibraryW Module %s = %p\n", mod_path, hmod);
     }
 #endif
 
-    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
-        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
-            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    if (hmod && hmod != hmod_old)
     {
-        dinput_hook_init();
-    }
+        if (hmod != g_ddraw_module && lpLibFileName &&
+            (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+                _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+        {
+            dinput_hook_init();
+        }
 
-    hook_init(FALSE);
+        hook_init(FALSE);
+    }
 
     return hmod;
 }
 
 HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags)
 {
+    HMODULE hmod_old = GetModuleHandleA(lpLibFileName);
     HMODULE hmod = real_LoadLibraryExA(lpLibFileName, hFile, dwFlags);
 
 #ifdef _DEBUG
     char mod_path[MAX_PATH] = { 0 };
-    if (hmod && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
+    if (hmod && hmod != hmod_old && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
     {
         TRACE("LoadLibraryExA Module %s = %p (%s)\n", mod_path, hmod, lpLibFileName);
     }
 #endif
 
-    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
-        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
-            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    if (hmod && hmod != hmod_old)
     {
-        dinput_hook_init();
-    }
+        if (hmod != g_ddraw_module && lpLibFileName &&
+            (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+                _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+        {
+            dinput_hook_init();
+        }
 
-    hook_init(FALSE);
+        hook_init(FALSE);
+    }
 
     return hmod;
 }
 
 HMODULE WINAPI fake_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags)
 {
+    HMODULE hmod_old = GetModuleHandleW(lpLibFileName);
     HMODULE hmod = real_LoadLibraryExW(lpLibFileName, hFile, dwFlags);
 
 #ifdef _DEBUG
     char mod_path[MAX_PATH] = { 0 };
-    if (hmod && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
+    if (hmod && hmod != hmod_old && GetModuleFileNameA(hmod, mod_path, MAX_PATH))
     {
         TRACE("LoadLibraryExW Module %s = %p\n", mod_path, hmod);
     }
 #endif
 
-    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
-        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
-            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    if (hmod && hmod != hmod_old)
     {
-        dinput_hook_init();
-    }
+        if (hmod != g_ddraw_module && lpLibFileName &&
+            (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+                _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+        {
+            dinput_hook_init();
+        }
 
-    hook_init(FALSE);
+        hook_init(FALSE);
+    }
 
     return hmod;
 }
