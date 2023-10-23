@@ -8,7 +8,15 @@
 #define HOOK_SKIP_2 0x00000001l
 #define HOOK_LOCAL_ONLY 0x00000002l
 
-typedef struct HOOKLISTDATA { char function_name[32]; PROC new_function; PROC* function; DWORD flags; } HOOKLISTDATA;
+typedef struct HOOKLISTDATA { 
+    char function_name[32]; 
+    PROC new_function; 
+    PROC* function; 
+    DWORD flags; 
+    PROC org_function; 
+    HMODULE mod;
+} HOOKLISTDATA;
+
 typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[30]; } HOOKLIST;
 
 typedef BOOL(WINAPI* GETCURSORPOSPROC)(LPPOINT);

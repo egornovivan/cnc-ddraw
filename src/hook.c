@@ -209,10 +209,17 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
                     {
                         for (int x = 0; hooks[i].data[x].function_name[0]; x++)
                         {
-                            DWORD org_function =
-                                (DWORD)real_GetProcAddress(
-                                    cur_mod,
-                                    hooks[i].data[x].function_name);
+                            /* GetProcAddress is slow, save the pointer and reuse it for better performance */
+                            DWORD org_function = (DWORD)InterlockedExchangeAdd((LONG*)&hooks[i].data[x].org_function, 0);
+
+                            if (!org_function || cur_mod != hooks[i].data[x].mod)
+                            {
+                                hooks[i].data[x].mod = cur_mod;
+
+                                org_function = (DWORD)real_GetProcAddress(cur_mod, hooks[i].data[x].function_name);
+
+                                InterlockedExchange((LONG*)&hooks[i].data[x].org_function, (LONG)org_function);
+                            }
 
                             if (!hooks[i].data[x].new_function || !org_function)
                                 continue;
@@ -357,7 +364,7 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
                                         {
                                             DWORD org =
                                                 (DWORD)real_GetProcAddress(
-                                                    GetModuleHandle(hooks[i].module_name),
+                                                    GetModuleHandleA(hooks[i].module_name),
                                                     hooks[i].data[x].function_name);
 
                                             if (org && first_thunk->u1.Function != org)
