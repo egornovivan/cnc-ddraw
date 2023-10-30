@@ -1,8 +1,8 @@
 -include config.mk
 
 WINDRES  ?= windres
-LDFLAGS   = -Iinc -Wall -Wl,--enable-stdcall-fixup -s
-CFLAGS    = -std=c99 -O2
+LDFLAGS   = -Wl,--enable-stdcall-fixup -s
+CFLAGS    = -Iinc -O2 -march=pentium4 -Wall
 LIBS      = -lgdi32 -lwinmm -lpsapi -ldbghelp -lole32
 
 FILES = src/IDirect3D/IDirect3D.c \
