@@ -802,12 +802,12 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     {
         g_ddraw->render.viewport.width = g_ddraw->render.width;
         g_ddraw->render.viewport.height =
-            (int)(((float)g_ddraw->height / g_ddraw->width) * g_ddraw->render.viewport.width);
+            (int)(((double)g_ddraw->height / g_ddraw->width) * g_ddraw->render.viewport.width);
 
         if (g_ddraw->render.viewport.height > g_ddraw->render.height)
         {
             g_ddraw->render.viewport.width =
-                (int)(((float)g_ddraw->render.viewport.width / g_ddraw->render.viewport.height) * g_ddraw->render.height);
+                (int)(((double)g_ddraw->render.viewport.width / g_ddraw->render.viewport.height) * g_ddraw->render.height);
 
             g_ddraw->render.viewport.height = g_ddraw->render.height;
         }
