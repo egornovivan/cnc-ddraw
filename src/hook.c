@@ -181,11 +181,13 @@ void hook_patch_obfuscated_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, 
         if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
             return;
 
-        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header +
-            (DWORD)(nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress));
+        DWORD import_desc_rva = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        DWORD import_desc_size = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size;
 
-        if (import_desc == (PIMAGE_IMPORT_DESCRIPTOR)nt_headers)
+        if (import_desc_rva == 0 || import_desc_size == 0)
             return;
+
+        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header + import_desc_rva);
 
         while (import_desc->FirstThunk)
         {
@@ -301,11 +303,13 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
         if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
             return;
 
-        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header +
-            (DWORD)(nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress));
+        DWORD import_desc_rva = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        DWORD import_desc_size = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size;
 
-        if (import_desc == (PIMAGE_IMPORT_DESCRIPTOR)nt_headers)
+        if (import_desc_rva == 0 || import_desc_size == 0)
             return;
+
+        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header + import_desc_rva);
 
         while (import_desc->FirstThunk)
         {
@@ -416,25 +420,24 @@ BOOL hook_got_ddraw_import()
         if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
             return FALSE;
 
-        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header +
-            (DWORD)(nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress));
+        DWORD import_desc_rva = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        DWORD import_desc_size = nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].Size;
 
-        if (import_desc == (PIMAGE_IMPORT_DESCRIPTOR)nt_headers)
+        if (import_desc_rva == 0 || import_desc_size == 0)
             return FALSE;
+
+        PIMAGE_IMPORT_DESCRIPTOR import_desc = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)dos_header + import_desc_rva);
 
         while (import_desc->FirstThunk)
         {
-            if (!import_desc->Name)
+            if (import_desc->Name)
             {
-                import_desc++;
-                continue;
-            }
+                char* imp_module_name = (char*)((DWORD)dos_header + import_desc->Name);
 
-            char* imp_module_name = (char*)((DWORD)dos_header + import_desc->Name);
-
-            if (_stricmp(imp_module_name, "ddraw.dll") == 0)
-            {
-                return TRUE;
+                if (_stricmp(imp_module_name, "ddraw.dll") == 0)
+                {
+                    return TRUE;
+                }
             }
 
             import_desc++;
