@@ -406,13 +406,14 @@ void hook_patch_iat_list(HMODULE hmod, BOOL unhook, HOOKLIST* hooks, BOOL is_loc
     }
 }
 
-BOOL hook_got_ddraw_import()
+BOOL hook_got_ddraw_import(HMODULE mod, BOOL check_imported_dlls)
 {
+    if (!mod)
+        return FALSE;
+
     __try
     {
-        HMODULE hmod = GetModuleHandleA(NULL);
-
-        PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)hmod;
+        PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)mod;
         if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
             return FALSE;
 
@@ -439,6 +440,11 @@ BOOL hook_got_ddraw_import()
                     PIMAGE_THUNK_DATA first_thunk = (void*)((DWORD)dos_header + import_desc->FirstThunk);
 
                     if (first_thunk->u1.Function)
+                        return TRUE;
+                }
+                else if (check_imported_dlls)
+                {
+                    if (hook_got_ddraw_import(GetModuleHandleA(imp_module_name), FALSE))
                         return TRUE;
                 }
             }
@@ -596,7 +602,7 @@ void hook_init(BOOL initial_hook)
 {
     if (initial_hook)
     {
-        if (g_config.hook == 4 && hook_got_ddraw_import())
+        if (g_config.hook == 4 && hook_got_ddraw_import(GetModuleHandleA(NULL), TRUE))
         {
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
             g_config.hook = 3;
