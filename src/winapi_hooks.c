@@ -16,6 +16,7 @@
 #include "ddclipper.h"
 #include "dllmain.h"
 #include "hook.h"
+#include "directinput.h"
 
 
 BOOL WINAPI fake_GetCursorPos(LPPOINT lpPoint)
@@ -1005,15 +1006,15 @@ HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
     }
 #endif
 
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
     if (hmod && hmod != hmod_old)
     {
-        if (hmod != g_ddraw_module && lpLibFileName &&
-            (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
-                _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
-        {
-            dinput_hook_init();
-        }
-
         hook_init(FALSE);
     }
 
@@ -1033,15 +1034,15 @@ HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName)
     }
 #endif
 
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
     if (hmod && hmod != hmod_old)
     {
-        if (hmod != g_ddraw_module && lpLibFileName &&
-            (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
-                _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
-        {
-            dinput_hook_init();
-        }
-
         hook_init(FALSE);
     }
 
@@ -1061,15 +1062,15 @@ HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwF
     }
 #endif
 
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
+            _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
     if (hmod && hmod != hmod_old)
     {
-        if (hmod != g_ddraw_module && lpLibFileName &&
-            (_strcmpi(lpLibFileName, "dinput.dll") == 0 || _strcmpi(lpLibFileName, "dinput") == 0 ||
-                _strcmpi(lpLibFileName, "dinput8.dll") == 0 || _strcmpi(lpLibFileName, "dinput8") == 0))
-        {
-            dinput_hook_init();
-        }
-
         hook_init(FALSE);
     }
 
@@ -1089,15 +1090,15 @@ HMODULE WINAPI fake_LoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dw
     }
 #endif
 
+    if (hmod && hmod != g_ddraw_module && lpLibFileName &&
+        (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
+            _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
+    {
+        dinput_hook_init();
+    }
+
     if (hmod && hmod != hmod_old)
     {
-        if (hmod != g_ddraw_module && lpLibFileName &&
-            (_wcsicmp(lpLibFileName, L"dinput.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput") == 0 ||
-                _wcsicmp(lpLibFileName, L"dinput8.dll") == 0 || _wcsicmp(lpLibFileName, L"dinput8") == 0))
-        {
-            dinput_hook_init();
-        }
-
         hook_init(FALSE);
     }
 
@@ -1119,11 +1120,12 @@ FARPROC WINAPI fake_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 #if defined(__GNUC__)
     if (g_config.hook == 4 && hModule && HIWORD(lpProcName))
     {
-        if (strcmp(lpProcName, "DirectInputCreateA") == 0 || 
-            strcmp(lpProcName, "DirectInputCreateEx") == 0 || 
+        if (strcmp(lpProcName, "DirectInputCreateA") == 0 ||
+            strcmp(lpProcName, "DirectInputCreateEx") == 0 ||
             strcmp(lpProcName, "DirectInput8Create") == 0)
         {
             hook = TRUE;
+            g_dinput_hook_active = TRUE;
         }
     }
 #endif
