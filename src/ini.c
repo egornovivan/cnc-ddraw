@@ -67,6 +67,33 @@ void ini_create(INIFILE* ini, char* filename)
     }
 }
 
+BOOL ini_section_exists(INIFILE* ini, LPCSTR section)
+{
+    if (!ini || !ini->sections || !section || strlen(section) == 0)
+    {
+        return FALSE;
+    }
+
+    char s[MAX_PATH];
+    strncpy(s, section, sizeof(s) - 1);
+    s[sizeof(s) - 1] = 0;
+
+    for (char* p = s; *p; ++p)
+        *p = tolower(*p);
+
+    unsigned long hash = Crc32_ComputeBuf(0, s, strlen(s));
+
+    for (int i = 0; ini->sections[i].hash; i++)
+    {
+        if (ini->sections[i].hash == hash)
+        {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 DWORD ini_get_string(INIFILE* ini, LPCSTR section, LPCSTR key, LPCSTR def, LPSTR buf, DWORD size)
 {
     if (!buf || size == 0)
@@ -88,7 +115,7 @@ DWORD ini_get_string(INIFILE* ini, LPCSTR section, LPCSTR key, LPCSTR def, LPSTR
 
     char s[MAX_PATH];
     strncpy(s, section, sizeof(s) - 1);
-    buf[sizeof(s) - 1] = 0;
+    s[sizeof(s) - 1] = 0;
 
     for (char* p = s; *p; ++p)
         *p = tolower(*p);
