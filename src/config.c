@@ -1120,6 +1120,22 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
 {
     char buf[MAX_PATH] = { 0 };
 
+    if (g_config.is_wine)
+    {
+        char section[MAX_PATH] = { 0 };
+        _snprintf(section, sizeof(section) - 1, "%s/wine", g_config.process_file_name);
+
+        if (ini_section_exists(&g_config.ini, section))
+        {
+            DWORD x = ini_get_string(&g_config.ini, section, key, "", out_string, out_size);
+
+            if (x > 0)
+                return x;
+
+            return ini_get_string(&g_config.ini, "ddraw", key, default_value, out_string, out_size);
+        }
+    }
+
     DWORD s = ini_get_string(&g_config.ini, g_config.process_file_name, key, "", out_string, out_size);
 
     if (s > 0)
