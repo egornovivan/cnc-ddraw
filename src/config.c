@@ -344,7 +344,6 @@ static void cfg_create_ini()
             "\n"
             "; Atrox\n"
             "[Atrox]\n"
-            "hook=3\n"
             "fixchilds=0\n"
             "allow_wmactivate=true\n"
             "\n"
