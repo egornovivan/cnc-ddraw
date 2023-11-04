@@ -436,7 +436,10 @@ BOOL hook_got_ddraw_import()
 
                 if (_stricmp(imp_module_name, "ddraw.dll") == 0)
                 {
-                    return TRUE;
+                    PIMAGE_THUNK_DATA first_thunk = (void*)((DWORD)dos_header + import_desc->FirstThunk);
+
+                    if (first_thunk->u1.Function)
+                        return TRUE;
                 }
             }
 
