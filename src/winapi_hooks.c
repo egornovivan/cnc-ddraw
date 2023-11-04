@@ -1114,9 +1114,23 @@ FARPROC WINAPI fake_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
     }
 #endif
 
+    BOOL hook = g_config.hook == 3;
+
+#if defined(__GNUC__)
+    if (g_config.hook == 4 && hModule && HIWORD(lpProcName))
+    {
+        if (strcmp(lpProcName, "DirectInputCreateA") == 0 || 
+            strcmp(lpProcName, "DirectInputCreateEx") == 0 || 
+            strcmp(lpProcName, "DirectInput8Create") == 0)
+        {
+            hook = TRUE;
+        }
+    }
+#endif
+
     FARPROC proc = real_GetProcAddress(hModule, lpProcName);
 
-    if (g_config.hook != 3 || !hModule || !HIWORD(lpProcName))
+    if (!hook || !hModule || !HIWORD(lpProcName))
         return proc;
 
     for (int i = 0; g_hook_hooklist[i].module_name[0]; i++)

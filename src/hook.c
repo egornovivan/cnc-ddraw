@@ -607,13 +607,6 @@ void hook_init(BOOL initial_hook)
             /* Switch to 3 if we can be sure that ddraw.dll will not be unloaded from the process */
             g_config.hook = 3;
         }
-
-#if defined(__GNUC__)
-        if (g_config.hook == 4)
-        {
-            g_config.hook = 3;
-        }
-#endif
     }
 
     if (!g_hook_active || g_config.hook == 3 || g_config.hook == 4)
