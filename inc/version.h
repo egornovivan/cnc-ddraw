@@ -4,8 +4,8 @@
 #define str(s) #s
 #define ver_str(a,b,c,d) str(a) "." str(b) "." str(c) "." str(d)
 
-#define VERSION_MAJOR    5
-#define VERSION_MINOR    6
+#define VERSION_MAJOR    6
+#define VERSION_MINOR    0
 #define VERSION_BUILD    0
 #define VERSION_REVISION 0
 
