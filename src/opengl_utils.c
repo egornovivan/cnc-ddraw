@@ -4,6 +4,7 @@
 #include "dd.h"
 #include "debug.h"
 #include "hook.h"
+#include "config.h"
 
 PFNWGLCREATECONTEXTPROC xwglCreateContext;
 PFNWGLDELETECONTEXTPROC xwglDeleteContext;
@@ -211,7 +212,7 @@ void oglu_init()
         glEnableVertexAttribArray && glUniform2fv && glUniformMatrix4fv && glGenVertexArrays && glBindVertexArray &&
         glGetUniformLocation;
 
-    if (g_ddraw->wine && glversion && glversion[0] == '2') // macOS
+    if (g_config.is_wine && glversion && glversion[0] == '2') // macOS
     {
         g_oglu_got_version3 = FALSE;
         wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)xwglGetProcAddress("wglCreateContextAttribsARB");

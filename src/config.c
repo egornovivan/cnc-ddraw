@@ -1067,6 +1067,8 @@ static void cfg_create_ini()
 
 static void cfg_init()
 {
+    g_config.is_wine = real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
+
     /* get process filename and directory */
     if (GetModuleFileNameA(NULL, g_config.game_path, sizeof(g_config.game_path) - 1) > 0)
     {

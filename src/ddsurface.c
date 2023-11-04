@@ -955,7 +955,7 @@ HRESULT dds_Lock(
 
     dbg_dump_dds_lock_flags(dwFlags);
 
-    if (g_ddraw && g_config.fixnotresponding && !g_ddraw->wine)
+    if (g_ddraw && g_config.fixnotresponding && !g_config.is_wine)
     {
         MSG msg; /* workaround for "Not Responding" window problem */
         real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE);

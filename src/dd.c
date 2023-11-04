@@ -855,7 +855,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
         if (g_config.remove_menu && GetMenu(g_ddraw->hwnd))
             SetMenu(g_ddraw->hwnd, NULL);
 
-        if (!g_ddraw->wine)
+        if (!g_config.is_wine)
         {
             MSG msg; /* workaround for "Not Responding" window problem in cnc games */
             real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE | PM_QS_INPUT);
@@ -888,7 +888,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             real_SetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE, exstyle & ~(WS_EX_TOOLWINDOW));
         }
 
-        if (g_ddraw->wine)
+        if (g_config.is_wine)
         {
             real_SetWindowLongA(
                 g_ddraw->hwnd,
@@ -1015,7 +1015,7 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             return dd_SetDisplayMode(dwWidth, dwHeight, dwBPP, dwFlags);
         }
 
-        if (g_ddraw->wine)
+        if (g_config.is_wine)
         {
             real_SetWindowLongA(
                 g_ddraw->hwnd, 
@@ -1391,7 +1391,6 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         InitializeCriticalSection(&g_ddraw->cs);
 
         g_ddraw->render.sem = CreateSemaphore(NULL, 0, 1, NULL);
-        g_ddraw->wine = real_GetProcAddress(GetModuleHandleA("ntdll.dll"), "wine_get_version") != 0;
         g_blt_use_avx = util_is_avx_supported();
 
         if (g_config.minfps > 1000)
@@ -1473,7 +1472,7 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         }
         else /* auto */
         {
-            if (!g_ddraw->wine && d3d9_is_available())
+            if (!g_config.is_wine && d3d9_is_available())
             {
                 g_ddraw->renderer = d3d9_render_main;
             }

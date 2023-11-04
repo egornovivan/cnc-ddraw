@@ -16,6 +16,7 @@ typedef struct CNCDDRAWCONFIG
     char process_file_name[MAX_PATH];
     char process_file_ext[MAX_PATH];
     INIFILE ini;
+    BOOL is_wine;
     
     /* Optional settings */
 

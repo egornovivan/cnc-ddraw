@@ -124,7 +124,6 @@ typedef struct CNCDDRAW
     BOOL iscnc1;
     BOOL iskkndx;
     LONG upscale_hack_active;
-    BOOL wine;
     HCURSOR old_cursor;
     int show_cursor_count;
     BOOL alt_key_down;
