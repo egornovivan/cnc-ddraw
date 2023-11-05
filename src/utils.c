@@ -549,7 +549,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
         char class_name[MAX_PATH] = { 0 };
         GetClassNameA(hwnd, class_name, sizeof(class_name) - 1);
 
-        //TRACE_EXT("     AVIWINDOW class=%s\n", class_name);
+        //TRACE("     AVIWINDOW class=%s\n", class_name);
 
         if (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE || 
             strcmp(class_name, "VideoRenderer") == 0 ||

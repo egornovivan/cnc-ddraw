@@ -560,6 +560,43 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
         }
 
+        if (wParam == WA_INACTIVE)
+        {
+            if (g_config.windowed && !g_config.fullscreen && lParam && GetParent((HWND)lParam) == hWnd)
+            {
+                char class_name[MAX_PATH] = { 0 };
+                GetClassNameA((HWND)lParam, class_name, sizeof(class_name) - 1);
+
+                if (strcmp(class_name, "#32770") == 0) // dialog box
+                {
+                    mouse_unlock();
+
+                    /*
+                    // Center to main window
+                    RECT rc_main = { 0 };
+                    RECT rc_dialog = { 0 };
+                    RECT rc = { 0 };
+
+                    real_GetWindowRect(hWnd, &rc_main);
+                    real_GetWindowRect((HWND)lParam, &rc_dialog);
+                    CopyRect(&rc, &rc_main);
+
+                    OffsetRect(&rc_dialog, -rc_dialog.left, -rc_dialog.top);
+                    OffsetRect(&rc, -rc.left, -rc.top);
+                    OffsetRect(&rc, -rc_dialog.right, -rc_dialog.bottom);
+
+                    real_SetWindowPos(
+                        (HWND)lParam,
+                        HWND_TOP,
+                        rc_main.left + (rc.right / 2),
+                        rc_main.top + (rc.bottom / 2),
+                        0, 0,
+                        SWP_NOSIZE);
+                     */
+                }
+            }
+        }
+
         //if (g_ddraw->windowed || g_ddraw->noactivateapp)
 
         if (!g_config.allow_wmactivate)
