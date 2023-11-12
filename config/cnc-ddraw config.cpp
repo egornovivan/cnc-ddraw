@@ -3,6 +3,7 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <IniFiles.hpp>
+#include <IOUtils.hpp>
 #include <System.Hash.hpp>
 #include <tchar.h>
 //---------------------------------------------------------------------------
@@ -10,6 +11,9 @@
 #include <Vcl.Themes.hpp>
 USEFORM("ConfigFormUnit.cpp", ConfigForm);
 //---------------------------------------------------------------------------
+
+#define GAME_PATH (TPath::GetDirectoryName(Application->ExeName) + "\\")
+
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	try
@@ -31,7 +35,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 			return 0;
 		}
 
-		auto *ini = new TIniFile(".\\ddraw.ini");
+		auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
 		auto theme = ini->ReadString("ddraw", "configtheme", "Windows10");
 
 		TStyleManager::TrySetStyle(
