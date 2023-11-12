@@ -20,3 +20,4 @@ EXPORTS
     DirectInput8Create = fake_DirectInput8Create
     GameHandlesClose                          DATA
     pvBmpBits = FakePrimarySurface            DATA
+    DDIsWindowed
