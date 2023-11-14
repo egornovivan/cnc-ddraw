@@ -691,7 +691,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     }
     case WM_TOGGLE_FULLSCREEN:
     {
-        if (!g_config.fullscreen || (g_config.windowed && g_config.toggle_borderless))
+        if (!g_config.fullscreen || g_config.toggle_upscaled || (g_config.windowed && g_config.toggle_borderless))
         {
             /* Check if we are fullscreen/borderless already */
             if (wParam == CNC_DDRAW_SET_FULLSCREEN && (!g_config.windowed || g_config.fullscreen))
@@ -731,7 +731,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         if (g_config.hotkeys.toggle_fullscreen &&
             wParam == g_config.hotkeys.toggle_fullscreen &&
-            (!g_config.fullscreen || (g_config.windowed && g_config.toggle_borderless)) &&
+            (!g_config.fullscreen || g_config.toggle_upscaled || (g_config.windowed && g_config.toggle_borderless)) &&
             context_code && 
             !key_state)
         {

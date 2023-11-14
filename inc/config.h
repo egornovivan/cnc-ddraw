@@ -10,7 +10,7 @@ typedef struct CNCDDRAWCONFIG
 {
     RECT window_rect;
     int window_state;
-    int borderless_state;
+    int upscaled_state;
     char ini_path[MAX_PATH];
     char game_path[MAX_PATH];
     char process_file_name[MAX_PATH];
@@ -37,6 +37,7 @@ typedef struct CNCDDRAWCONFIG
     BOOL vhack;
     char screenshot_dir[MAX_PATH];
     BOOL toggle_borderless;
+    BOOL toggle_upscaled;
 
     /* Compatibility settings */
 

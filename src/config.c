@@ -23,7 +23,7 @@ static DWORD cfg_get_string(LPCSTR key, LPCSTR default_value, LPSTR out_string, 
 #define GET_STRING(a,b,c,d) cfg_get_string(a, b, c, d); TRACE("%s=%s\n", a, c)
 
 CNCDDRAWCONFIG g_config =
-    { .window_rect = {.left = -32000, .top = -32000, .right = 0, .bottom = 0 }, .window_state = -1, .borderless_state = -1 };
+    { .window_rect = {.left = -32000, .top = -32000, .right = 0, .bottom = 0 }, .window_state = -1, .upscaled_state = -1 };
 
 void cfg_load()
 {
@@ -52,6 +52,7 @@ void cfg_load()
     GET_BOOL(g_config.vhack, "vhack", FALSE);
     GET_STRING("screenshotdir", ".\\Screenshots\\", g_config.screenshot_dir, sizeof(g_config.screenshot_dir));
     GET_BOOL(g_config.toggle_borderless, "toggle_borderless", FALSE);
+    GET_BOOL(g_config.toggle_upscaled, "toggle_upscaled", FALSE);
 
     /* Compatibility settings */
 
@@ -148,9 +149,9 @@ void cfg_save()
         WritePrivateProfileString(section, "windowed", g_config.window_state ? "true" : "false", g_config.ini_path);
     }
 
-    if (g_config.borderless_state != -1)
+    if (g_config.upscaled_state != -1)
     {
-        WritePrivateProfileString(section, "fullscreen", g_config.borderless_state ? "true" : "false", g_config.ini_path);
+        WritePrivateProfileString(section, "fullscreen", g_config.upscaled_state ? "true" : "false", g_config.ini_path);
     }
 }
 
@@ -234,6 +235,9 @@ static void cfg_create_ini()
             "\n"
             "; Switch between windowed/borderless modes with alt+enter rather than windowed/fullscreen modes\n"
             "toggle_borderless=false\n"
+            "\n"
+            "; Switch between windowed/fullscreen upscaled modes with alt+enter rather than windowed/fullscreen modes\n"
+            "toggle_upscaled=false\n"
             "\n"
             "\n"
             "\n"
