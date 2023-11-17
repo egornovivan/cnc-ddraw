@@ -171,6 +171,8 @@ HRESULT dd_EnumDisplayModes(
         m.dmSize = sizeof(DEVMODE);
         i = 0;
 
+        BOOL custom_res_injected = FALSE;
+
         while (EnumDisplaySettings(NULL, i, &m))
         {
             if (refresh_rate == m.dmDisplayFrequency &&
@@ -183,10 +185,11 @@ HRESULT dd_EnumDisplayModes(
                     while (--m.dmPelsWidth % 8);
                 }
 
-                if (i == 0 && g_config.custom_width && g_config.custom_height)
+                if (!custom_res_injected && g_config.custom_width && g_config.custom_height)
                 {
                     m.dmPelsWidth = g_config.custom_width;
                     m.dmPelsHeight = g_config.custom_height;
+                    custom_res_injected = TRUE;
                 }
 
                 TRACE(
