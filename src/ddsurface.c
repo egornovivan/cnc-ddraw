@@ -972,6 +972,8 @@ HRESULT dds_Lock(
             lpDestRect->right > This->width ||
             lpDestRect->bottom > This->height)
         {
+            lpDDSurfaceDesc->lpSurface = NULL;
+
             return DDERR_INVALIDPARAMS;
         }
 
