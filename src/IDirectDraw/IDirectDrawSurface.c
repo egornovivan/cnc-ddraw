@@ -284,9 +284,9 @@ HRESULT __stdcall IDirectDrawSurface__GetAttachedSurface(
 
 HRESULT __stdcall IDirectDrawSurface__GetBltStatus(IDirectDrawSurfaceImpl* This, DWORD dwFlags)
 {
-    TRACE_EXT("-> %s(This=%p)\n", __FUNCTION__, This);
+    //TRACE_EXT("-> %s(This=%p)\n", __FUNCTION__, This);
     HRESULT ret = DD_OK;
-    TRACE_EXT("<- %s\n", __FUNCTION__);
+    //TRACE_EXT("<- %s\n", __FUNCTION__);
     return ret;
 }
 
