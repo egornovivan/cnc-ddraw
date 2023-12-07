@@ -35,7 +35,12 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 			return 0;
 		}
 
-		auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
+		auto iniPath = System::Sysutils::GetEnvironmentVariable(
+			"CNC_DDRAW_CONFIG_FILE");
+
+		auto *ini = 
+			new TIniFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
+			
 		auto theme = ini->ReadString("ddraw", "configtheme", "Windows10");
 
 		TStyleManager::TrySetStyle(

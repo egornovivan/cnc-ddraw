@@ -1090,25 +1090,26 @@ static void cfg_init()
         }
     }
 
-    /* set up settings ini */
-
-    if (strlen(g_config.game_path) > 0)
+    if (!GetEnvironmentVariableA("CNC_DDRAW_CONFIG_FILE", g_config.ini_path, sizeof(g_config.ini_path) - 1))
     {
-        _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%sddraw.ini", g_config.game_path);
-
-        if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
+        if (strlen(g_config.game_path) > 0)
         {
-            cfg_create_ini();
-        }
+            _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%sddraw.ini", g_config.game_path);
 
-        if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
+            if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
+            {
+                cfg_create_ini();
+            }
+
+            if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
+            {
+                strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
+            }
+        }
+        else
         {
             strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
         }
-    }
-    else
-    {
-        strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
     }
 
     if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)

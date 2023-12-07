@@ -43,7 +43,12 @@ void __fastcall TConfigForm::CreateParams(TCreateParams & Params)
 
 void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 {
-	auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
+	auto iniPath = System::Sysutils::GetEnvironmentVariable(
+		"CNC_DDRAW_CONFIG_FILE");
+
+	auto *ini =
+		new TIniFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
+
 	ini->WriteString("ddraw", "configlang", IsEnglish ? "auto" : "english");
 	delete ini;
 
@@ -60,7 +65,12 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 
 void __fastcall TConfigForm::ThemePnlClick(TObject *Sender)
 {
-	auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
+	auto iniPath = System::Sysutils::GetEnvironmentVariable(
+		"CNC_DDRAW_CONFIG_FILE");
+
+	auto *ini =
+		new TIniFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
+
 	auto theme =
 		ThemePnl->Color == (TColor)RGB(31, 31, 31) ? "Cobalt XEMedia" : "Windows10";
 
@@ -89,7 +99,10 @@ void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
 		return;
 	}
 
-	DeleteFile(GAME_PATH + "ddraw.ini");
+	auto iniPath = System::Sysutils::GetEnvironmentVariable(
+		"CNC_DDRAW_CONFIG_FILE");
+
+	DeleteFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
 
 	ShellExecute(
 		NULL,
@@ -671,8 +684,12 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
 {
+	auto iniPath = System::Sysutils::GetEnvironmentVariable(
+		"CNC_DDRAW_CONFIG_FILE");
+
 	/* Let cnc-ddraw create a new ddraw.ini if it doesn't exist */
-	if (FileExists(GAME_PATH + "ddraw.dll") && !FileExists(GAME_PATH + "ddraw.ini")) {
+	if (FileExists(GAME_PATH + "ddraw.dll") &&
+		!FileExists(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini")) {
 
 		SetEnvironmentVariableW(L"cnc_ddraw_config_init", L"1");
 
@@ -696,7 +713,8 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		}
 	}
 
-	auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
+	auto *ini =
+		new TIniFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
 
 	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
 
@@ -905,7 +923,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	RestoreDefaultsBtn->Visible =
 		FileExists(GAME_PATH + "ddraw.dll") &&
-		FileExists(GAME_PATH + "ddraw.ini") &&
+		FileExists(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini") &&
 		GetBool(ini, "allow_reset", true);
 
 	delete ini;
@@ -918,7 +936,11 @@ void TConfigForm::SaveSettings()
 	if (!Initialized)
 		return;
 
-	auto *ini = new TIniFile(GAME_PATH + "ddraw.ini");
+	auto iniPath = System::Sysutils::GetEnvironmentVariable(
+		"CNC_DDRAW_CONFIG_FILE");
+
+	auto *ini =
+		new TIniFile(iniPath.Length() ? iniPath : GAME_PATH + "ddraw.ini");
 
 	/* Display Settings */
 
