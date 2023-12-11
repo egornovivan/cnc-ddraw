@@ -42,6 +42,7 @@ typedef struct IDirectDrawSurfaceImpl
     DWORD last_flip_tick;
     DWORD last_blt_tick;
     BOOL queried;
+    BOOL skip_flip; /* Quest for Glory 5 */
 
     struct IDirectDrawSurfaceImpl* backbuffer;
     struct IDirectDrawClipperImpl* clipper;

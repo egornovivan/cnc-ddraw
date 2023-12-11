@@ -747,7 +747,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
 {
     dbg_dump_dds_flip_flags(dwFlags);
 
-    if (This->backbuffer)
+    if (This->backbuffer && !This->skip_flip)
     {
         EnterCriticalSection(&g_ddraw->cs);
         IDirectDrawSurfaceImpl* backbuffer = lpDDSurfaceTargetOverride ? lpDDSurfaceTargetOverride : This->backbuffer;
@@ -774,6 +774,8 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
             dds_Flip(This->backbuffer, NULL, 0);
         }
     }
+
+    This->skip_flip = FALSE;
 
     if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
     {
@@ -1318,6 +1320,8 @@ HRESULT dd_CreateSurface(
         g_ddraw->primary->height == g_ddraw->height &&
         g_ddraw->primary->bpp == g_ddraw->bpp)
     {
+        g_ddraw->primary->skip_flip = TRUE;
+
         *lpDDSurface = g_ddraw->primary;
         IDirectDrawSurface_AddRef(g_ddraw->primary);
 
