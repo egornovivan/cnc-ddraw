@@ -804,7 +804,10 @@ static void ogl_render()
 
         LeaveCriticalSection(&g_ddraw->cs);
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (g_ddraw->render.viewport.x != 0 || g_ddraw->render.viewport.y != 0)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
 
         if (scale_changed)
         {
