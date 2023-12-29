@@ -314,8 +314,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         real_GetWindowLongA(hWnd, GWL_EXSTYLE)) &&
                     SetRect(&clientrc, 0, 0, clientrc.right - clientrc.left, clientrc.bottom - clientrc.top))
                 {
-                    double scaleH = (double)g_ddraw->height / g_ddraw->width;
-                    double scaleW = (double)g_ddraw->width / g_ddraw->height;
+                    float scaleH = (float)g_ddraw->height / g_ddraw->width;
+                    float scaleW = (float)g_ddraw->width / g_ddraw->height;
 
                     switch (wParam)
                     {
