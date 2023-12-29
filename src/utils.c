@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <intrin.h>
+#include <math.h>
 #include "ddraw.h"
 #include "debug.h"
 #include "dd.h"
@@ -381,11 +382,11 @@ void util_toggle_maximize()
             dst_rc.top = 0;
             dst_rc.left = 0;
             dst_rc.right = w;
-            dst_rc.bottom = (LONG)(((float)g_ddraw->height / g_ddraw->width) * w);
+            dst_rc.bottom = (LONG)roundf(((float)g_ddraw->height / g_ddraw->width) * w);
 
             if (dst_rc.bottom > h)
             {
-                dst_rc.right = (LONG)(((float)dst_rc.right / dst_rc.bottom) * h);
+                dst_rc.right = (LONG)roundf(((float)dst_rc.right / dst_rc.bottom) * h);
                 dst_rc.bottom = h;
             }
 
