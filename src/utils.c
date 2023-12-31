@@ -379,12 +379,15 @@ void util_toggle_maximize()
             int w = dst_rc.right - dst_rc.left;
             int h = dst_rc.bottom - dst_rc.top;
 
+            double dst_ar = (double)g_ddraw->height / g_ddraw->width;
+            double src_ar = (double)h / w;
+
             dst_rc.top = 0;
             dst_rc.left = 0;
             dst_rc.right = w;
-            dst_rc.bottom = (LONG)round(((double)g_ddraw->height / g_ddraw->width) * w);
+            dst_rc.bottom = (LONG)round(dst_ar * w);
 
-            if (dst_rc.bottom > h)
+            if (src_ar < dst_ar)
             {
                 dst_rc.right = (LONG)round(((double)dst_rc.right / dst_rc.bottom) * h);
                 dst_rc.bottom = h;
