@@ -804,16 +804,16 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
     }
     else if (g_config.maintas)
     {
-        float dst_ar = (float)g_ddraw->height / g_ddraw->width;
-        float src_ar = (float)g_ddraw->render.height / g_ddraw->render.width;
+        double dst_ar = (double)g_ddraw->height / g_ddraw->width;
+        double src_ar = (double)g_ddraw->render.height / g_ddraw->render.width;
 
         g_ddraw->render.viewport.width = g_ddraw->render.width;
-        g_ddraw->render.viewport.height = (int)roundf(dst_ar * g_ddraw->render.viewport.width);
+        g_ddraw->render.viewport.height = (int)round(dst_ar * g_ddraw->render.viewport.width);
 
         if (src_ar < dst_ar)
         {
             g_ddraw->render.viewport.width =
-                (int)roundf(((float)g_ddraw->render.viewport.width / g_ddraw->render.viewport.height) * g_ddraw->render.height);
+                (int)round(((double)g_ddraw->render.viewport.width / g_ddraw->render.viewport.height) * g_ddraw->render.height);
 
             g_ddraw->render.viewport.height = g_ddraw->render.height;
         }

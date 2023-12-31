@@ -314,8 +314,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         real_GetWindowLongA(hWnd, GWL_EXSTYLE)) &&
                     SetRect(&clientrc, 0, 0, clientrc.right - clientrc.left, clientrc.bottom - clientrc.top))
                 {
-                    float scaleH = (float)g_ddraw->height / g_ddraw->width;
-                    float scaleW = (float)g_ddraw->width / g_ddraw->height;
+                    double scaleH = (double)g_ddraw->height / g_ddraw->width;
+                    double scaleW = (double)g_ddraw->width / g_ddraw->height;
 
                     switch (wParam)
                     {
@@ -324,19 +324,19 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     case WMSZ_LEFT:
                     case WMSZ_RIGHT:
                     {
-                        windowrc->bottom += (LONG)(scaleH * clientrc.right - clientrc.bottom);
+                        windowrc->bottom += (LONG)round(scaleH * clientrc.right - clientrc.bottom);
                         break;
                     }
                     case WMSZ_TOP:
                     case WMSZ_BOTTOM:
                     {
-                        windowrc->right += (LONG)(scaleW * clientrc.bottom - clientrc.right);
+                        windowrc->right += (LONG)round(scaleW * clientrc.bottom - clientrc.right);
                         break;
                     }
                     case WMSZ_TOPRIGHT:
                     case WMSZ_TOPLEFT:
                     {
-                        windowrc->top -= (LONG)(scaleH * clientrc.right - clientrc.bottom);
+                        windowrc->top -= (LONG)round(scaleH * clientrc.right - clientrc.bottom);
                         break;
                     }
                     }
