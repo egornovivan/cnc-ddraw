@@ -324,19 +324,19 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     case WMSZ_LEFT:
                     case WMSZ_RIGHT:
                     {
-                        windowrc->bottom += (LONG)roundf(scaleH * clientrc.right - clientrc.bottom);
+                        windowrc->bottom += (LONG)(scaleH * clientrc.right - clientrc.bottom);
                         break;
                     }
                     case WMSZ_TOP:
                     case WMSZ_BOTTOM:
                     {
-                        windowrc->right += (LONG)roundf(scaleW * clientrc.bottom - clientrc.right);
+                        windowrc->right += (LONG)(scaleW * clientrc.bottom - clientrc.right);
                         break;
                     }
                     case WMSZ_TOPRIGHT:
                     case WMSZ_TOPLEFT:
                     {
-                        windowrc->top -= (LONG)roundf(scaleH * clientrc.right - clientrc.bottom);
+                        windowrc->top -= (LONG)(scaleH * clientrc.right - clientrc.bottom);
                         break;
                     }
                     }
