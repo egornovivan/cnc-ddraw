@@ -1405,7 +1405,7 @@ HRESULT dd_CreateSurface(
     else if (dst_surface->width && dst_surface->height)
     {
         dst_surface->bytes_pp = dst_surface->bpp / 8;
-        dst_surface->pitch = ((dst_surface->width * dst_surface->bpp + 31) & ~31) >> 3;
+        dst_surface->pitch = ((dst_surface->width * dst_surface->bpp + 63) & ~63) >> 3;
         dst_surface->size = dst_surface->pitch * dst_surface->height;
 
         DWORD aligned_width = dst_surface->pitch / dst_surface->bytes_pp;
@@ -1429,7 +1429,7 @@ HRESULT dd_CreateSurface(
         }
 
         dst_surface->bmi->bmiHeader.biSizeImage =
-            ((aligned_width * clr_bits + 31) & ~31) / 8 * dst_surface->height;
+            ((aligned_width * clr_bits + 63) & ~63) / 8 * dst_surface->height;
 
         if (dst_surface->bpp == 8)
         {

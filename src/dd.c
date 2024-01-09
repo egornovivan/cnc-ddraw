@@ -211,7 +211,7 @@ HRESULT dd_EnumDisplayModes(
                 s.dwRefreshRate = 60;
                 s.dwHeight = m.dmPelsHeight;
                 s.dwWidth = m.dmPelsWidth; 
-                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
                 s.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
@@ -237,7 +237,7 @@ HRESULT dd_EnumDisplayModes(
                 s.ddpfPixelFormat.dwRBitMask = 0xF800;
                 s.ddpfPixelFormat.dwGBitMask = 0x07E0;
                 s.ddpfPixelFormat.dwBBitMask = 0x001F;
-                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
@@ -262,7 +262,7 @@ HRESULT dd_EnumDisplayModes(
                 s.ddpfPixelFormat.dwRBitMask = 0xFF0000;
                 s.ddpfPixelFormat.dwGBitMask = 0x00FF00;
                 s.ddpfPixelFormat.dwBBitMask = 0x0000FF;
-                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+                s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
                 if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
                 {
@@ -331,7 +331,7 @@ HRESULT dd_EnumDisplayModes(
             s.dwRefreshRate = 60;
             s.dwHeight = resolutions[i].cy;
             s.dwWidth = resolutions[i].cx;
-            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
@@ -353,7 +353,7 @@ HRESULT dd_EnumDisplayModes(
             s.ddpfPixelFormat.dwRBitMask = 0xF800;
             s.ddpfPixelFormat.dwGBitMask = 0x07E0;
             s.ddpfPixelFormat.dwBBitMask = 0x001F;
-            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
@@ -378,7 +378,7 @@ HRESULT dd_EnumDisplayModes(
             s.ddpfPixelFormat.dwRBitMask = 0xFF0000;
             s.ddpfPixelFormat.dwGBitMask = 0x00FF00;
             s.ddpfPixelFormat.dwBBitMask = 0x0000FF;
-            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+            s.lPitch = ((s.dwWidth * s.ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
             if (s.ddpfPixelFormat.dwRGBBitCount == bpp_filter || !bpp_filter)
             {
@@ -481,7 +481,7 @@ HRESULT dd_GetDisplayMode(LPDDSURFACEDESC lpDDSurfaceDesc)
         lpDDSurfaceDesc->dwWidth = g_ddraw->width ? g_ddraw->width : 1024;
 
         lpDDSurfaceDesc->lPitch = 
-            ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+            ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
 
         if (g_ddraw->bpp == 32 || g_config.vermeer_hack)
         {
@@ -492,7 +492,7 @@ HRESULT dd_GetDisplayMode(LPDDSURFACEDESC lpDDSurfaceDesc)
             lpDDSurfaceDesc->ddpfPixelFormat.dwBBitMask = 0x0000FF;
 
             lpDDSurfaceDesc->lPitch =
-                ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+                ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
         }
         else if (g_ddraw->bpp != 8)
         {
@@ -503,7 +503,7 @@ HRESULT dd_GetDisplayMode(LPDDSURFACEDESC lpDDSurfaceDesc)
             lpDDSurfaceDesc->ddpfPixelFormat.dwBBitMask = 0x001F;
 
             lpDDSurfaceDesc->lPitch =
-                ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 31) & ~31) >> 3;
+                ((lpDDSurfaceDesc->dwWidth * lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount + 63) & ~63) >> 3;
         }
     }
 
