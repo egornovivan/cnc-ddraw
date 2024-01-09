@@ -156,7 +156,11 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
     if (src->bpp == 8 && src->palette)
     {
         if (!ss_screenshot_8bit(filename, src))
+        {
+            memcpy(&src->bmi->bmiColors[0], src->palette->data_rgb, 256 * sizeof(int));
+
             return ss_screenshot_bmp(filename, src);
+        }
 
         return TRUE;
     }
