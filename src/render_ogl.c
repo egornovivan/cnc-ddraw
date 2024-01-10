@@ -583,7 +583,7 @@ static void ogl_init_scale_program()
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
-        0);
+        g_ogl.surface_tex);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_ogl.frame_buffer_tex_id, 0);
 
