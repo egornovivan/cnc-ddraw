@@ -689,6 +689,7 @@ static void cfg_create_ini()
             "\n"
             "; Escape Velocity Nova\n"
             "[EV Nova]\n"
+            "nonexclusive=true\n"
             "hook_peekmessage=true\n"
             "rgb555=true\n"
             "keytogglefullscreen=0x46\n"
