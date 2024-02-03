@@ -29,7 +29,7 @@ void cfg_load()
 {
     cfg_init();
 
-    /* Optional settings */
+    /* Optional settings */ 
 
     GET_INT(g_config.window_rect.right, "width", 0);
     GET_INT(g_config.window_rect.bottom, "height", 0);
