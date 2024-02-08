@@ -40,7 +40,7 @@ void cfg_load()
     GET_INT(g_config.maxfps, "maxfps", -1);
     GET_BOOL(g_config.vsync, "vsync", FALSE);
     GET_BOOL(g_config.adjmouse, "adjmouse", TRUE);
-    GET_STRING("shader", "Shaders\\cubic\\catmull-rom-bilinear.glsl", g_config.shader, sizeof(g_config.shader));
+    GET_STRING("shader", "Shaders\\interpolation\\catmull-rom-bilinear.glsl", g_config.shader, sizeof(g_config.shader));
     GET_INT(g_config.window_rect.left, "posX", -32000);
     GET_INT(g_config.window_rect.top, "posY", -32000);
     GET_STRING("renderer", "auto", g_config.renderer, sizeof(g_config.renderer));
@@ -201,7 +201,7 @@ static void cfg_create_ini()
             "; 2x scaling example: https://imgur.com/a/kxsM1oY - 4x scaling example: https://imgur.com/a/wjrhpFV\n"
             "; You can specify a full path to a .glsl shader file here or use one of the values listed below\n"
             "; Possible values: Nearest neighbor, Bilinear, Bicubic, Lanczos, xBR-lv2\n"
-            "shader=Shaders\\cubic\\catmull-rom-bilinear.glsl\n"
+            "shader=Shaders\\interpolation\\catmull-rom-bilinear.glsl\n"
             "\n"
             "; Window position, -32000 = center to screen\n"
             "posX=-32000\n"
