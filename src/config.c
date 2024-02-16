@@ -1095,11 +1095,29 @@ static void cfg_init()
         }
     }
 
+    /* get dll filename and directory */
+    if (GetModuleFileNameA(g_ddraw_module, g_config.dll_path, sizeof(g_config.dll_path) - 1) > 0)
+    {
+        _splitpath(g_config.dll_path, NULL, NULL, g_config.dll_file_name, g_config.dll_file_ext);
+
+        int len = strlen(g_config.dll_path) - strlen(g_config.dll_file_name) - strlen(g_config.dll_file_ext);
+        char* end = strstr(g_config.dll_path + len, g_config.dll_file_name);
+
+        if (end)
+        {
+            *end = 0;
+        }
+        else
+        {
+            g_config.dll_path[0] = 0;
+        }
+    }
+
     if (!GetEnvironmentVariableA("CNC_DDRAW_CONFIG_FILE", g_config.ini_path, sizeof(g_config.ini_path) - 1))
     {
-        if (strlen(g_config.game_path) > 0)
+        if (strlen(g_config.dll_path) > 0 && strlen(g_config.dll_file_name) > 0)
         {
-            _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%sddraw.ini", g_config.game_path);
+            _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%s%s.ini", g_config.dll_path, g_config.dll_file_name);
 
             if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
             {
@@ -1108,7 +1126,7 @@ static void cfg_init()
 
             if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
             {
-                strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
+                _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%s%s.ini", g_config.dll_path, g_config.dll_file_name);
             }
         }
         else
