@@ -160,7 +160,7 @@ static void ogl_build_programs()
 
             if (GetFileAttributes(shader_path) == INVALID_FILE_ATTRIBUTES)
             {
-                _snprintf(shader_path, sizeof(shader_path) - 1, "%s%s", g_config.game_path, g_config.shader);
+                _snprintf(shader_path, sizeof(shader_path) - 1, "%s%s", g_config.dll_path, g_config.shader);
             }
 
             /* detect common upscaling shaders and disable them if no upscaling is required */

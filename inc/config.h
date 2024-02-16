@@ -13,8 +13,11 @@ typedef struct CNCDDRAWCONFIG
     int upscaled_state;
     char ini_path[MAX_PATH];
     char game_path[MAX_PATH];
+    char dll_path[MAX_PATH];
     char process_file_name[MAX_PATH];
+    char dll_file_name[MAX_PATH];
     char process_file_ext[MAX_PATH];
+    char dll_file_ext[MAX_PATH];
     INIFILE ini;
     BOOL is_wine;
     
