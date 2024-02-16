@@ -1117,7 +1117,10 @@ static void cfg_init()
     {
         if (strlen(g_config.dll_path) > 0 && strlen(g_config.dll_file_name) > 0)
         {
-            _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%s%s.ini", g_config.dll_path, g_config.dll_file_name);
+            _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%sddraw.ini", g_config.dll_path);
+
+            /* Use this here instead to sync .ini filename with .dll filename - by egornovivan @ github */
+            //_snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%s%s.ini", g_config.dll_path, g_config.dll_file_name);
 
             if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
             {
@@ -1126,7 +1129,8 @@ static void cfg_init()
 
             if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
             {
-                _snprintf(g_config.ini_path, sizeof(g_config.ini_path) - 1, "%s%s.ini", g_config.dll_path, g_config.dll_file_name);
+                /* This might not actually be needed, but we keep it for now */
+                strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
             }
         }
         else
