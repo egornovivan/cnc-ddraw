@@ -568,6 +568,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
 
         if (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE || 
             strcmp(class_name, "VideoRenderer") == 0 ||
+            strcmp(class_name, "MCIAVI") == 0 ||
             strcmp(class_name, "AVIWnd32") == 0 || 
             strcmp(class_name, "MCIWndClass") == 0)
         {

@@ -763,6 +763,7 @@ BOOL WINAPI fake_StretchBlt(
         (hwnd == g_ddraw->hwnd ||
             (g_config.fixchilds && IsChild(g_ddraw->hwnd, hwnd) &&
                 (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE ||
+                    strcmp(class_name, "MCIAVI") == 0 ||
                     strcmp(class_name, "AVIWnd32") == 0 ||
                     strcmp(class_name, "MCIWndClass") == 0))))
     {
@@ -864,7 +865,22 @@ int WINAPI fake_StretchDIBits(
     UINT iUsage,
     DWORD rop)
 {
-    if (g_ddraw && g_ddraw->hwnd && WindowFromDC(hdc) == g_ddraw->hwnd)
+    HWND hwnd = WindowFromDC(hdc);
+
+    char class_name[MAX_PATH] = { 0 };
+
+    if (g_ddraw && g_ddraw->hwnd && hwnd && hwnd != g_ddraw->hwnd)
+    {
+        GetClassNameA(hwnd, class_name, sizeof(class_name) - 1);
+    }
+
+    if (g_ddraw && g_ddraw->hwnd &&
+        (hwnd == g_ddraw->hwnd ||
+            (g_config.fixchilds && IsChild(g_ddraw->hwnd, hwnd) &&
+                (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE ||
+                    strcmp(class_name, "MCIAVI") == 0 ||
+                    strcmp(class_name, "AVIWnd32") == 0 ||
+                    strcmp(class_name, "MCIWndClass") == 0))))
     {
         if (g_ddraw->primary && (g_ddraw->primary->bpp == 16 || g_ddraw->primary->bpp == 32 || g_ddraw->primary->palette))
         {
@@ -894,11 +910,11 @@ int WINAPI fake_StretchDIBits(
                 return result;
             }
         }
-        else if (g_ddraw->width > 0)
+        else if (g_ddraw->width > 0 && g_ddraw->render.hdc)
         {
             return
                 real_StretchDIBits(
-                    hdc,
+                    g_ddraw->render.hdc,
                     xDest + g_ddraw->render.viewport.x,
                     yDest + g_ddraw->render.viewport.y,
                     (int)(DestWidth * g_ddraw->render.scale_w),
