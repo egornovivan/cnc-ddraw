@@ -26,6 +26,8 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
     {
+        g_ddraw_module = hDll;
+
         if (GetEnvironmentVariableW(L"cnc_ddraw_config_init", NULL, 0))
         {
             cfg_load();
@@ -39,8 +41,6 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 #endif
 
         cfg_load();
-
-        g_ddraw_module = hDll;
 
         char buf[1024];
 
