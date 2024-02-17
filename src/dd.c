@@ -1033,6 +1033,8 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
                 (g_ddraw->render.mode.dmPelsWidth != real_GetSystemMetrics(SM_CXSCREEN) || 
                     g_ddraw->render.mode.dmPelsHeight != real_GetSystemMetrics(SM_CYSCREEN)))
             {
+                ChangeDisplaySettings(NULL, 0);
+
                 g_ddraw->render.run = FALSE;
                 g_config.windowed = TRUE;
                 g_config.fullscreen = TRUE;
