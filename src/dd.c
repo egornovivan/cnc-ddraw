@@ -1015,13 +1015,29 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
             }
         }
 
-        if ((!d3d9_active || g_config.nonexclusive) &&
-            ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+        if (!d3d9_active || g_config.nonexclusive)
         {
-            g_ddraw->render.run = FALSE;
-            g_config.windowed = TRUE;
-            g_config.fullscreen = TRUE;
-            return dd_SetDisplayMode(dwWidth, dwHeight, dwBPP, dwFlags);
+            if (ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+            {
+                g_ddraw->render.run = FALSE;
+                g_config.windowed = TRUE;
+                g_config.fullscreen = TRUE;
+                return dd_SetDisplayMode(dwWidth, dwHeight, dwBPP, dwFlags);
+            }
+
+            /* 
+                Fix wayland bug: 
+                ChangeDisplaySettings fails silently - enable borderless mode in case display resolution was not changed 
+            */
+            if (g_config.is_wine && 
+                (g_ddraw->render.mode.dmPelsWidth != real_GetSystemMetrics(SM_CXSCREEN) || 
+                    g_ddraw->render.mode.dmPelsHeight != real_GetSystemMetrics(SM_CYSCREEN)))
+            {
+                g_ddraw->render.run = FALSE;
+                g_config.windowed = TRUE;
+                g_config.fullscreen = TRUE;
+                return dd_SetDisplayMode(dwWidth, dwHeight, dwBPP, dwFlags);
+            }
         }
 
         if (g_config.is_wine)
