@@ -35,6 +35,12 @@ void fpsl_init()
         g_fpsl.D3DKMTCloseAdapter(&g_fpsl.close_adapter);
     }
 
+    if (!g_fpsl.cs_initialized)
+    {
+        g_fpsl.cs_initialized = TRUE;
+        InitializeCriticalSection(&g_fpsl.cs);
+    }
+
     if (!g_fpsl.gdi32_dll)
     {
         g_fpsl.gdi32_dll = real_LoadLibraryA("gdi32.dll");
@@ -78,19 +84,26 @@ void fpsl_init()
     g_fpsl.initialized = TRUE;
 }
 
-BOOL fpsl_wait_for_vblank(BOOL open_adapter)
+BOOL fpsl_wait_for_vblank()
 {
     if (g_fpsl.initialized)
     {
-        if (open_adapter && g_fpsl.D3DKMTOpenAdapterFromHdc && !g_fpsl.got_adapter)
+        if (!g_fpsl.got_adapter && g_fpsl.D3DKMTOpenAdapterFromHdc && g_ddraw->render.hdc)
         {
-            g_fpsl.adapter.hDc = g_ddraw->render.hdc;
+            EnterCriticalSection(&g_fpsl.cs);
 
-            if (g_fpsl.D3DKMTOpenAdapterFromHdc(&g_fpsl.adapter) == 0)
+            if (!g_fpsl.got_adapter)
             {
-                g_fpsl.vblank_event.hAdapter = g_fpsl.adapter.hAdapter;
-                g_fpsl.got_adapter = TRUE;
+                g_fpsl.adapter.hDc = g_ddraw->render.hdc;
+
+                if (g_fpsl.D3DKMTOpenAdapterFromHdc(&g_fpsl.adapter) == 0)
+                {
+                    g_fpsl.vblank_event.hAdapter = g_fpsl.adapter.hAdapter;
+                    g_fpsl.got_adapter = TRUE;
+                }
             }
+
+            LeaveCriticalSection(&g_fpsl.cs);
         }
 
         if (g_fpsl.got_adapter && g_fpsl.D3DKMTWaitForVerticalBlankEvent)
@@ -104,7 +117,19 @@ BOOL fpsl_wait_for_vblank(BOOL open_adapter)
 
 BOOL fpsl_dwm_flush()
 {
-    return g_fpsl.initialized && fpsl_dwm_is_enabled() && g_fpsl.DwmFlush && SUCCEEDED(g_fpsl.DwmFlush());
+    if (g_fpsl.initialized && fpsl_dwm_is_enabled() && g_fpsl.DwmFlush)
+    {
+        HRESULT x = g_fpsl.DwmFlush();
+
+        if (!SUCCEEDED(x))
+        {
+            //TRACE(" ERROR %s(result=%08X)\n", __FUNCTION__, x);
+        }
+
+        return SUCCEEDED(x);
+    }
+
+    return FALSE;
 }
 
 BOOL fpsl_dwm_is_enabled()
@@ -128,7 +153,7 @@ void fpsl_frame_end()
     if (g_config.maxfps < 0 || 
         (g_config.vsync && (!g_config.maxfps || g_config.maxfps >= g_ddraw->mode.dmDisplayFrequency)))
     {
-        if (fpsl_dwm_flush() || fpsl_wait_for_vblank(TRUE))
+        if (fpsl_dwm_flush() || fpsl_wait_for_vblank())
             return;
     }
 

@@ -48,12 +48,14 @@ typedef struct FPSLIMITER
     D3DKMTCLOSEADAPTERPROC D3DKMTCloseAdapter;
     BOOL got_adapter;
     BOOL initialized;
+    CRITICAL_SECTION cs;
+    BOOL cs_initialized;
 } FPSLIMITER;
 
 extern FPSLIMITER g_fpsl;
 
 void fpsl_init();
-BOOL fpsl_wait_for_vblank(BOOL open_adapter);
+BOOL fpsl_wait_for_vblank();
 BOOL fpsl_dwm_flush();
 BOOL fpsl_dwm_is_enabled();
 void fpsl_frame_start();
