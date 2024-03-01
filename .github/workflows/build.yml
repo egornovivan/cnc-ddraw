@@ -1,0 +1,130 @@
+name: Build
+
+on:
+ push:
+  branches:
+  - 'master'
+  - 'develop'
+  - 'github-action'
+  paths:
+  - '.github/workflows/build.yml'
+  - 'action.yml'
+
+jobs:
+ Build:
+  runs-on: windows-2019
+  steps:
+
+#  - name: Install Windows XP Support for Visual Studio 2022 # windows-2022 # v141_xp # Installation takes more than 5 minutes
+#    run: |
+#         Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
+#         $InstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+#         $componentsToAdd = @(
+#           "Microsoft.VisualStudio.Component.WinXP"
+#         )
+#         [string]$workloadArgs = $componentsToAdd | ForEach-Object {" --add " +  $_}
+#         $Arguments = ('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"",$workloadArgs, '--quiet', '--norestart', '--nocache')
+#         $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+#         if ($process.ExitCode -eq 0)
+#         {
+#           Write-Host "components have been successfully added"
+#           Get-ChildItem C:\ProgramData\Microsoft\VisualStudio\Packages\Microsoft.Windows.XPSupport.*
+#         }
+#         else
+#         {
+#           Write-Host "components were not installed"
+#           exit 1
+#         }
+
+  - name: Clone cnc-ddraw
+    uses: actions/checkout@v4
+
+  - name: Release build
+    id: build-release
+    uses: ./
+    with:
+     release: true
+
+  - name: ReleaseWin2000 build
+    id: build-releasewin2000
+    uses: ./
+    with:
+     releasewin2000: true
+
+  - name: Debug build
+    id: build-debug
+    uses: ./
+    with:
+     debug: true
+
+  - name: DebugLog build
+    id: build-debuglog
+    uses: ./
+    with:
+     debuglog: true
+
+  - name: DebugLogMini build
+    id: build-debuglogmini
+    uses: ./
+    with:
+     debuglogmini: true
+
+  - name:  Prepare artifact
+    run:   |
+           :
+
+           mkdir -p cnc-ddraw-release
+           mkdir -p cnc-ddraw-releasewin2000
+           mkdir -p cnc-ddraw-debug
+           mkdir -p cnc-ddraw-debuglog
+           mkdir -p cnc-ddraw-debuglogmini
+
+           cp "${{ steps.build-release.outputs.release }}" cnc-ddraw-release
+
+           cp "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" cnc-ddraw-releasewin2000
+
+           cp "${{ steps.build-debug.outputs.debug }}" cnc-ddraw-debug
+           cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
+
+           cp "${{ steps.build-debuglog.outputs.debuglog }}" cnc-ddraw-debuglog
+           cp "${{ steps.build-debuglog.outputs.debuglog-pdb }}" cnc-ddraw-debuglog
+
+           cp "${{ steps.build-debuglogmini.outputs.debuglogmini }}" cnc-ddraw-debuglogmini
+           cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
+           
+    shell: bash
+
+  - name: Upload artifacts cnc-ddraw-release
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-release
+     path: cnc-ddraw-release
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-releasewin2000
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-releasewin2000
+     path: cnc-ddraw-releasewin2000
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-debug
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-debug
+     path: cnc-ddraw-debug
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-debuglog
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-debuglog
+     path: cnc-ddraw-debuglog
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-debuglogmini
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-debuglogmini
+     path: cnc-ddraw-debuglogmini
+     retention-days: 14
