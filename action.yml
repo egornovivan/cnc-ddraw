@@ -1,0 +1,198 @@
+#name:        'sfall'
+#description: 'Builds sfall binaries'
+#author:      '@wipe2238'
+
+###
+#
+# Example:
+#
+# - name: Build sfall
+#   id:   sfall
+#   uses: phobos2077/sfall@develop
+#   with:
+#    release-xp: true
+#
+# - name: Copy sfall to mod directory
+#   run:  copy "${{ steps.sfall.outputs.release-xp }}" "my/mod/directory/ddraw.dll"
+#
+###
+
+# While both inputs are marked as required, users needs to set only one of them (at minimum) to 'true' for action to work
+inputs:
+
+ release:
+  description: 'Set to true to enable building with Release configuration'
+  required:    true
+
+ releasewin2000:
+  description: 'Set to true to enable building with ReleaseWin2000 configuration'
+  required:    true
+
+ debug:
+  description: 'Set to true to enable building with Debug configuration'
+  required:    true
+
+ debuglog:
+  description: 'Set to true to enable building with DebugLog configuration'
+  required:    true
+
+ debuglogmini:
+  description: 'Set to true to enable building with DebugLogMini configuration'
+  required:    true
+
+# Outputs are always using Windows directory separator (`\`)
+outputs:
+
+ release:
+  description:  'Full path to ddraw.dll built with Release configuration'
+  value:         ${{ steps.build-release.outputs.ddraw-dll }}
+
+ releasewin2000:
+  description:  'Full path to ddraw.dll built with ReleaseWin2000 configuration'
+  value:         ${{ steps.build-releasewin2000.outputs.ddraw-dll }}
+
+ debug:
+  description: 'Full path to ddraw.dll built with Debug configuration'
+  value:       ${{ steps.build-debug.outputs.ddraw-dll }}
+ debug-pdb:
+  description: 'Full path to ddraw.pdb built with Debug configuration'
+  value:       ${{ steps.build-debug.outputs.ddraw-pdb }}
+
+ debuglog:
+  description: 'Full path to ddraw.dll built with DebugLog configuration'
+  value:       ${{ steps.build-debuglog.outputs.ddraw-dll }}
+ debuglog-pdb:
+  description: 'Full path to ddraw.pdb built with DebugLog configuration'
+  value:       ${{ steps.build-debuglog.outputs.ddraw-pdb }}
+
+ debuglogmini:
+  description: 'Full path to ddraw.dll built with DebugLogMini configuration'
+  value:       ${{ steps.build-debuglogmini.outputs.ddraw-dll }}
+ debuglogmini-pdb:
+  description: 'Full path to ddraw.pdb built with DebugLogMini configuration'
+  value:       ${{ steps.build-debuglogmini.outputs.ddraw-pdb }}
+
+runs:
+ using: 'composite'
+ steps:
+
+ # Quick check for things which should never happen
+ - name:  Sanity checks
+   run:   |
+          if   [[ "${{ runner.os }}" != "Windows" ]]; then
+               echo "[ERROR] This action can only be used on Windows"
+               exit 1
+          elif [[ "${{ inputs.release }}" != "true" ]] && [[ "${{ inputs.releasewin2000 }}" != "true" ]] && [[ "${{ inputs.debug }}" != "true" ]] && [[ "${{ inputs.debuglog }}" != "true" ]] && [[ "${{ inputs.debuglogmini }}" != "true" ]]; then
+               echo "[ERROR] At least one of following inputs must be set to 'true' -- 'release', 'releasewin2000', 'debug', 'debuglog', 'debuglogmini'"
+               exit 1
+          #
+          elif [[ ! -f "$(cygpath --unix "$GITHUB_ACTION_PATH/cnc-ddraw.sln")" ]]; then
+               echo "[ERROR] Solution file not found -- '\\cnc-ddraw.sln'"
+               exit 1
+          fi
+          #
+   shell: bash
+
+ # MSBuild is not in PATH on Windows machines
+ # Using `::set-output` to make sure workflow environment remains unchanged
+ - name:  Prepare MSBuild
+   id:    msbuild
+   run:   |
+          echo "::group::Prepare MSBuild"
+
+          MSBUILD_EXE="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
+          echo "exe=$MSBUILD_EXE" >> $GITHUB_OUTPUT
+
+          echo "::endgroup::"
+   shell: bash
+
+ # Creating empty `PostBuild.cmd` to avoid false-positive build error
+ - name:  Build Release
+   id:    build-release
+   run:   |
+          if [[ "${{ inputs.release }}" == "true" ]]; then
+             echo ::group::Build Release
+
+             #
+             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=Release -p:Platform=x86 -p:PlatformToolset=v141_xp
+             #
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Release/ddraw.dll")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
+
+ # Creating empty `PostBuild.cmd` to avoid false-positive build error
+ - name:  Build ReleaseWin2000
+   id:    build-releasewin2000
+   run:   |
+          if [[ "${{ inputs.releasewin2000 }}" == "true" ]]; then
+             echo ::group::Build ReleaseWin2000
+
+             #
+             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=ReleaseWin2000 -p:Platform=x86 -p:PlatformToolset=v141_xp
+             #
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/ReleaseWin2000/ddraw.dll")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
+
+ # Creating empty `PostBuild.cmd` to avoid false-positive build error
+ - name: Build Debug
+   id:   build-debug
+   run:   |
+          :
+          if [[ "${{ inputs.debug }}" == "true" ]]; then
+             echo "::group::Build Debug"
+
+             #
+             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=Debug -p:Platform=x86 -p:PlatformToolset=v141_xp
+             #
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Debug/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Debug/ddraw.pdb")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
+
+ # Creating empty `PostBuild.cmd` to avoid false-positive build error
+ - name: Build DebugLog
+   id:   build-debuglog
+   run:   |
+          :
+          if [[ "${{ inputs.debuglog }}" == "true" ]]; then
+             echo "::group::Build DebugLog"
+
+             #
+             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=DebugLog -p:Platform=x86 -p:PlatformToolset=v141_xp
+             #
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLog/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLog/ddraw.pdb")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
+
+ # Creating empty `PostBuild.cmd` to avoid false-positive build error
+ - name: Build DebugLogMini
+   id:   build-debuglogmini
+   run:   |
+          :
+          if [[ "${{ inputs.debuglogmini }}" == "true" ]]; then
+             echo "::group::Build DebugLogMini"
+
+             #
+             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=DebugLogMini -p:Platform=x86 -p:PlatformToolset=v141_xp
+             #
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLogMini/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLogMini/ddraw.pdb")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
