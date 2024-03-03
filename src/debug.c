@@ -22,7 +22,7 @@ static BOOL g_dbg_log_rotate;
 #ifdef _DEBUG 
 static int g_dbg_crash_count = 0;
 
-int dbg_exception_handler(EXCEPTION_POINTERS* exception)
+LONG WINAPI dbg_exception_handler(EXCEPTION_POINTERS* exception)
 {
     g_dbg_crash_count++;
 
