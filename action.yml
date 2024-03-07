@@ -1,23 +1,3 @@
-#name:        'sfall'
-#description: 'Builds sfall binaries'
-#author:      '@wipe2238'
-
-###
-#
-# Example:
-#
-# - name: Build sfall
-#   id:   sfall
-#   uses: phobos2077/sfall@develop
-#   with:
-#    release-xp: true
-#
-# - name: Copy sfall to mod directory
-#   run:  copy "${{ steps.sfall.outputs.release-xp }}" "my/mod/directory/ddraw.dll"
-#
-###
-
-# While both inputs are marked as required, users needs to set only one of them (at minimum) to 'true' for action to work
 inputs:
 
  release:
@@ -40,16 +20,30 @@ inputs:
   description: 'Set to true to enable building with DebugLogMini configuration'
   required:    true
 
+ releaseconfig:
+  description: 'Set to true to enable building with Release configuration'
+  required:    true
+
+ debugconfig:
+  description: 'Set to true to enable building with Debug configuration'
+  required:    true
+
 # Outputs are always using Windows directory separator (`\`)
 outputs:
 
  release:
-  description:  'Full path to ddraw.dll built with Release configuration'
-  value:         ${{ steps.build-release.outputs.ddraw-dll }}
+  description: 'Full path to ddraw.dll built with Release configuration'
+  value:       ${{ steps.build-release.outputs.ddraw-dll }}
+ release-pdb:
+  description: 'Full path to ddraw.pdb built with Release configuration'
+  value:       ${{ steps.build-release.outputs.ddraw-pdb }}
 
  releasewin2000:
-  description:  'Full path to ddraw.dll built with ReleaseWin2000 configuration'
-  value:         ${{ steps.build-releasewin2000.outputs.ddraw-dll }}
+  description: 'Full path to ddraw.dll built with ReleaseWin2000 configuration'
+  value:       ${{ steps.build-releasewin2000.outputs.ddraw-dll }}
+ releasewin2000-pdb:
+  description: 'Full path to ddraw.pdb built with ReleaseWin2000 configuration'
+  value:       ${{ steps.build-releasewin2000.outputs.ddraw-pdb }}
 
  debug:
   description: 'Full path to ddraw.dll built with Debug configuration'
@@ -72,6 +66,20 @@ outputs:
   description: 'Full path to ddraw.pdb built with DebugLogMini configuration'
   value:       ${{ steps.build-debuglogmini.outputs.ddraw-pdb }}
 
+ releaseconfig:
+  description: 'Full path to cnc-ddraw config.exe built with Release configuration'
+  value:       ${{ steps.build-releaseconfig.outputs.config-exe }}
+ releaseconfig-pdb:
+  description: 'Full path to cnc-ddraw config.pdb built with Release configuration'
+  value:       ${{ steps.build-releaseconfig.outputs.config-pdb }}
+
+ debugconfig:
+  description: 'Full path to cnc-ddraw config.exe built with Debug configuration'
+  value:       ${{ steps.build-debugconfig.outputs.config-exe }}
+ debugconfig-pdb:
+  description: 'Full path to cnc-ddraw config.pdb built with Debug configuration'
+  value:       ${{ steps.build-debugconfig.outputs.config-pdb }}
+
 runs:
  using: 'composite'
  steps:
@@ -82,15 +90,56 @@ runs:
           if   [[ "${{ runner.os }}" != "Windows" ]]; then
                echo "[ERROR] This action can only be used on Windows"
                exit 1
-          elif [[ "${{ inputs.release }}" != "true" ]] && [[ "${{ inputs.releasewin2000 }}" != "true" ]] && [[ "${{ inputs.debug }}" != "true" ]] && [[ "${{ inputs.debuglog }}" != "true" ]] && [[ "${{ inputs.debuglogmini }}" != "true" ]]; then
-               echo "[ERROR] At least one of following inputs must be set to 'true' -- 'release', 'releasewin2000', 'debug', 'debuglog', 'debuglogmini'"
-               exit 1
-          #
           elif [[ ! -f "$(cygpath --unix "$GITHUB_ACTION_PATH/cnc-ddraw.sln")" ]]; then
-               echo "[ERROR] Solution file not found -- '\\cnc-ddraw.sln'"
+               echo "[ERROR] Solution file not found -- '/cnc-ddraw.sln'"
+               exit 1
+          elif [[ ! -f "$(cygpath --unix "$GITHUB_ACTION_PATH/config/cnc-ddraw config.cbproj")" ]]; then
+               echo "[ERROR] Solution file not found -- '/config/cnc-ddraw config.cbproj'"
                exit 1
           fi
-          #
+   shell: bash
+
+ - name:  Prepare RAD Studio
+   id:    radstudio
+   run:   |
+          if [[ "${{ inputs.releaseconfig }}" == "true" ]] || [[ "${{ inputs.debugconfig }}" == "true" ]]; then
+             echo "::group::Prepare RAD Studio"
+             
+             if [[ ! -d "$GITHUB_ACTION_PATH/Embarcadero" ]]; then
+             
+                cd "$GITHUB_ACTION_PATH"
+                curl -o "$GITHUB_ACTION_PATH/Embarcadero.7z" "https:/www.googleapis.com/drive/v3/files/1SjvOu3yOnsoRtivNgIhsBV8nA2DQXJmt?alt=media&key=AIzaSyAA9ERw-9LZVEohRYtCWka_TQc6oXmvcVU"
+                7z x "Embarcadero.7z"
+             
+             fi
+             
+             echo "allusersprofile=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "appdata=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "bcb=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "bds=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "bdsbin=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/bin/")" >> $GITHUB_OUTPUT
+             echo "bdscatalogrepository=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/CatalogRepository/")" >> $GITHUB_OUTPUT
+             echo "bdscatalogrepositoryallusers=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/CatalogRepository/")" >> $GITHUB_OUTPUT
+             echo "bdscommondir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "bdsinclude=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/include/")" >> $GITHUB_OUTPUT
+             echo "bdslib=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/lib/")" >> $GITHUB_OUTPUT
+             echo "bdsplatformsdksdir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/SDKs/")" >> $GITHUB_OUTPUT
+             echo "bdsprofilesdir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/Profiles/")" >> $GITHUB_OUTPUT
+             echo "bdsprojectsdir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/Projects/")" >> $GITHUB_OUTPUT
+             echo "bdsuserdir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "commonprogramfiles=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "commonprogramfiles_x86_=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "commonprogramw6432=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "delphi=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "ibredistdir=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/InterBase/redist/InterBase2020/")" >> $GITHUB_OUTPUT
+             echo "localappdata=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "path=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/InterBase/redist/InterBase2020/IDE_spoof/");$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/bin/");$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/Bpl/");$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/bin64/");$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/Documents/Embarcadero/Studio/23.0/Bpl/Win64/");$PATH" >> $GITHUB_OUTPUT
+             echo "programdata=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "public=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             echo "userprofile=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
+             
+             echo "::endgroup::"
+          fi
    shell: bash
 
  # MSBuild is not in PATH on Windows machines
@@ -106,52 +155,45 @@ runs:
           echo "::endgroup::"
    shell: bash
 
- # Creating empty `PostBuild.cmd` to avoid false-positive build error
  - name:  Build Release
    id:    build-release
    run:   |
           if [[ "${{ inputs.release }}" == "true" ]]; then
-             echo ::group::Build Release
+             echo "::group::Build Release"
 
-             #
-             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
              "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=Release -p:Platform=x86 -p:PlatformToolset=v141_xp
-             #
+
              echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Release/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Release/ddraw.pdb")" >> $GITHUB_OUTPUT
 
              echo "::endgroup::"
           fi
    shell: bash
 
- # Creating empty `PostBuild.cmd` to avoid false-positive build error
  - name:  Build ReleaseWin2000
    id:    build-releasewin2000
    run:   |
           if [[ "${{ inputs.releasewin2000 }}" == "true" ]]; then
-             echo ::group::Build ReleaseWin2000
+             echo "::group::Build ReleaseWin2000"
 
-             #
-             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
              "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=ReleaseWin2000 -p:Platform=x86 -p:PlatformToolset=v141_xp
-             #
+
              echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/ReleaseWin2000/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/ReleaseWin2000/ddraw.pdb")" >> $GITHUB_OUTPUT
 
              echo "::endgroup::"
           fi
    shell: bash
 
- # Creating empty `PostBuild.cmd` to avoid false-positive build error
- - name: Build Debug
-   id:   build-debug
+ - name:  Build Debug
+   id:    build-debug
    run:   |
           :
           if [[ "${{ inputs.debug }}" == "true" ]]; then
              echo "::group::Build Debug"
 
-             #
-             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
              "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=Debug -p:Platform=x86 -p:PlatformToolset=v141_xp
-             #
+
              echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Debug/ddraw.dll")" >> $GITHUB_OUTPUT
              echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/Debug/ddraw.pdb")" >> $GITHUB_OUTPUT
 
@@ -159,18 +201,15 @@ runs:
           fi
    shell: bash
 
- # Creating empty `PostBuild.cmd` to avoid false-positive build error
- - name: Build DebugLog
-   id:   build-debuglog
+ - name:  Build DebugLog
+   id:    build-debuglog
    run:   |
           :
           if [[ "${{ inputs.debuglog }}" == "true" ]]; then
              echo "::group::Build DebugLog"
 
-             #
-             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
              "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=DebugLog -p:Platform=x86 -p:PlatformToolset=v141_xp
-             #
+
              echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLog/ddraw.dll")" >> $GITHUB_OUTPUT
              echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLog/ddraw.pdb")" >> $GITHUB_OUTPUT
 
@@ -178,21 +217,99 @@ runs:
           fi
    shell: bash
 
- # Creating empty `PostBuild.cmd` to avoid false-positive build error
- - name: Build DebugLogMini
-   id:   build-debuglogmini
+ - name:  Build DebugLogMini
+   id:    build-debuglogmini
    run:   |
           :
           if [[ "${{ inputs.debuglogmini }}" == "true" ]]; then
              echo "::group::Build DebugLogMini"
 
-             #
-             # echo "@echo off" > "$GITHUB_ACTION_PATH/sfall/PostBuild.cmd"
              "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=DebugLogMini -p:Platform=x86 -p:PlatformToolset=v141_xp
-             #
+
              echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLogMini/ddraw.dll")" >> $GITHUB_OUTPUT
              echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/DebugLogMini/ddraw.pdb")" >> $GITHUB_OUTPUT
 
              echo "::endgroup::"
           fi
+   shell: bash
+
+ - name:  Build Release Config
+   id:    build-releaseconfig
+   run:   |
+          if [[ "${{ inputs.releaseconfig }}" == "true" ]]; then
+             echo "::group::Build Release Config"
+
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/config/cnc-ddraw config.cbproj" -p:Config=Release -p:Platform=Win32
+
+             echo "config-exe=$(cygpath --windows "$GITHUB_ACTION_PATH/config/Win32/Release/cnc-ddraw config.exe")" >> $GITHUB_OUTPUT
+             echo "config-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/config/Win32/Release/cnc-ddraw config.pdb")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   env:
+    ALLUSERSPROFILE: ${{ steps.radstudio.outputs.allusersprofile }}
+    APPDATA: ${{ steps.radstudio.outputs.appdata }}
+    BCB: ${{ steps.radstudio.outputs.bcb }}
+    BDS: ${{ steps.radstudio.outputs.bds }}
+    BDSBIN: ${{ steps.radstudio.outputs.bdsbin }}
+    BDSCOMMONDIR: ${{ steps.radstudio.outputs.bdscommondir }}
+    BDSCatalogRepository: ${{ steps.radstudio.outputs.bdscatalogrepository }}
+    BDSCatalogRepositoryAllUsers: ${{ steps.radstudio.outputs.bdscatalogrepositoryallusers }}
+    BDSINCLUDE: ${{ steps.radstudio.outputs.bdsinclude }}
+    BDSLIB: ${{ steps.radstudio.outputs.bdslib }}
+    BDSPLATFORMSDKSDIR: ${{ steps.radstudio.outputs.bdsplatformsdksdir }}
+    BDSPROFILESDIR: ${{ steps.radstudio.outputs.bdsprofilesdir }}
+    BDSPROJECTSDIR: ${{ steps.radstudio.outputs.bdsprojectsdir }}
+    BDSUSERDIR: ${{ steps.radstudio.outputs.bdsuserdir }}
+    CommonProgramFiles_x86_: ${{ steps.radstudio.outputs.commonprogramfiles_x86_ }}
+    CommonProgramFiles: ${{ steps.radstudio.outputs.commonprogramfiles }}
+    CommonProgramW6432: ${{ steps.radstudio.outputs.commonprogramw6432 }}
+    DELPHI: ${{ steps.radstudio.outputs.delphi }}
+    IBREDISTDIR: ${{ steps.radstudio.outputs.ibredistdir }}
+    LOCALAPPDATA: ${{ steps.radstudio.outputs.localappdata }}
+    PATH: ${{ steps.radstudio.outputs.path }}
+    PUBLIC: ${{ steps.radstudio.outputs.public }}
+    ProgramData: ${{ steps.radstudio.outputs.programdata }}
+    USERPROFILE: ${{ steps.radstudio.outputs.userprofile }}
+   shell: bash
+
+ - name:  Build Debug Config
+   id:    build-debugconfig
+   run:   |
+          :
+          if [[ "${{ inputs.debugconfig }}" == "true" ]]; then
+             echo "::group::Build Debug Config"
+
+             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/config/cnc-ddraw config.cbproj" -p:Config=Debug -p:Platform=Win32
+
+             echo "config-exe=$(cygpath --windows "$GITHUB_ACTION_PATH/config/Win32/Debug/cnc-ddraw config.exe")" >> $GITHUB_OUTPUT
+             echo "config-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/config/Win32/Debug/cnc-ddraw config.pdb")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   env:
+    ALLUSERSPROFILE: ${{ steps.radstudio.outputs.allusersprofile }}
+    APPDATA: ${{ steps.radstudio.outputs.appdata }}
+    BCB: ${{ steps.radstudio.outputs.bcb }}
+    BDS: ${{ steps.radstudio.outputs.bds }}
+    BDSBIN: ${{ steps.radstudio.outputs.bdsbin }}
+    BDSCOMMONDIR: ${{ steps.radstudio.outputs.bdscommondir }}
+    BDSCatalogRepository: ${{ steps.radstudio.outputs.bdscatalogrepository }}
+    BDSCatalogRepositoryAllUsers: ${{ steps.radstudio.outputs.bdscatalogrepositoryallusers }}
+    BDSINCLUDE: ${{ steps.radstudio.outputs.bdsinclude }}
+    BDSLIB: ${{ steps.radstudio.outputs.bdslib }}
+    BDSPLATFORMSDKSDIR: ${{ steps.radstudio.outputs.bdsplatformsdksdir }}
+    BDSPROFILESDIR: ${{ steps.radstudio.outputs.bdsprofilesdir }}
+    BDSPROJECTSDIR: ${{ steps.radstudio.outputs.bdsprojectsdir }}
+    BDSUSERDIR: ${{ steps.radstudio.outputs.bdsuserdir }}
+    CommonProgramFiles_x86_: ${{ steps.radstudio.outputs.commonprogramfiles_x86_ }}
+    CommonProgramFiles: ${{ steps.radstudio.outputs.commonprogramfiles }}
+    CommonProgramW6432: ${{ steps.radstudio.outputs.commonprogramw6432 }}
+    DELPHI: ${{ steps.radstudio.outputs.delphi }}
+    IBREDISTDIR: ${{ steps.radstudio.outputs.ibredistdir }}
+    LOCALAPPDATA: ${{ steps.radstudio.outputs.localappdata }}
+    PATH: ${{ steps.radstudio.outputs.path }}
+    PUBLIC: ${{ steps.radstudio.outputs.public }}
+    ProgramData: ${{ steps.radstudio.outputs.programdata }}
+    USERPROFILE: ${{ steps.radstudio.outputs.userprofile }}
    shell: bash

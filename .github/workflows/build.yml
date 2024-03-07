@@ -6,9 +6,6 @@ on:
   - 'master'
   - 'develop'
   - 'github-action'
-  paths:
-  - '.github/workflows/build.yml'
-  - 'action.yml'
 
 jobs:
  Build:
@@ -69,19 +66,52 @@ jobs:
     with:
      debuglogmini: true
 
+  - name: Release build config
+    id: build-releaseconfig
+    uses: ./
+    with:
+     releaseconfig: true
+
+  - name: Debug build config
+    id: build-debugconfig
+    uses: ./
+    with:
+     debugconfig: true
+
   - name:  Prepare artifact
     run:   |
            :
 
            mkdir -p cnc-ddraw-release
+           mkdir -p cnc-ddraw-release-pdb
            mkdir -p cnc-ddraw-releasewin2000
+           mkdir -p cnc-ddraw-releasewin2000-pdb
            mkdir -p cnc-ddraw-debug
            mkdir -p cnc-ddraw-debuglog
            mkdir -p cnc-ddraw-debuglogmini
+           #mkdir -p cnc-ddraw-releaseconfig-pdb
+           mkdir -p cnc-ddraw-debugconfig
+
+           curl -o "glsl-shaders-master.zip" "https://codeload.github.com/libretro/glsl-shaders/zip/refs/heads/master"
+           7z x "glsl-shaders-master.zip"
+           cp -r glsl-shaders-master cnc-ddraw-release/Shaders
+           cp -r glsl-shaders-master cnc-ddraw-releasewin2000/Shaders
 
            cp "${{ steps.build-release.outputs.release }}" cnc-ddraw-release
+           cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-release
+           cp LICENSE cnc-ddraw-release/LICENSE.txt
+           cp README.md cnc-ddraw-release/README.txt
+           "./cnc-ddraw-release/cnc-ddraw config.exe" -restart &
+
+           cp "${{ steps.build-release.outputs.release-pdb }}" cnc-ddraw-release-pdb
 
            cp "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" cnc-ddraw-releasewin2000
+           cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-releasewin2000
+           cp LICENSE cnc-ddraw-releasewin2000/LICENSE.txt
+           cp README.md cnc-ddraw-releasewin2000/README.txt
+           "./cnc-ddraw-releasewin2000/cnc-ddraw config.exe" -restart &
+
+           cp "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" cnc-ddraw-releasewin2000-pdb
 
            cp "${{ steps.build-debug.outputs.debug }}" cnc-ddraw-debug
            cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
@@ -91,7 +121,12 @@ jobs:
 
            cp "${{ steps.build-debuglogmini.outputs.debuglogmini }}" cnc-ddraw-debuglogmini
            cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
-           
+
+           #cp "${{ steps.build-releaseconfig.outputs.releaseconfig-pdb }}" cnc-ddraw-releaseconfig-pdb
+
+           cp "${{ steps.build-debugconfig.outputs.debugconfig }}" cnc-ddraw-debugconfig
+           #cp "${{ steps.build-debugconfig.outputs.debugconfig-pdb }}" cnc-ddraw-debugconfig
+
     shell: bash
 
   - name: Upload artifacts cnc-ddraw-release
@@ -101,11 +136,25 @@ jobs:
      path: cnc-ddraw-release
      retention-days: 14
 
+  - name: Upload artifacts cnc-ddraw-release-pdb
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-release-pdb
+     path: cnc-ddraw-release-pdb
+     retention-days: 14
+
   - name: Upload artifacts cnc-ddraw-releasewin2000
     uses: actions/upload-artifact@v4
     with:
      name: cnc-ddraw-releasewin2000
      path: cnc-ddraw-releasewin2000
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-releasewin2000-pdb
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-releasewin2000-pdb
+     path: cnc-ddraw-releasewin2000-pdb
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-debug
@@ -127,4 +176,18 @@ jobs:
     with:
      name: cnc-ddraw-debuglogmini
      path: cnc-ddraw-debuglogmini
+     retention-days: 14
+
+#  - name: Upload artifacts cnc-ddraw-releaseconfig-pdb
+#    uses: actions/upload-artifact@v4
+#    with:
+#     name: cnc-ddraw-releaseconfig-pdb
+#     path: cnc-ddraw-releaseconfig-pdb
+#     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-debugconfig
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-debugconfig
+     path: cnc-ddraw-debugconfig
      retention-days: 14
