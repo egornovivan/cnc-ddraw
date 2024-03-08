@@ -1,11 +1,6 @@
 name: Build
 
-on:
- push:
-  branches:
-  - 'master'
-  - 'develop'
-  - 'github-action'
+on: push
 
 jobs:
  Build:
@@ -82,50 +77,121 @@ jobs:
     run:   |
            :
 
-           mkdir -p cnc-ddraw-release
-           mkdir -p cnc-ddraw-release-pdb
-           mkdir -p cnc-ddraw-releasewin2000
-           mkdir -p cnc-ddraw-releasewin2000-pdb
-           mkdir -p cnc-ddraw-debug
-           mkdir -p cnc-ddraw-debuglog
-           mkdir -p cnc-ddraw-debuglogmini
-           #mkdir -p cnc-ddraw-releaseconfig-pdb
-           mkdir -p cnc-ddraw-debugconfig
+           if [[ -f "${{ steps.build-release.outputs.release }}" ]]; then
 
-           curl -o "glsl-shaders-master.zip" "https://codeload.github.com/libretro/glsl-shaders/zip/refs/heads/master"
-           7z x "glsl-shaders-master.zip"
-           cp -r glsl-shaders-master cnc-ddraw-release/Shaders
-           cp -r glsl-shaders-master cnc-ddraw-releasewin2000/Shaders
+              mkdir -p cnc-ddraw-release
+              cp "${{ steps.build-release.outputs.release }}" cnc-ddraw-release
+              cp LICENSE cnc-ddraw-release/LICENSE.txt
+              cp README.md cnc-ddraw-release/README.txt
 
-           cp "${{ steps.build-release.outputs.release }}" cnc-ddraw-release
-           cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-release
-           cp LICENSE cnc-ddraw-release/LICENSE.txt
-           cp README.md cnc-ddraw-release/README.txt
-           "./cnc-ddraw-release/cnc-ddraw config.exe" -restart &
+              mkdir -p cnc-ddraw-release-pdb
+              cp "${{ steps.build-release.outputs.release-pdb }}" cnc-ddraw-release-pdb
 
-           cp "${{ steps.build-release.outputs.release-pdb }}" cnc-ddraw-release-pdb
+           fi
 
-           cp "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" cnc-ddraw-releasewin2000
-           cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-releasewin2000
-           cp LICENSE cnc-ddraw-releasewin2000/LICENSE.txt
-           cp README.md cnc-ddraw-releasewin2000/README.txt
-           "./cnc-ddraw-releasewin2000/cnc-ddraw config.exe" -restart &
+           if [[ -f "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" ]]; then
 
-           cp "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" cnc-ddraw-releasewin2000-pdb
+              mkdir -p cnc-ddraw-releasewin2000
+              cp "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" cnc-ddraw-releasewin2000
+              cp LICENSE cnc-ddraw-releasewin2000/LICENSE.txt
+              cp README.md cnc-ddraw-releasewin2000/README.txt
 
-           cp "${{ steps.build-debug.outputs.debug }}" cnc-ddraw-debug
-           cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
+              mkdir -p cnc-ddraw-releasewin2000-pdb
+              cp "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" cnc-ddraw-releasewin2000-pdb
 
-           cp "${{ steps.build-debuglog.outputs.debuglog }}" cnc-ddraw-debuglog
-           cp "${{ steps.build-debuglog.outputs.debuglog-pdb }}" cnc-ddraw-debuglog
+           fi
 
-           cp "${{ steps.build-debuglogmini.outputs.debuglogmini }}" cnc-ddraw-debuglogmini
-           cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
+           if [[ -f "${{ steps.build-debug.outputs.debug }}" ]]; then
 
-           #cp "${{ steps.build-releaseconfig.outputs.releaseconfig-pdb }}" cnc-ddraw-releaseconfig-pdb
+              mkdir -p cnc-ddraw-debug
+              cp "${{ steps.build-debug.outputs.debug }}" cnc-ddraw-debug
+              cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
 
-           cp "${{ steps.build-debugconfig.outputs.debugconfig }}" cnc-ddraw-debugconfig
-           #cp "${{ steps.build-debugconfig.outputs.debugconfig-pdb }}" cnc-ddraw-debugconfig
+           fi
+
+           if [[ -f "${{ steps.build-debuglog.outputs.debuglog }}" ]]; then
+
+              mkdir -p cnc-ddraw-debuglog
+              cp "${{ steps.build-debuglog.outputs.debuglog }}" cnc-ddraw-debuglog
+              cp "${{ steps.build-debuglog.outputs.debuglog-pdb }}" cnc-ddraw-debuglog
+
+           fi
+
+           if [[ -f "${{ steps.build-debuglogmini.outputs.debuglogmini }}" ]]; then
+
+              mkdir -p cnc-ddraw-debuglogmini
+              cp "${{ steps.build-debuglogmini.outputs.debuglogmini }}" cnc-ddraw-debuglogmini
+              cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
+
+           fi
+
+           if [[ -f "${{ steps.build-releaseconfig.outputs.releaseconfig }}" ]]; then
+
+              if [[ -f "${{ steps.build-release.outputs.release }}" ]]; then
+
+                 cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-release
+                 "./cnc-ddraw-release/cnc-ddraw config.exe" -restart &
+
+              fi
+
+              if [[ -f "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" ]]; then
+
+                 cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-releasewin2000
+                 "./cnc-ddraw-releasewin2000/cnc-ddraw config.exe" -restart &
+
+              fi
+
+              if [[ ! -f "${{ steps.build-release.outputs.release }}" ]] && [[ ! -f "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" ]]; then
+
+                 mkdir -p cnc-ddraw-releaseconfig
+                 cp "${{ steps.build-releaseconfig.outputs.releaseconfig }}" cnc-ddraw-releaseconfig
+
+              fi
+
+              if [[ -f "${{ steps.build-releaseconfig.outputs.releaseconfig-pdb }}" ]]; then
+
+                 mkdir -p cnc-ddraw-releaseconfig-pdb
+                 cp "${{ steps.build-releaseconfig.outputs.releaseconfig-pdb }}" cnc-ddraw-releaseconfig-pdb
+
+              fi
+
+           fi
+
+           if [[ -f "${{ steps.build-debugconfig.outputs.debugconfig }}" ]]; then
+
+              mkdir -p cnc-ddraw-debugconfig
+              cp "${{ steps.build-debugconfig.outputs.debugconfig }}" cnc-ddraw-debugconfig
+
+              if [[ -f "${{ steps.build-debugconfig.outputs.debugconfig-pdb }}" ]]; then
+
+                 cp "${{ steps.build-debugconfig.outputs.debugconfig-pdb }}" cnc-ddraw-debugconfig
+
+              fi
+
+           fi
+
+           if [[ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]]; then
+
+              curl -o "glsl-shaders-master.zip" "https://codeload.github.com/libretro/glsl-shaders/zip/refs/heads/master"
+              7z x "glsl-shaders-master.zip"
+
+              if [[ -f "${{ steps.build-release.outputs.release }}" ]]; then
+
+                 cp -r glsl-shaders-master cnc-ddraw-release/Shaders
+                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-release.zip" ".\cnc-ddraw-release\*"
+                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-release-pdb.zip" ".\cnc-ddraw-release-pdb\*"
+
+              fi
+
+              if [[ -f "${{ steps.build-releasewin2000.outputs.releasewin2000 }}" ]]; then
+
+                 cp -r glsl-shaders-master cnc-ddraw-releasewin2000/Shaders
+                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-releasewin2000.zip" ".\cnc-ddraw-releasewin2000\*"
+                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-releasewin2000-pdb.zip" ".\cnc-ddraw-releasewin2000-pdb\*"
+
+              fi
+
+           fi
 
     shell: bash
 
@@ -134,6 +200,7 @@ jobs:
     with:
      name: cnc-ddraw-release
      path: cnc-ddraw-release
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-release-pdb
@@ -141,6 +208,7 @@ jobs:
     with:
      name: cnc-ddraw-release-pdb
      path: cnc-ddraw-release-pdb
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-releasewin2000
@@ -148,6 +216,7 @@ jobs:
     with:
      name: cnc-ddraw-releasewin2000
      path: cnc-ddraw-releasewin2000
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-releasewin2000-pdb
@@ -155,6 +224,7 @@ jobs:
     with:
      name: cnc-ddraw-releasewin2000-pdb
      path: cnc-ddraw-releasewin2000-pdb
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-debug
@@ -162,6 +232,7 @@ jobs:
     with:
      name: cnc-ddraw-debug
      path: cnc-ddraw-debug
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-debuglog
@@ -169,6 +240,7 @@ jobs:
     with:
      name: cnc-ddraw-debuglog
      path: cnc-ddraw-debuglog
+     if-no-files-found: ignore
      retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-debuglogmini
@@ -176,18 +248,39 @@ jobs:
     with:
      name: cnc-ddraw-debuglogmini
      path: cnc-ddraw-debuglogmini
+     if-no-files-found: ignore
      retention-days: 14
 
-#  - name: Upload artifacts cnc-ddraw-releaseconfig-pdb
-#    uses: actions/upload-artifact@v4
-#    with:
-#     name: cnc-ddraw-releaseconfig-pdb
-#     path: cnc-ddraw-releaseconfig-pdb
-#     retention-days: 14
+  - name: Upload artifacts cnc-ddraw-releaseconfig
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-releaseconfig
+     path: cnc-ddraw-releaseconfig
+     if-no-files-found: ignore
+     retention-days: 14
+
+  - name: Upload artifacts cnc-ddraw-releaseconfig-pdb
+    uses: actions/upload-artifact@v4
+    with:
+     name: cnc-ddraw-releaseconfig-pdb
+     path: cnc-ddraw-releaseconfig-pdb
+     if-no-files-found: ignore
+     retention-days: 14
 
   - name: Upload artifacts cnc-ddraw-debugconfig
     uses: actions/upload-artifact@v4
     with:
      name: cnc-ddraw-debugconfig
      path: cnc-ddraw-debugconfig
+     if-no-files-found: ignore
      retention-days: 14
+
+  - name: Release
+    uses: softprops/action-gh-release@v1
+    if: startsWith(github.ref, 'refs/tags/')
+    with:
+     files: |
+      cnc-ddraw-release.zip
+      cnc-ddraw-releasewin2000.zip
+      cnc-ddraw-release-pdb.zip
+      cnc-ddraw-releasewin2000-pdb.zip
