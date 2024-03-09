@@ -25,21 +25,13 @@ BOOL d3d9_is_available()
 {
     LPDIRECT3D9 d3d9 = NULL;
 
-    TRACE("d3d9_is_available\n");
-
     if ((g_d3d9.hmodule = real_LoadLibraryA("d3d9.dll")))
     {
-        TRACE("d3d9_is_available: mod=%p\n", g_d3d9.hmodule);
-
         IDirect3D9* (WINAPI * d3d_create9)(UINT) =
             (IDirect3D9 * (WINAPI*)(UINT))real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
 
-        TRACE("d3d9_is_available: d3d_create9=%p\n", d3d_create9);
-
         if (d3d_create9 && (d3d9 = d3d_create9(D3D_SDK_VERSION)))
-        {
-            TRACE("d3d9_is_available: release=%d\n", IDirect3D9_Release(d3d9));
-        }
+            IDirect3D9_Release(d3d9);
     }
 
     return d3d9 != NULL;

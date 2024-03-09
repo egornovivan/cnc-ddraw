@@ -1512,9 +1512,8 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
 
         g_ddraw->ref--;
     }
-    TRACE("Alloc\n");
+
     IDirectDrawImpl* dd = (IDirectDrawImpl*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(IDirectDrawImpl));
-    TRACE("Alloc: dd=%p\n", dd);
     memcpy(&dd->guid, iid, sizeof(dd->guid));
 
     if (IsEqualGUID(&IID_IDirectDraw, iid))
