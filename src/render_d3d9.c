@@ -76,7 +76,7 @@ BOOL d3d9_create()
             if (SUCCEEDED(hr)) 
             {
                 TRACE("+--Direct3D9-------------------------------------\n");
-                TRACE("| D3D9On12:            %s\n", d3d9on12 != NULL ? "True" : "False");
+                TRACE("| D3D9On12:            %s (%p)\n", d3d9on12 != NULL ? "True" : "False", GetModuleHandleA("d3d9on12.dll"));
                 TRACE("| VendorId:            0x%x\n", ai.VendorId);
                 TRACE("| DeviceId:            0x%x\n", ai.DeviceId);
                 TRACE("| Revision:            0x%x\n", ai.Revision);
