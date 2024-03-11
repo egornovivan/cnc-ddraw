@@ -143,8 +143,6 @@ typedef struct CNCDDRAW
     DWORD minfps_tick_len;
     DWORD gui_thread_id;
     BOOL show_driver_warning;
-    BOOL d3d9on12;
-    BOOL opengl_core;
 
 } CNCDDRAW;
 

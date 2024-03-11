@@ -1466,11 +1466,11 @@ HRESULT dd_CreateEx(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOute
         
         if (_strcmpi(g_config.renderer, "direct3d9on12") == 0)
         {
-            g_ddraw->d3d9on12 = TRUE;
+            g_config.d3d9on12 = TRUE;
         }
         else if (_strcmpi(g_config.renderer, "openglcore") == 0)
         {
-            g_ddraw->opengl_core = TRUE;
+            g_config.opengl_core = TRUE;
         }
 
         if (tolower(g_config.renderer[0]) == 'd') /* direct3d9 or direct3d9on12*/

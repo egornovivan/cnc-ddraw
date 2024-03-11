@@ -20,6 +20,8 @@ typedef struct CNCDDRAWCONFIG
     char dll_file_ext[MAX_PATH];
     INIFILE ini;
     BOOL is_wine;
+    BOOL d3d9on12;
+    BOOL opengl_core;
     
     /* Optional settings */
 

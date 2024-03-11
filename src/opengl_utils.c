@@ -218,7 +218,7 @@ void oglu_init()
         wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)xwglGetProcAddress("wglCreateContextAttribsARB");
     }
 
-    if (g_ddraw->opengl_core)
+    if (g_config.opengl_core)
     {
         wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)xwglGetProcAddress("wglCreateContextAttribsARB");
     }

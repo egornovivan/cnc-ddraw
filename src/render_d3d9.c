@@ -27,11 +27,27 @@ BOOL d3d9_is_available()
 
     if ((g_d3d9.hmodule = real_LoadLibraryA("d3d9.dll")))
     {
-        IDirect3D9* (WINAPI * d3d_create9)(UINT) =
-            (IDirect3D9 * (WINAPI*)(UINT))real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
+        if (g_config.d3d9on12)
+        {
+            D3D9ON12_ARGS args;
+            memset(&args, 0, sizeof(args));
+            args.Enable9On12 = TRUE;
 
-        if (d3d_create9 && (d3d9 = d3d_create9(D3D_SDK_VERSION)))
-            IDirect3D9_Release(d3d9);
+            IDirect3D9* (WINAPI * d3d_create9on12)(INT, D3D9ON12_ARGS*, UINT) =
+                (void*)real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9On12");
+
+            if (d3d_create9on12 && (d3d9 = d3d_create9on12(D3D_SDK_VERSION, &args, 1)))
+                IDirect3D9_Release(d3d9);
+        }
+
+        if (!d3d9)
+        {
+            IDirect3D9* (WINAPI * d3d_create9)(UINT) =
+                (IDirect3D9 * (WINAPI*)(UINT))real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
+
+            if (d3d_create9 && (d3d9 = d3d_create9(D3D_SDK_VERSION)))
+                IDirect3D9_Release(d3d9);
+        }
     }
 
     return d3d9 != NULL;
@@ -59,7 +75,7 @@ BOOL d3d9_create()
         IDirect3D9* (WINAPI * d3d_create9on12)(INT, D3D9ON12_ARGS*, UINT) = NULL;
         IDirect3D9* (WINAPI * d3d_create9)(UINT) = (void*)real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9");
 
-        if (g_ddraw->d3d9on12)
+        if (g_config.d3d9on12)
         {
             d3d_create9on12 = (void*)real_GetProcAddress(g_d3d9.hmodule, "Direct3DCreate9On12");
         }
