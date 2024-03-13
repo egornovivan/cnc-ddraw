@@ -84,8 +84,12 @@ jobs:
               cp LICENSE cnc-ddraw-release/LICENSE.txt
               cp README.md cnc-ddraw-release/README.txt
 
-              mkdir -p cnc-ddraw-release-pdb
-              cp "${{ steps.build-release.outputs.release-pdb }}" cnc-ddraw-release-pdb
+              if [[ -f "${{ steps.build-release.outputs.release-pdb }}" ]]; then
+
+                 mkdir -p cnc-ddraw-release-pdb
+                 cp "${{ steps.build-release.outputs.release-pdb }}" cnc-ddraw-release-pdb
+
+              fi
 
            fi
 
@@ -96,8 +100,12 @@ jobs:
               cp LICENSE cnc-ddraw-releasewin2000/LICENSE.txt
               cp README.md cnc-ddraw-releasewin2000/README.txt
 
-              mkdir -p cnc-ddraw-releasewin2000-pdb
-              cp "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" cnc-ddraw-releasewin2000-pdb
+              if [[ -f "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" ]]; then
+
+                 mkdir -p cnc-ddraw-releasewin2000-pdb
+                 cp "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" cnc-ddraw-releasewin2000-pdb
+
+              fi
 
            fi
 
@@ -105,7 +113,12 @@ jobs:
 
               mkdir -p cnc-ddraw-debug
               cp "${{ steps.build-debug.outputs.debug }}" cnc-ddraw-debug
-              cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
+
+              if [[ -f "${{ steps.build-debug.outputs.debug-pdb }}" ]]; then
+
+                 cp "${{ steps.build-debug.outputs.debug-pdb }}" cnc-ddraw-debug
+
+              fi
 
            fi
 
@@ -113,7 +126,12 @@ jobs:
 
               mkdir -p cnc-ddraw-debuglog
               cp "${{ steps.build-debuglog.outputs.debuglog }}" cnc-ddraw-debuglog
-              cp "${{ steps.build-debuglog.outputs.debuglog-pdb }}" cnc-ddraw-debuglog
+
+              if [[ -f "${{ steps.build-debuglog.outputs.debuglog-pdb }}" ]]; then
+
+                 cp "${{ steps.build-debuglog.outputs.debuglog-pdb }}" cnc-ddraw-debuglog
+
+              fi
 
            fi
 
@@ -121,7 +139,12 @@ jobs:
 
               mkdir -p cnc-ddraw-debuglogmini
               cp "${{ steps.build-debuglogmini.outputs.debuglogmini }}" cnc-ddraw-debuglogmini
-              cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
+
+              if [[ -f "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" ]]; then
+
+                 cp "${{ steps.build-debuglogmini.outputs.debuglogmini-pdb }}" cnc-ddraw-debuglogmini
+
+              fi
 
            fi
 
@@ -179,7 +202,12 @@ jobs:
 
                  cp -r glsl-shaders-master cnc-ddraw-release/Shaders
                  7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-release.zip" ".\cnc-ddraw-release\*"
-                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-release-pdb.zip" ".\cnc-ddraw-release-pdb\*"
+
+                 if [[ -f "${{ steps.build-release.outputs.release-pdb }}" ]]; then
+
+                    7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-release-pdb.zip" ".\cnc-ddraw-release-pdb\*"
+
+                 fi
 
               fi
 
@@ -187,7 +215,12 @@ jobs:
 
                  cp -r glsl-shaders-master cnc-ddraw-releasewin2000/Shaders
                  7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-releasewin2000.zip" ".\cnc-ddraw-releasewin2000\*"
-                 7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-releasewin2000-pdb.zip" ".\cnc-ddraw-releasewin2000-pdb\*"
+
+                 if [[ -f "${{ steps.build-releasewin2000.outputs.releasewin2000-pdb }}" ]]; then
+
+                    7z a -tzip -mm=Deflate -mfb=258 -mpass=15 "cnc-ddraw-releasewin2000-pdb.zip" ".\cnc-ddraw-releasewin2000-pdb\*"
+
+                 fi
 
               fi
 

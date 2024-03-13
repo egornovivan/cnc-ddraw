@@ -99,20 +99,36 @@ runs:
           fi
    shell: bash
 
+ - name:  Prepare w64devkit
+   id:    w64devkit
+   run:   |
+          if [[ "${{ inputs.releasewin2000 }}" == "true" ]]; then
+             echo "::group::Prepare w64devkit"
+
+             cd "$GITHUB_ACTION_PATH"
+             curl -Ls -o "$GITHUB_ACTION_PATH/w64devkit.zip" "$(curl -s https://api.github.com/repos/FunkyFr3sh/w64devkit/releases/latest | grep browser_download_url | cut -d '"' -f 4)"
+             7z x "w64devkit.zip"
+
+             echo "path=$(cygpath --windows "$GITHUB_ACTION_PATH/w64devkit/bin/")" >> $GITHUB_OUTPUT
+
+             echo "::endgroup::"
+          fi
+   shell: bash
+
  - name:  Prepare RAD Studio
    id:    radstudio
    run:   |
           if [[ "${{ inputs.releaseconfig }}" == "true" ]] || [[ "${{ inputs.debugconfig }}" == "true" ]]; then
              echo "::group::Prepare RAD Studio"
-             
+
              if [[ ! -d "$GITHUB_ACTION_PATH/Embarcadero" ]]; then
-             
+
                 cd "$GITHUB_ACTION_PATH"
                 curl -o "$GITHUB_ACTION_PATH/Embarcadero.7z" "https:/www.googleapis.com/drive/v3/files/1SjvOu3yOnsoRtivNgIhsBV8nA2DQXJmt?alt=media&key=AIzaSyAA9ERw-9LZVEohRYtCWka_TQc6oXmvcVU"
                 7z x "Embarcadero.7z"
-             
+
              fi
-             
+
              echo "allusersprofile=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
              echo "appdata=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
              echo "bcb=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
@@ -137,7 +153,7 @@ runs:
              echo "programdata=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
              echo "public=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
              echo "userprofile=$(cygpath --windows "$GITHUB_ACTION_PATH/Embarcadero/Studio/23.0/")" >> $GITHUB_OUTPUT
-             
+
              echo "::endgroup::"
           fi
    shell: bash
@@ -176,13 +192,16 @@ runs:
           if [[ "${{ inputs.releasewin2000 }}" == "true" ]]; then
              echo "::group::Build ReleaseWin2000"
 
-             "${{ steps.msbuild.outputs.exe }}" "$GITHUB_ACTION_PATH/cnc-ddraw.sln" -p:Configuration=ReleaseWin2000 -p:Platform=x86 -p:PlatformToolset=v141_xp
+             make clean
+             make
 
-             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/ReleaseWin2000/ddraw.dll")" >> $GITHUB_OUTPUT
-             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/bin/ReleaseWin2000/ddraw.pdb")" >> $GITHUB_OUTPUT
+             echo "ddraw-dll=$(cygpath --windows "$GITHUB_ACTION_PATH/ddraw.dll")" >> $GITHUB_OUTPUT
+             echo "ddraw-pdb=$(cygpath --windows "$GITHUB_ACTION_PATH/ddraw.pdb")" >> $GITHUB_OUTPUT
 
              echo "::endgroup::"
           fi
+   env:
+    PATH: ${{ steps.w64devkit.outputs.path }}
    shell: bash
 
  - name:  Build Debug
