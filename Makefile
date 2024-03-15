@@ -1,8 +1,10 @@
 -include config.mk
 
-WINDRES  ?= windres
-LDFLAGS   = -Wl,--enable-stdcall-fixup -s
-CFLAGS    = -Iinc -O2 -march=pentium4 -Wall
+CC        = i686-w64-mingw32-gcc
+CXX       = i686-w64-mingw32-g++
+WINDRES  ?= i686-w64-mingw32-windres
+LDFLAGS   = -Wl,--enable-stdcall-fixup -s -static
+CFLAGS    = -Iinc -O2 -march=i486 -Wall
 LIBS      = -lgdi32 -lwinmm -lpsapi -ldbghelp -lole32
 
 FILES = src/IDirect3D/IDirect3D.c \
@@ -42,7 +44,6 @@ FILES = src/IDirect3D/IDirect3D.c \
 all:
 	$(WINDRES) -J rc ddraw.rc ddraw.rc.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o ddraw.dll $(FILES) ddraw.def ddraw.rc.o $(LIBS)
-#	$(CC) $(CFLAGS) $(LDFLAGS) -nostdlib -shared -o ddraw.dll $(FILES) ddraw.def ddraw.rc.o $(LIBS) -lkernel32 -luser32 -lmsvcrt
 
 clean:
 	$(RM) ddraw.dll ddraw.rc.o
