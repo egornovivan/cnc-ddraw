@@ -69,7 +69,7 @@ static HRESULT WINAPI fake_did_GetDeviceData(
 
     HRESULT result = real_did_GetDeviceData(This, cbObjectData, rgdod, pdwInOut, dwFlags);
 
-    if (SUCCEEDED(result) && g_ddraw && !g_mouse_locked)
+    if (SUCCEEDED(result) && This == g_mouse_device && !g_mouse_locked && !g_config.devmode)
     {
         if (pdwInOut)
         {
@@ -91,7 +91,7 @@ static HRESULT WINAPI fake_did_GetDeviceState(IDirectInputDeviceA* This, DWORD c
 
     HRESULT result = real_did_GetDeviceState(This, cbData, lpvData);
 
-    if (SUCCEEDED(result) && g_ddraw && !g_mouse_locked)
+    if (SUCCEEDED(result) && This == g_mouse_device && !g_mouse_locked && !g_config.devmode)
     {
         if (cbData > 0 && lpvData)
         {
