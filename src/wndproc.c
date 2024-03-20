@@ -667,7 +667,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             /* let it pass through once (tiberian sun) */
             static BOOL one_time;
-
+        
             if (wParam && !one_time && g_config.tshack)
             {
                 one_time = TRUE;

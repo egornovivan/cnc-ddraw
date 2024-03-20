@@ -716,6 +716,28 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
     return result;
 }
 
+SHORT WINAPI fake_GetKeyState(int nVirtKey)
+{
+    if (g_config.infantryhack && g_ddraw && g_ddraw->hwnd)
+    {
+        if (real_GetForegroundWindow() != g_ddraw->hwnd)
+            return 0;
+    }
+
+    return GetKeyState(nVirtKey);
+}
+
+SHORT WINAPI fake_GetAsyncKeyState(int vKey)
+{
+    if (g_config.infantryhack && g_ddraw && g_ddraw->hwnd)
+    {
+        if (real_GetForegroundWindow() != g_ddraw->hwnd)
+            return 0;
+    }
+
+    return GetAsyncKeyState(vKey);
+}
+
 int WINAPI fake_GetDeviceCaps(HDC hdc, int index)
 {
     if (g_ddraw &&
