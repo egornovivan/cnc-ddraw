@@ -718,10 +718,9 @@ BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT w
 
 SHORT WINAPI fake_GetKeyState(int nVirtKey)
 {
-    if (g_config.infantryhack && g_ddraw && g_ddraw->hwnd)
+    if (g_config.windowed && g_ddraw && g_ddraw->hwnd && !util_in_foreground())
     {
-        if (real_GetForegroundWindow() != g_ddraw->hwnd)
-            return 0;
+        return 0;
     }
 
     return real_GetKeyState(nVirtKey);
@@ -729,10 +728,9 @@ SHORT WINAPI fake_GetKeyState(int nVirtKey)
 
 SHORT WINAPI fake_GetAsyncKeyState(int vKey)
 {
-    if (g_config.infantryhack && g_ddraw && g_ddraw->hwnd)
+    if (g_config.windowed && g_ddraw && g_ddraw->hwnd && !util_in_foreground())
     {
-        if (real_GetForegroundWindow() != g_ddraw->hwnd)
-            return 0;
+        return 0;
     }
 
     return real_GetAsyncKeyState(vKey);

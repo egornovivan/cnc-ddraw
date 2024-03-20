@@ -8,6 +8,7 @@
 HMODULE WINAPI util_enumerate_modules(_In_opt_ HMODULE hModuleLast);
 BOOL util_is_bad_read_ptr(void* p);
 BOOL util_is_minimized(HWND hwnd);
+BOOL util_in_foreground();
 BOOL util_is_avx_supported();
 void util_limit_game_ticks();
 void util_update_bnet_pos(int newX, int newY);

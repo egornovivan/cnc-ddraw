@@ -100,6 +100,13 @@ BOOL util_is_minimized(HWND hwnd)
     return IsIconic(hwnd) || (real_GetClientRect(hwnd, &rc) && (rc.right - rc.left == 0 || rc.bottom - rc.top == 0));
 }
 
+BOOL util_in_foreground()
+{
+    DWORD process_id = 0;
+
+    return GetWindowThreadProcessId(real_GetForegroundWindow(), &process_id) && process_id == GetCurrentProcessId();
+}
+
 BOOL util_is_avx_supported()
 {
     const DWORD XMM_STATE_BIT = 1 << 1;
