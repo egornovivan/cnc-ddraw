@@ -724,7 +724,7 @@ SHORT WINAPI fake_GetKeyState(int nVirtKey)
             return 0;
     }
 
-    return GetKeyState(nVirtKey);
+    return real_GetKeyState(nVirtKey);
 }
 
 SHORT WINAPI fake_GetAsyncKeyState(int vKey)
@@ -735,7 +735,7 @@ SHORT WINAPI fake_GetAsyncKeyState(int vKey)
             return 0;
     }
 
-    return GetAsyncKeyState(vKey);
+    return real_GetAsyncKeyState(vKey);
 }
 
 int WINAPI fake_GetDeviceCaps(HDC hdc, int index)

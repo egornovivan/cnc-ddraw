@@ -775,7 +775,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (g_config.hotkeys.unlock_cursor1 && 
             (wParam == VK_CONTROL || wParam == g_config.hotkeys.unlock_cursor1))
         {
-            if (GetAsyncKeyState(VK_CONTROL) & 0x8000 && GetAsyncKeyState(g_config.hotkeys.unlock_cursor1) & 0x8000)
+            if (real_GetAsyncKeyState(VK_CONTROL) & 0x8000 && real_GetAsyncKeyState(g_config.hotkeys.unlock_cursor1) & 0x8000)
             {
                 mouse_unlock();
                 return 0;
@@ -785,7 +785,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (g_config.hotkeys.unlock_cursor2 && 
             (wParam == g_config.hotkeys.unlock_cursor2 || wParam == VK_MENU || wParam == VK_CONTROL))
         {
-            if ((GetAsyncKeyState(VK_RMENU) & 0x8000) && GetAsyncKeyState(g_config.hotkeys.unlock_cursor2) & 0x8000)
+            if ((real_GetAsyncKeyState(VK_RMENU) & 0x8000) && real_GetAsyncKeyState(g_config.hotkeys.unlock_cursor2) & 0x8000)
             {
                 mouse_unlock();
                 return 0;
