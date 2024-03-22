@@ -65,6 +65,8 @@ HRESULT dd_EnumDisplayModes(
     {
         max_w = reg_m.dmPelsWidth;
         max_h = reg_m.dmPelsHeight;
+
+        TRACE("     max_w=%u, max_h=%u\n", reg_m.dmPelsWidth, reg_m.dmPelsHeight);
     }
 
     if (g_config.stronghold_hack && max_w && (max_w % 8))
@@ -317,7 +319,10 @@ HRESULT dd_EnumDisplayModes(
                 m.dmPelsHeight = resolutions[i].cy;
             
                 if (ChangeDisplaySettings(&m, CDS_TEST) != DISP_CHANGE_SUCCESSFUL)
+                {
+                    TRACE("     SKIPPED: %ux%u\n", m.dmPelsWidth, m.dmPelsHeight);
                     continue;
+                }
             }
 
             memset(&s, 0, sizeof(s));
