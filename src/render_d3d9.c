@@ -55,7 +55,7 @@ BOOL d3d9_is_available()
 
 BOOL d3d9_create()
 {
-    if (g_d3d9.hwnd == g_ddraw->hwnd && d3d9_create_resources() && d3d9_reset(g_config.windowed))
+    if (g_d3d9.hwnd == g_ddraw.hwnd && d3d9_create_resources() && d3d9_reset(g_config.windowed))
     {
         return TRUE;
     }
@@ -122,18 +122,18 @@ BOOL d3d9_create()
                 TRACE("+------------------------------------------------\n");
             }
 #endif
-            g_d3d9.hwnd = g_ddraw->hwnd;
+            g_d3d9.hwnd = g_ddraw.hwnd;
 
             memset(&g_d3d9.params, 0, sizeof(g_d3d9.params));
 
             g_d3d9.params.Windowed = g_config.windowed || g_config.nonexclusive;
             g_d3d9.params.SwapEffect = D3DSWAPEFFECT_DISCARD;
-            g_d3d9.params.hDeviceWindow = g_ddraw->hwnd;
+            g_d3d9.params.hDeviceWindow = g_ddraw.hwnd;
             g_d3d9.params.PresentationInterval = g_config.vsync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
-            g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
-            g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
+            g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw.render.width;
+            g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw.render.height;
             g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_config.refresh_rate;
-            g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
+            g_d3d9.params.BackBufferFormat = g_ddraw.mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
             g_d3d9.params.BackBufferCount = 1;
 
             DWORD behavior_flags[] = {
@@ -151,7 +151,7 @@ BOOL d3d9_create()
                         g_d3d9.instance,
                         D3DADAPTER_DEFAULT,
                         D3DDEVTYPE_HAL,
-                        g_ddraw->hwnd,
+                        g_ddraw.hwnd,
                         behavior_flags[i],
                         &g_d3d9.params,
                         &g_d3d9.device)))
@@ -176,10 +176,10 @@ BOOL d3d9_on_device_lost()
 BOOL d3d9_reset(BOOL windowed)
 {
     g_d3d9.params.Windowed = windowed || g_config.nonexclusive;
-    g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw->render.width;
-    g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw->render.height;
+    g_d3d9.params.BackBufferWidth = g_d3d9.params.Windowed ? 0 : g_ddraw.render.width;
+    g_d3d9.params.BackBufferHeight = g_d3d9.params.Windowed ? 0 : g_ddraw.render.height;
     g_d3d9.params.FullScreen_RefreshRateInHz = g_d3d9.params.Windowed ? 0 : g_config.refresh_rate;
-    g_d3d9.params.BackBufferFormat = g_ddraw->mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
+    g_d3d9.params.BackBufferFormat = g_ddraw.mode.dmBitsPerPel == 16 ? D3DFMT_R5G6B5 : D3DFMT_X8R8G8B8;
 
     if (g_d3d9.device && SUCCEEDED(IDirect3DDevice9_Reset(g_d3d9.device, &g_d3d9.params)))
     {
@@ -187,9 +187,9 @@ BOOL d3d9_reset(BOOL windowed)
 
         if (result)
         {
-            InterlockedExchange(&g_ddraw->render.palette_updated, TRUE);
-            InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            InterlockedExchange(&g_ddraw.render.palette_updated, TRUE);
+            InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         }
 
         return result;
@@ -264,8 +264,8 @@ static BOOL d3d9_create_resources()
 
     BOOL err = FALSE;
 
-    int width = g_ddraw->width;
-    int height = g_ddraw->height;
+    int width = g_ddraw.width;
+    int height = g_ddraw.height;
 
     g_d3d9.tex_width =
         width <= 1024 ? 1024 : width <= 2048 ? 2048 : width <= 4096 ? 4096 : width;
@@ -287,11 +287,11 @@ static BOOL d3d9_create_resources()
             &g_d3d9.vertex_buf,
             NULL));
 
-    err = err || !d3d9_update_vertices(InterlockedExchangeAdd(&g_ddraw->upscale_hack_active, 0), TRUE);
+    err = err || !d3d9_update_vertices(InterlockedExchangeAdd(&g_ddraw.upscale_hack_active, 0), TRUE);
 
     for (int i = 0; i < D3D9_TEXTURE_COUNT; i++)
     {
-        if (g_ddraw->bpp == 16 && g_config.rgb555)
+        if (g_ddraw.bpp == 16 && g_config.rgb555)
         {
             BOOL error = FAILED(
                 IDirect3DDevice9_CreateTexture(
@@ -320,7 +320,7 @@ static BOOL d3d9_create_resources()
                         0));
             }
         }
-        else if (g_ddraw->bpp == 32)
+        else if (g_ddraw.bpp == 32)
         {
             BOOL error = FAILED(
                 IDirect3DDevice9_CreateTexture(
@@ -358,7 +358,7 @@ static BOOL d3d9_create_resources()
                     g_d3d9.tex_height,
                     1,
                     0,
-                    g_ddraw->bpp == 16 ? D3DFMT_R5G6B5 : D3DFMT_L8,
+                    g_ddraw.bpp == 16 ? D3DFMT_R5G6B5 : D3DFMT_L8,
                     D3DPOOL_MANAGED,
                     &g_d3d9.surface_tex[i],
                     0));
@@ -366,7 +366,7 @@ static BOOL d3d9_create_resources()
 
         err = err || !g_d3d9.surface_tex[i];
 
-        if (g_ddraw->bpp == 8)
+        if (g_ddraw.bpp == 8)
         {
             BOOL error = FAILED(
                 IDirect3DDevice9_CreateTexture(
@@ -399,7 +399,7 @@ static BOOL d3d9_create_resources()
         }
     }
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
     {
         err = err || FAILED(
             IDirect3DDevice9_CreatePixelShader(g_d3d9.device, (DWORD*)D3D9_PALETTE_SHADER, &g_d3d9.pixel_shader));
@@ -434,7 +434,7 @@ static BOOL d3d9_create_resources()
         }
     }
 
-    return g_d3d9.vertex_buf && (g_d3d9.pixel_shader || g_ddraw->bpp == 16 || g_ddraw->bpp == 32) && !err;
+    return g_d3d9.vertex_buf && (g_d3d9.pixel_shader || g_ddraw.bpp == 16 || g_ddraw.bpp == 32) && !err;
 }
 
 static BOOL d3d9_set_states()
@@ -445,14 +445,14 @@ static BOOL d3d9_set_states()
     err = err || FAILED(IDirect3DDevice9_SetStreamSource(g_d3d9.device, 0, g_d3d9.vertex_buf, 0, sizeof(CUSTOMVERTEX)));
     err = err || FAILED(IDirect3DDevice9_SetTexture(g_d3d9.device, 0, (IDirect3DBaseTexture9*)g_d3d9.surface_tex[0]));
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
     {
         err = err || FAILED(IDirect3DDevice9_SetTexture(g_d3d9.device, 1, (IDirect3DBaseTexture9*)g_d3d9.palette_tex[0]));
         
         BOOL bilinear =
             g_config.d3d9_filter &&
             g_d3d9.pixel_shader_upscale &&
-            (g_ddraw->render.viewport.width != g_ddraw->width || g_ddraw->render.viewport.height != g_ddraw->height);
+            (g_ddraw.render.viewport.width != g_ddraw.width || g_ddraw.render.viewport.height != g_ddraw.height);
 
         err = err || FAILED(
             IDirect3DDevice9_SetPixelShader(
@@ -471,8 +471,8 @@ static BOOL d3d9_set_states()
         {
             if (g_config.d3d9_filter == FILTER_LANCZOS &&
                 g_d3d9.pixel_shader_upscale &&
-                (g_ddraw->render.viewport.width != g_ddraw->width || 
-                    g_ddraw->render.viewport.height != g_ddraw->height) &&
+                (g_ddraw.render.viewport.width != g_ddraw.width || 
+                    g_ddraw.render.viewport.height != g_ddraw.height) &&
                 SUCCEEDED(IDirect3DDevice9_SetPixelShader(g_d3d9.device, g_d3d9.pixel_shader_upscale)))
             {
                 float texture_size[4] = { (float)g_d3d9.tex_width, (float)g_d3d9.tex_height, 0, 0 };
@@ -483,8 +483,8 @@ static BOOL d3d9_set_states()
                 SUCCEEDED(IDirect3DDevice9_SetSamplerState(g_d3d9.device, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR)) &&
                 g_config.d3d9_filter == FILTER_CUBIC &&
                 g_d3d9.pixel_shader_upscale &&
-                (g_ddraw->render.viewport.width != g_ddraw->width || 
-                    g_ddraw->render.viewport.height != g_ddraw->height) &&
+                (g_ddraw.render.viewport.width != g_ddraw.width || 
+                    g_ddraw.render.viewport.height != g_ddraw.height) &&
                 SUCCEEDED(IDirect3DDevice9_SetPixelShader(g_d3d9.device, g_d3d9.pixel_shader_upscale)))
             {
                 float texture_size[4] = { (float)g_d3d9.tex_width, (float)g_d3d9.tex_height, 0, 0 };
@@ -495,10 +495,10 @@ static BOOL d3d9_set_states()
 
     /*
     D3DVIEWPORT9 view_data = {
-        g_ddraw->render.viewport.x,
-        g_ddraw->render.viewport.y,
-        g_ddraw->render.viewport.width,
-        g_ddraw->render.viewport.height,
+        g_ddraw.render.viewport.x,
+        g_ddraw.render.viewport.y,
+        g_ddraw.render.viewport.width,
+        g_ddraw.render.viewport.height,
         0.0f,
         1.0f };
 
@@ -509,14 +509,14 @@ static BOOL d3d9_set_states()
 
 static BOOL d3d9_update_vertices(BOOL upscale_hack, BOOL stretch)
 {
-    float vp_x = stretch ? (float)g_ddraw->render.viewport.x : 0.0f;
-    float vp_y = stretch ? (float)g_ddraw->render.viewport.y : 0.0f;
+    float vp_x = stretch ? (float)g_ddraw.render.viewport.x : 0.0f;
+    float vp_y = stretch ? (float)g_ddraw.render.viewport.y : 0.0f;
 
-    float vp_w = stretch ? (float)(g_ddraw->render.viewport.width + g_ddraw->render.viewport.x) : (float)g_ddraw->width;
-    float vp_h = stretch ? (float)(g_ddraw->render.viewport.height + g_ddraw->render.viewport.y) : (float)g_ddraw->height;
+    float vp_w = stretch ? (float)(g_ddraw.render.viewport.width + g_ddraw.render.viewport.x) : (float)g_ddraw.width;
+    float vp_h = stretch ? (float)(g_ddraw.render.viewport.height + g_ddraw.render.viewport.y) : (float)g_ddraw.height;
 
-    float s_h = upscale_hack ? g_d3d9.scale_h * ((float)g_ddraw->upscale_hack_height / g_ddraw->height) : g_d3d9.scale_h;
-    float s_w = upscale_hack ? g_d3d9.scale_w * ((float)g_ddraw->upscale_hack_width / g_ddraw->width) : g_d3d9.scale_w;
+    float s_h = upscale_hack ? g_d3d9.scale_h * ((float)g_ddraw.upscale_hack_height / g_ddraw.height) : g_d3d9.scale_h;
+    float s_w = upscale_hack ? g_d3d9.scale_w * ((float)g_ddraw.upscale_hack_width / g_ddraw.width) : g_d3d9.scale_w;
 
     CUSTOMVERTEX vertices[] =
     {
@@ -546,10 +546,10 @@ DWORD WINAPI d3d9_render_main(void)
 
     BOOL needs_update = FALSE;
 
-    DWORD timeout = g_config.minfps > 0 ? g_ddraw->minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_ddraw.minfps_tick_len : INFINITE;
 
-    while (g_ddraw->render.run &&
-        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
+    while (g_ddraw.render.run &&
+        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw.render.sem, timeout) != WAIT_FAILED))
     {
 #if _DEBUG
         dbg_draw_frame_info_start();
@@ -559,39 +559,39 @@ DWORD WINAPI d3d9_render_main(void)
 
         fpsl_frame_start();
 
-        EnterCriticalSection(&g_ddraw->cs);
+        EnterCriticalSection(&g_ddraw.cs);
 
-        if (g_ddraw->primary && 
-            g_ddraw->primary->bpp == g_ddraw->bpp &&
-            g_ddraw->primary->width == g_ddraw->width &&
-            g_ddraw->primary->height == g_ddraw->height &&
-            (g_ddraw->bpp == 16 || g_ddraw->bpp == 32 || g_ddraw->primary->palette))
+        if (g_ddraw.primary && 
+            g_ddraw.primary->bpp == g_ddraw.bpp &&
+            g_ddraw.primary->width == g_ddraw.width &&
+            g_ddraw.primary->height == g_ddraw.height &&
+            (g_ddraw.bpp == 16 || g_ddraw.bpp == 32 || g_ddraw.primary->palette))
         {
             if (g_config.lock_surfaces)
-                EnterCriticalSection(&g_ddraw->primary->cs);
+                EnterCriticalSection(&g_ddraw.primary->cs);
 
             if (g_config.vhack)
             {
                 if (util_detect_low_res_screen())
                 {
-                    if (!InterlockedExchange(&g_ddraw->upscale_hack_active, TRUE))
+                    if (!InterlockedExchange(&g_ddraw.upscale_hack_active, TRUE))
                         d3d9_update_vertices(TRUE, TRUE);
                 }
                 else
                 {
-                    if (InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE))
+                    if (InterlockedExchange(&g_ddraw.upscale_hack_active, FALSE))
                         d3d9_update_vertices(FALSE, TRUE);
                 }
             }
 
             D3DLOCKED_RECT lock_rc;
 
-            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_config.minfps == -2)
+            if (InterlockedExchange(&g_ddraw.render.surface_updated, FALSE) || g_config.minfps == -2)
             {
                 if (++tex_index >= D3D9_TEXTURE_COUNT)
                     tex_index = 0;
 
-                RECT rc = { 0, 0, g_ddraw->width, g_ddraw->height };
+                RECT rc = { 0, 0, g_ddraw.width, g_ddraw.height };
 
                 if (SUCCEEDED(IDirect3DDevice9_SetTexture(g_d3d9.device, 0, (IDirect3DBaseTexture9*)g_d3d9.surface_tex[tex_index])) &&
                     SUCCEEDED(IDirect3DTexture9_LockRect(g_d3d9.surface_tex[tex_index], 0, &lock_rc, &rc, 0)))
@@ -600,21 +600,21 @@ DWORD WINAPI d3d9_render_main(void)
                         lock_rc.pBits,
                         0,
                         0,
-                        g_ddraw->primary->width,
-                        g_ddraw->primary->height,
+                        g_ddraw.primary->width,
+                        g_ddraw.primary->height,
                         lock_rc.Pitch,
-                        g_ddraw->primary->surface,
+                        g_ddraw.primary->surface,
                         0,
                         0,
-                        g_ddraw->primary->pitch,
-                        g_ddraw->primary->bpp);
+                        g_ddraw.primary->pitch,
+                        g_ddraw.primary->bpp);
 
                     IDirect3DTexture9_UnlockRect(g_d3d9.surface_tex[tex_index], 0);
                 }
             }
 
-            if (g_ddraw->bpp == 8 &&
-                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_config.minfps == -2))
+            if (g_ddraw.bpp == 8 &&
+                (InterlockedExchange(&g_ddraw.render.palette_updated, FALSE) || g_config.minfps == -2))
             {
                 if (++pal_index >= D3D9_TEXTURE_COUNT)
                     pal_index = 0;
@@ -624,7 +624,7 @@ DWORD WINAPI d3d9_render_main(void)
                 if (SUCCEEDED(IDirect3DDevice9_SetTexture(g_d3d9.device, 1, (IDirect3DBaseTexture9*)g_d3d9.palette_tex[pal_index])) &&
                     SUCCEEDED(IDirect3DTexture9_LockRect(g_d3d9.palette_tex[pal_index], 0, &lock_rc, &rc, 0)))
                 {
-                    memcpy(lock_rc.pBits, g_ddraw->primary->palette->data_rgb, 256 * sizeof(int));
+                    memcpy(lock_rc.pBits, g_ddraw.primary->palette->data_rgb, 256 * sizeof(int));
 
                     IDirect3DTexture9_UnlockRect(g_d3d9.palette_tex[pal_index], 0);
                 }
@@ -632,13 +632,13 @@ DWORD WINAPI d3d9_render_main(void)
 
             if (g_config.fixchilds)
             {
-                g_ddraw->child_window_exists = FALSE;
-                InterlockedExchangePointer((void*)&g_ddraw->video_window_hwnd, NULL);
-                EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
+                g_ddraw.child_window_exists = FALSE;
+                InterlockedExchangePointer((void*)&g_ddraw.video_window_hwnd, NULL);
+                EnumChildWindows(g_ddraw.hwnd, util_enum_child_proc, (LPARAM)g_ddraw.primary);
 
-                if (g_ddraw->render.width != g_ddraw->width || g_ddraw->render.height != g_ddraw->height)
+                if (g_ddraw.render.width != g_ddraw.width || g_ddraw.render.height != g_ddraw.height)
                 {
-                    if (g_ddraw->child_window_exists)
+                    if (g_ddraw.child_window_exists)
                     {
                         IDirect3DDevice9_Clear(g_d3d9.device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
@@ -654,12 +654,12 @@ DWORD WINAPI d3d9_render_main(void)
             }
 
             if (g_config.lock_surfaces)
-                LeaveCriticalSection(&g_ddraw->primary->cs);
+                LeaveCriticalSection(&g_ddraw.primary->cs);
         }
 
-        LeaveCriticalSection(&g_ddraw->cs);
+        LeaveCriticalSection(&g_ddraw.cs);
 
-        if (g_ddraw->render.viewport.x != 0 || g_ddraw->render.viewport.y != 0)
+        if (g_ddraw.render.viewport.x != 0 || g_ddraw.render.viewport.y != 0)
         {
             IDirect3DDevice9_Clear(g_d3d9.device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
         }
@@ -668,7 +668,7 @@ DWORD WINAPI d3d9_render_main(void)
         IDirect3DDevice9_DrawPrimitive(g_d3d9.device, D3DPT_TRIANGLESTRIP, 0, 2);
         IDirect3DDevice9_EndScene(g_d3d9.device);
 
-        if (g_ddraw->bnet_active)
+        if (g_ddraw.bnet_active)
         {
             IDirect3DDevice9_Clear(g_d3d9.device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
         }
@@ -676,9 +676,9 @@ DWORD WINAPI d3d9_render_main(void)
         if (FAILED(IDirect3DDevice9_Present(g_d3d9.device, NULL, NULL, NULL, NULL)))
         {
             DWORD_PTR result;
-            SendMessageTimeout(g_ddraw->hwnd, WM_D3D9DEVICELOST, 0, 0, 0, 1000, &result);
+            SendMessageTimeout(g_ddraw.hwnd, WM_D3D9DEVICELOST, 0, 0, 0, 1000, &result);
 
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
             Sleep(50);
         }
 
@@ -690,7 +690,7 @@ DWORD WINAPI d3d9_render_main(void)
     }
 
     if (g_config.vhack)
-        InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE);
+        InterlockedExchange(&g_ddraw.upscale_hack_active, FALSE);
 
     return 0;
 }

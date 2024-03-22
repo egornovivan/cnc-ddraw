@@ -82,11 +82,11 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
     {
         TRACE("     Released (%p)\n", This);
 
-        if (g_ddraw && (This->caps & DDSCAPS_PRIMARYSURFACE))
+        if (g_ddraw.ref && (This->caps & DDSCAPS_PRIMARYSURFACE))
         {
-            EnterCriticalSection(&g_ddraw->cs);
-            g_ddraw->primary = NULL;
-            LeaveCriticalSection(&g_ddraw->cs);
+            EnterCriticalSection(&g_ddraw.cs);
+            g_ddraw.primary = NULL;
+            LeaveCriticalSection(&g_ddraw.cs);
         }
 
         if (This->bitmap)
@@ -111,7 +111,7 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         if (This->mapping)
             CloseHandle(This->mapping);
 
-        if (This->backbuffer && (!g_ddraw || (void*)This->backbuffer != g_ddraw->last_freed_surface))
+        if (This->backbuffer && (!g_ddraw.ref || (void*)This->backbuffer != g_ddraw.last_freed_surface))
         {
             IDirectDrawSurface_Release(This->backbuffer);
         }
@@ -119,15 +119,15 @@ ULONG __stdcall IDirectDrawSurface__Release(IDirectDrawSurfaceImpl* This)
         if (This->clipper)
             IDirectDrawClipper_Release(This->clipper);
 
-        if (This->palette && (!g_ddraw || (void*)This->palette != g_ddraw->last_freed_palette))
+        if (This->palette && (!g_ddraw.ref || (void*)This->palette != g_ddraw.last_freed_palette))
         {
             IDirectDrawPalette_Release(This->palette);
         }
 
         DeleteCriticalSection(&This->cs);
 
-        if (g_ddraw)
-            g_ddraw->last_freed_surface = This;
+        if (g_ddraw.ref)
+            g_ddraw.last_freed_surface = This;
 
         HeapFree(GetProcessHeap(), 0, This);
     }

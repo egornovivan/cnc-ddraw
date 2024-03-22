@@ -56,11 +56,11 @@ typedef struct SPEEDLIMITER
 
 struct IDirectDrawSurfaceImpl;
 
-extern struct CNCDDRAW* g_ddraw;
+extern struct CNCDDRAW g_ddraw;
 
 typedef struct CNCDDRAW
 {
-    ULONG ref;
+    LONG ref;
 
     DWORD width;
     DWORD height;

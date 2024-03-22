@@ -45,14 +45,14 @@ static HRESULT WINAPI fake_did_SetCooperativeLevel(IDirectInputDeviceA* This, HW
 {
     TRACE("DirectInput SetCooperativeLevel(This=%p, hwnd=%p, dwFlags=0x%08X)\n", This, hwnd, dwFlags);
 
-    if (This == g_mouse_device && g_ddraw && (dwFlags & DISCL_EXCLUSIVE))
+    if (This == g_mouse_device && g_ddraw.ref && (dwFlags & DISCL_EXCLUSIVE))
     {
         if (g_mouse_locked || g_config.devmode)
         {
             while (real_ShowCursor(FALSE) >= 0);
         }
 
-        InterlockedExchange((LONG*)&g_ddraw->show_cursor_count, -1);
+        InterlockedExchange((LONG*)&g_ddraw.show_cursor_count, -1);
     }
 
     return real_did_SetCooperativeLevel(This, hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);

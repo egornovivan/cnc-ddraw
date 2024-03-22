@@ -134,7 +134,7 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
     char str_time[64];
     time_t t = time(NULL);
 
-    strncpy(title, g_ddraw->title, sizeof(g_ddraw->title));
+    strncpy(title, g_ddraw.title, sizeof(g_ddraw.title));
 
     for (int i = 0; i < strlen(title); i++)
     {

@@ -30,7 +30,7 @@ DWORD WINAPI ogl_render_main(void)
     Sleep(250);
     g_ogl.got_error = g_ogl.use_opengl = FALSE;
 
-    g_ogl.context = ogl_create_context(g_ddraw->render.hdc);
+    g_ogl.context = ogl_create_context(g_ddraw.render.hdc);
     if (g_ogl.context)
     {
         oglu_init();
@@ -42,21 +42,21 @@ DWORD WINAPI ogl_render_main(void)
         TRACE("| GL_SHADING_LANGUAGE_VERSION: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
         TRACE("+------------------------------------------------\n");
 
-        g_ogl.context = ogl_create_core_context(g_ddraw->render.hdc);
+        g_ogl.context = ogl_create_core_context(g_ddraw.render.hdc);
 
-        if (oglu_ext_exists("WGL_EXT_swap_control", g_ddraw->render.hdc) && wglSwapIntervalEXT)
+        if (oglu_ext_exists("WGL_EXT_swap_control", g_ddraw.render.hdc) && wglSwapIntervalEXT)
             wglSwapIntervalEXT(g_config.vsync ? 1 : 0);
 
         fpsl_init();
         ogl_build_programs();
-        ogl_create_textures(g_ddraw->width, g_ddraw->height);
+        ogl_create_textures(g_ddraw.width, g_ddraw.height);
         ogl_init_main_program();
         ogl_init_scale_program();
 
         g_ogl.got_error = g_ogl.got_error || !ogl_texture_upload_test();
         g_ogl.got_error = g_ogl.got_error || !ogl_shader_test();
         g_ogl.got_error = g_ogl.got_error || glGetError() != GL_NO_ERROR;
-        g_ogl.use_opengl = (g_ogl.main_program || g_ddraw->bpp == 16 || g_ddraw->bpp == 32) && !g_ogl.got_error;
+        g_ogl.use_opengl = (g_ogl.main_program || g_ddraw.bpp == 16 || g_ddraw.bpp == 32) && !g_ogl.got_error;
 
         ogl_render();
 
@@ -65,8 +65,8 @@ DWORD WINAPI ogl_render_main(void)
 
     if (!g_ogl.use_opengl)
     {
-        g_ddraw->show_driver_warning = TRUE;
-        g_ddraw->renderer = gdi_render_main;
+        g_ddraw.show_driver_warning = TRUE;
+        g_ddraw.renderer = gdi_render_main;
         gdi_render_main();
     }
 
@@ -137,15 +137,15 @@ static void ogl_build_programs()
 
     if (g_oglu_got_version3)
     {
-        if (g_ddraw->bpp == 8)
+        if (g_ddraw.bpp == 8)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PALETTE_FRAG_SHADER, core_profile);
         }
-        else if (g_ddraw->bpp == 16 && g_config.rgb555)
+        else if (g_ddraw.bpp == 16 && g_config.rgb555)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, RGB555_FRAG_SHADER, core_profile);
         }
-        else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
+        else if (g_ddraw.bpp == 16 || g_ddraw.bpp == 32)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER, PASSTHROUGH_FRAG_SHADER, core_profile);
         }
@@ -172,14 +172,14 @@ static void ogl_build_programs()
                 strstr(g_config.shader, "xbrz-freescale.glsl") != NULL;
 
             if (!is_upscaler ||
-                g_ddraw->render.viewport.width != g_ddraw->width ||
-                g_ddraw->render.viewport.height != g_ddraw->height)
+                g_ddraw.render.viewport.width != g_ddraw.width ||
+                g_ddraw.render.viewport.height != g_ddraw.height)
             {
                 g_ogl.scale_program = oglu_build_program_from_file(shader_path, core_profile);
 
                 if (!g_ogl.scale_program &&
-                    (g_ddraw->render.viewport.width != g_ddraw->width ||
-                        g_ddraw->render.viewport.height != g_ddraw->height))
+                    (g_ddraw.render.viewport.width != g_ddraw.width ||
+                        g_ddraw.render.viewport.height != g_ddraw.height))
                 {
                     g_ogl.scale_program = 
                         oglu_build_program(
@@ -209,11 +209,11 @@ static void ogl_build_programs()
 
     if (g_oglu_got_version2 && !g_ogl.main_program)
     {
-        if (g_ddraw->bpp == 8)
+        if (g_ddraw.bpp == 8)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PALETTE_FRAG_SHADER_110, FALSE);
         }
-        else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
+        else if (g_ddraw.bpp == 16 || g_ddraw.bpp == 32)
         {
             g_ogl.main_program = oglu_build_program(PASSTHROUGH_VERT_SHADER_110, PASSTHROUGH_FRAG_SHADER_110, FALSE);
         }
@@ -246,7 +246,7 @@ static void ogl_create_textures(int width, int height)
 
         while (glGetError() != GL_NO_ERROR);
 
-        if (g_ddraw->bpp == 32)
+        if (g_ddraw.bpp == 32)
         {
             glTexImage2D(
                 GL_TEXTURE_2D,
@@ -259,7 +259,7 @@ static void ogl_create_textures(int width, int height)
                 g_ogl.surface_type = GL_UNSIGNED_BYTE,
                 0);
         }
-        else if (g_ddraw->bpp == 16 && g_config.rgb555)
+        else if (g_ddraw.bpp == 16 && g_config.rgb555)
         {
             if (g_oglu_got_version3)
             {
@@ -288,7 +288,7 @@ static void ogl_create_textures(int width, int height)
                     0);
             }
         }
-        else if (g_ddraw->bpp == 16)
+        else if (g_ddraw.bpp == 16)
         {
             glTexImage2D(
                 GL_TEXTURE_2D,
@@ -316,7 +316,7 @@ static void ogl_create_textures(int width, int height)
                     0);
             }
         }
-        else if (g_ddraw->bpp == 8)
+        else if (g_ddraw.bpp == 8)
         {
             glTexImage2D(
                 GL_TEXTURE_2D,
@@ -360,7 +360,7 @@ static void ogl_create_textures(int width, int height)
         }
     }
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
     {
         glGenTextures(TEXTURE_COUNT, g_ogl.palette_tex_ids);
 
@@ -385,7 +385,7 @@ static void ogl_init_main_program()
 
     glUniform1i(glGetUniformLocation(g_ogl.main_program, "Texture"), 0);
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
         glUniform1i(glGetUniformLocation(g_ogl.main_program, "PaletteTexture"), 1);
 
     if (g_oglu_got_version3)
@@ -532,12 +532,12 @@ static void ogl_init_scale_program()
 
     float input_size[2], output_size[2], texture_size[2];
 
-    input_size[0] = (float)g_ddraw->width;
-    input_size[1] = (float)g_ddraw->height;
+    input_size[0] = (float)g_ddraw.width;
+    input_size[1] = (float)g_ddraw.height;
     texture_size[0] = (float)g_ogl.surface_tex_width;
     texture_size[1] = (float)g_ogl.surface_tex_height;
-    output_size[0] = (float)g_ddraw->render.viewport.width;
-    output_size[1] = (float)g_ddraw->render.viewport.height;
+    output_size[0] = (float)g_ddraw.render.viewport.width;
+    output_size[1] = (float)g_ddraw.render.viewport.height;
 
     GLint loc = glGetUniformLocation(g_ogl.scale_program, "OutputSize");
     if (loc != -1) 
@@ -648,31 +648,31 @@ static void ogl_render()
     BOOL needs_update = FALSE;
 
     glViewport(
-        g_ddraw->render.viewport.x, 
-        g_ddraw->render.viewport.y + g_ddraw->render.opengl_y_align,
-        g_ddraw->render.viewport.width, 
-        g_ddraw->render.viewport.height);
+        g_ddraw.render.viewport.x, 
+        g_ddraw.render.viewport.y + g_ddraw.render.opengl_y_align,
+        g_ddraw.render.viewport.width, 
+        g_ddraw.render.viewport.height);
 
     if (g_ogl.main_program)
     {
         glUseProgram(g_ogl.main_program);
     }
-    else if (g_ddraw->bpp == 16 || g_ddraw->bpp == 32)
+    else if (g_ddraw.bpp == 16 || g_ddraw.bpp == 32)
     {
         glEnable(GL_TEXTURE_2D);
     }
 
-    DWORD timeout = g_config.minfps > 0 ? g_ddraw->minfps_tick_len : INFINITE;
+    DWORD timeout = g_config.minfps > 0 ? g_ddraw.minfps_tick_len : INFINITE;
 
-    while (g_ogl.use_opengl && g_ddraw->render.run &&
-        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw->render.sem, timeout) != WAIT_FAILED))
+    while (g_ogl.use_opengl && g_ddraw.render.run &&
+        (g_config.minfps < 0 || WaitForSingleObject(g_ddraw.render.sem, timeout) != WAIT_FAILED))
     {
 #if _DEBUG
         dbg_draw_frame_info_start();
 #endif
 
-        g_ogl.scale_w = (float)g_ddraw->width / g_ogl.surface_tex_width;
-        g_ogl.scale_h = (float)g_ddraw->height / g_ogl.surface_tex_height;
+        g_ogl.scale_w = (float)g_ddraw.width / g_ogl.surface_tex_width;
+        g_ogl.scale_h = (float)g_ddraw.height / g_ogl.surface_tex_height;
 
         static int tex_index = 0, pal_index = 0;
 
@@ -680,36 +680,36 @@ static void ogl_render()
 
         fpsl_frame_start();
 
-        EnterCriticalSection(&g_ddraw->cs);
+        EnterCriticalSection(&g_ddraw.cs);
 
-        if (g_ddraw->primary && 
-            g_ddraw->primary->bpp == g_ddraw->bpp &&
-            g_ddraw->primary->width == g_ddraw->width &&
-            g_ddraw->primary->height == g_ddraw->height &&
-            (g_ddraw->bpp == 16 || g_ddraw->bpp == 32 || g_ddraw->primary->palette))
+        if (g_ddraw.primary && 
+            g_ddraw.primary->bpp == g_ddraw.bpp &&
+            g_ddraw.primary->width == g_ddraw.width &&
+            g_ddraw.primary->height == g_ddraw.height &&
+            (g_ddraw.bpp == 16 || g_ddraw.bpp == 32 || g_ddraw.primary->palette))
         {
             if (g_config.lock_surfaces)
-                EnterCriticalSection(&g_ddraw->primary->cs);
+                EnterCriticalSection(&g_ddraw.primary->cs);
 
             if (g_config.vhack)
             {
                 if (util_detect_low_res_screen())
                 {
-                    g_ogl.scale_w *= (float)g_ddraw->upscale_hack_width / g_ddraw->width;
-                    g_ogl.scale_h *= (float)g_ddraw->upscale_hack_height / g_ddraw->height;
+                    g_ogl.scale_w *= (float)g_ddraw.upscale_hack_width / g_ddraw.width;
+                    g_ogl.scale_h *= (float)g_ddraw.upscale_hack_height / g_ddraw.height;
 
-                    if (!InterlockedExchange(&g_ddraw->upscale_hack_active, TRUE))
+                    if (!InterlockedExchange(&g_ddraw.upscale_hack_active, TRUE))
                         scale_changed = TRUE;
                 }
                 else
                 {
-                    if (InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE))
+                    if (InterlockedExchange(&g_ddraw.upscale_hack_active, FALSE))
                         scale_changed = TRUE;
                 }
             }
 
-            if (g_ddraw->bpp == 8 &&
-                (InterlockedExchange(&g_ddraw->render.palette_updated, FALSE) || g_config.minfps == -2))
+            if (g_ddraw.bpp == 8 &&
+                (InterlockedExchange(&g_ddraw.render.palette_updated, FALSE) || g_config.minfps == -2))
             {
                 if (++pal_index >= TEXTURE_COUNT)
                     pal_index = 0;
@@ -725,19 +725,19 @@ static void ogl_render()
                     1,
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
-                    g_ddraw->primary->palette->data_bgr);
+                    g_ddraw.primary->palette->data_bgr);
             }
 
-            if (InterlockedExchange(&g_ddraw->render.surface_updated, FALSE) || g_config.minfps == -2)
+            if (InterlockedExchange(&g_ddraw.render.surface_updated, FALSE) || g_config.minfps == -2)
             {
                 if (++tex_index >= TEXTURE_COUNT)
                     tex_index = 0;
 
                 glBindTexture(GL_TEXTURE_2D, g_ogl.surface_tex_ids[tex_index]);
 
-                DWORD row_len = g_ddraw->primary->pitch ? g_ddraw->primary->pitch / g_ddraw->primary->bytes_pp : 0;
+                DWORD row_len = g_ddraw.primary->pitch ? g_ddraw.primary->pitch / g_ddraw.primary->bytes_pp : 0;
 
-                if (row_len != g_ddraw->primary->width)
+                if (row_len != g_ddraw.primary->width)
                     glPixelStorei(GL_UNPACK_ROW_LENGTH, row_len);
 
                 glTexSubImage2D(
@@ -745,13 +745,13 @@ static void ogl_render()
                     0,
                     0,
                     0,
-                    g_ddraw->width,
-                    g_ddraw->height,
+                    g_ddraw.width,
+                    g_ddraw.height,
                     g_ogl.surface_format,
                     g_ogl.surface_type,
-                    g_ddraw->primary->surface);
+                    g_ddraw.primary->surface);
 
-                if (row_len != g_ddraw->primary->width)
+                if (row_len != g_ddraw.primary->width)
                     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
             }
 
@@ -769,29 +769,29 @@ static void ogl_render()
 
             if (g_config.fixchilds)
             {
-                g_ddraw->child_window_exists = FALSE;
-                InterlockedExchangePointer((void*)&g_ddraw->video_window_hwnd, NULL);
-                EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
+                g_ddraw.child_window_exists = FALSE;
+                InterlockedExchangePointer((void*)&g_ddraw.video_window_hwnd, NULL);
+                EnumChildWindows(g_ddraw.hwnd, util_enum_child_proc, (LPARAM)g_ddraw.primary);
 
-                if (g_ddraw->render.width != g_ddraw->width || g_ddraw->render.height != g_ddraw->height)
+                if (g_ddraw.render.width != g_ddraw.width || g_ddraw.render.height != g_ddraw.height)
                 {
-                    if (g_ddraw->child_window_exists)
+                    if (g_ddraw.child_window_exists)
                     {
                         glClear(GL_COLOR_BUFFER_BIT);
 
                         if (!needs_update)
                         {
-                            glViewport(0, g_ddraw->render.height - g_ddraw->height, g_ddraw->width, g_ddraw->height);
+                            glViewport(0, g_ddraw.render.height - g_ddraw.height, g_ddraw.width, g_ddraw.height);
                             needs_update = TRUE;
                         }
                     }
                     else if (needs_update)
                     {
                         glViewport(
-                            g_ddraw->render.viewport.x, 
-                            g_ddraw->render.viewport.y + g_ddraw->render.opengl_y_align,
-                            g_ddraw->render.viewport.width, 
-                            g_ddraw->render.viewport.height);
+                            g_ddraw.render.viewport.x, 
+                            g_ddraw.render.viewport.y + g_ddraw.render.opengl_y_align,
+                            g_ddraw.render.viewport.width, 
+                            g_ddraw.render.viewport.height);
 
                         needs_update = FALSE;
                     }
@@ -799,12 +799,12 @@ static void ogl_render()
             }
 
             if (g_config.lock_surfaces)
-                LeaveCriticalSection(&g_ddraw->primary->cs);
+                LeaveCriticalSection(&g_ddraw.primary->cs);
         }
 
-        LeaveCriticalSection(&g_ddraw->cs);
+        LeaveCriticalSection(&g_ddraw.cs);
 
-        if (g_ddraw->render.viewport.x != 0 || g_ddraw->render.viewport.y != 0)
+        if (g_ddraw.render.viewport.x != 0 || g_ddraw.render.viewport.y != 0)
         {
             glClear(GL_COLOR_BUFFER_BIT);
         }
@@ -848,7 +848,7 @@ static void ogl_render()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, g_ogl.surface_tex_ids[tex_index]);
 
-        if (g_ddraw->bpp == 8)
+        if (g_ddraw.bpp == 8)
         {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, g_ogl.palette_tex_ids[pal_index]);
@@ -861,7 +861,7 @@ static void ogl_render()
             /* draw surface into framebuffer */
             glUseProgram(g_ogl.main_program);
 
-            glViewport(0, 0, g_ddraw->width, g_ddraw->height);
+            glViewport(0, 0, g_ddraw.width, g_ddraw.height);
 
             glBindFramebuffer(GL_FRAMEBUFFER, g_ogl.frame_buffer_id);
 
@@ -874,17 +874,17 @@ static void ogl_render()
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, 0);
 
-            if (g_ddraw->child_window_exists)
+            if (g_ddraw.child_window_exists)
             {
-                glViewport(0, g_ddraw->render.height - g_ddraw->height, g_ddraw->width, g_ddraw->height);
+                glViewport(0, g_ddraw.render.height - g_ddraw.height, g_ddraw.width, g_ddraw.height);
             }
             else
             {
                 glViewport(
-                    g_ddraw->render.viewport.x, 
-                    g_ddraw->render.viewport.y + g_ddraw->render.opengl_y_align,
-                    g_ddraw->render.viewport.width, 
-                    g_ddraw->render.viewport.height);
+                    g_ddraw.render.viewport.x, 
+                    g_ddraw.render.viewport.y + g_ddraw.render.opengl_y_align,
+                    g_ddraw.render.viewport.width, 
+                    g_ddraw.render.viewport.height);
             }
 
             /* apply filter */
@@ -917,10 +917,10 @@ static void ogl_render()
             glEnd();
         }
 
-        if (g_ddraw->bnet_active)
+        if (g_ddraw.bnet_active)
             glClear(GL_COLOR_BUFFER_BIT);
 
-        SwapBuffers(g_ddraw->render.hdc);
+        SwapBuffers(g_ddraw.render.hdc);
 
 #if _DEBUG
         dbg_draw_frame_info_end();
@@ -930,7 +930,7 @@ static void ogl_render()
     }
 
     if (g_config.vhack)
-        InterlockedExchange(&g_ddraw->upscale_hack_active, FALSE);
+        InterlockedExchange(&g_ddraw.upscale_hack_active, FALSE);
 }
 
 static void ogl_delete_context(HGLRC context)
@@ -940,7 +940,7 @@ static void ogl_delete_context(HGLRC context)
 
     glDeleteTextures(TEXTURE_COUNT, g_ogl.surface_tex_ids);
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
         glDeleteTextures(TEXTURE_COUNT, g_ogl.palette_tex_ids);
 
     if (glUseProgram)
@@ -1004,8 +1004,8 @@ static BOOL ogl_texture_upload_test()
             0,
             0,
             0,
-            g_ddraw->width,
-            g_ddraw->height,
+            g_ddraw.width,
+            g_ddraw.height,
             g_ogl.surface_format,
             g_ogl.surface_type,
             g_ogl.surface_tex);
@@ -1018,7 +1018,7 @@ static BOOL ogl_texture_upload_test()
             return FALSE;
     }
 
-    if (g_ddraw->bpp == 8)
+    if (g_ddraw.bpp == 8)
     {
         for (i = 0; i < TEXTURE_COUNT; i++)
         {
@@ -1053,7 +1053,7 @@ static BOOL ogl_shader_test()
 
     BOOL result = TRUE;
 
-    if (g_ddraw->bpp != 8)
+    if (g_ddraw.bpp != 8)
         return result;
 
     if (g_oglu_got_version3 && g_ogl.main_program)

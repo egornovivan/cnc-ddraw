@@ -48,8 +48,8 @@ HRESULT dds_Blt(
     dbg_dump_dds_blt_flags(dwFlags);
     dbg_dump_dds_blt_fx_flags((dwFlags & DDBLT_DDFX) && lpDDBltFx ? lpDDBltFx->dwDDFX : 0);
 
-    if (g_ddraw && 
-        g_ddraw->iskkndx &&
+    if (g_ddraw.ref && 
+        g_ddraw.iskkndx &&
         (dwFlags & DDBLT_COLORFILL) &&
         lpDestRect &&
         lpDestRect->right == 640 &&
@@ -261,7 +261,7 @@ HRESULT dds_Blt(
                 {
                     RGBQUAD* quad =
                         src_surface->palette ? src_surface->palette->data_rgb :
-                        g_ddraw && g_ddraw->primary && g_ddraw->primary->palette ? g_ddraw->primary->palette->data_rgb :
+                        g_ddraw.ref && g_ddraw.primary && g_ddraw.primary->palette ? g_ddraw.primary->palette->data_rgb :
                         NULL;
 
                     if (quad)
@@ -404,20 +404,20 @@ HRESULT dds_Blt(
         }
     }
 
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref && g_ddraw.render.run)
     {
-        InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
+        InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
 
         if (!(This->flags & DDSD_BACKBUFFERCOUNT) || This->last_flip_tick + FLIP_REDRAW_TIMEOUT < timeGetTime())
         {
             This->last_blt_tick = timeGetTime();
 
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
             SwitchToThread();
 
-            if (g_ddraw->ticks_limiter.tick_length > 0)
+            if (g_ddraw.ticks_limiter.tick_length > 0)
             {
-                g_ddraw->ticks_limiter.use_blt_or_flip = TRUE;
+                g_ddraw.ticks_limiter.use_blt_or_flip = TRUE;
                 util_limit_game_ticks();
             }
         }
@@ -557,7 +557,7 @@ HRESULT dds_BltFast(
                 {
                     RGBQUAD* quad =
                         src_surface->palette ? src_surface->palette->data_rgb :
-                        g_ddraw && g_ddraw->primary && g_ddraw->primary->palette ? g_ddraw->primary->palette->data_rgb :
+                        g_ddraw.ref && g_ddraw.primary && g_ddraw.primary->palette ? g_ddraw.primary->palette->data_rgb :
                         NULL;
 
                     if (quad)
@@ -637,20 +637,20 @@ HRESULT dds_BltFast(
         }
     }
 
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref && g_ddraw.render.run)
     {
-        InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
+        InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
 
         DWORD time = timeGetTime();
 
         if (!(This->flags & DDSD_BACKBUFFERCOUNT) ||
             (This->last_flip_tick + FLIP_REDRAW_TIMEOUT < time && This->last_blt_tick + FLIP_REDRAW_TIMEOUT < time))
         {
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
 
-            if (g_config.limit_bltfast && g_ddraw->ticks_limiter.tick_length > 0)
+            if (g_config.limit_bltfast && g_ddraw.ticks_limiter.tick_length > 0)
             {
-                g_ddraw->ticks_limiter.use_blt_or_flip = TRUE;
+                g_ddraw.ticks_limiter.use_blt_or_flip = TRUE;
                 util_limit_game_ticks();
             }
         }
@@ -749,7 +749,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
 
     if (This->backbuffer && !This->skip_flip)
     {
-        EnterCriticalSection(&g_ddraw->cs);
+        EnterCriticalSection(&g_ddraw.cs);
         IDirectDrawSurfaceImpl* backbuffer = lpDDSurfaceTargetOverride ? lpDDSurfaceTargetOverride : This->backbuffer;
 
         void* buf = InterlockedExchangePointer(&This->surface, backbuffer->surface);
@@ -767,7 +767,7 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
             blt_clear(buf, 0, backbuffer->size);
         }
 
-        LeaveCriticalSection(&g_ddraw->cs);
+        LeaveCriticalSection(&g_ddraw.cs);
 
         if (!lpDDSurfaceTargetOverride && This->backbuffer->backbuffer)
         {
@@ -777,12 +777,12 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
 
     This->skip_flip = FALSE;
 
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref && g_ddraw.render.run)
     {
         This->last_flip_tick = timeGetTime();
 
-        InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
-        ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+        InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
+        ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         SwitchToThread();
 
         if ((g_config.maxgameticks == 0 && (dwFlags & DDFLIP_WAIT)) || g_config.maxgameticks == -2)
@@ -790,9 +790,9 @@ HRESULT dds_Flip(IDirectDrawSurfaceImpl* This, IDirectDrawSurfaceImpl* lpDDSurfa
             dd_WaitForVerticalBlank(DDWAITVB_BLOCKEND, NULL);
         }
 
-        if (g_ddraw->ticks_limiter.tick_length > 0)
+        if (g_ddraw.ticks_limiter.tick_length > 0)
         {
-            g_ddraw->ticks_limiter.use_blt_or_flip = TRUE;
+            g_ddraw.ticks_limiter.use_blt_or_flip = TRUE;
             util_limit_game_ticks();
         }
     }
@@ -877,7 +877,7 @@ HRESULT dds_GetDC(IDirectDrawSurfaceImpl* This, HDC FAR* lpHDC)
 
     RGBQUAD* data =
         This->palette ? This->palette->data_rgb :
-        g_ddraw && g_ddraw->primary && g_ddraw->primary->palette ? g_ddraw->primary->palette->data_rgb :
+        g_ddraw.ref && g_ddraw.primary && g_ddraw.primary->palette ? g_ddraw.primary->palette->data_rgb :
         NULL;
 
     HDC dc = This->hdc;
@@ -957,10 +957,10 @@ HRESULT dds_Lock(
 
     dbg_dump_dds_lock_flags(dwFlags);
 
-    if (g_ddraw && g_config.fixnotresponding && !g_config.is_wine)
+    if (g_ddraw.ref && g_config.fixnotresponding && !g_config.is_wine)
     {
         MSG msg; /* workaround for "Not Responding" window problem */
-        real_PeekMessageA(&msg, g_ddraw->hwnd, 0, 0, PM_NOREMOVE);
+        real_PeekMessageA(&msg, g_ddraw.hwnd, 0, 0, PM_NOREMOVE);
     }
 
     HRESULT ret = dds_GetSurfaceDesc(This, lpDDSurfaceDesc);
@@ -988,16 +988,16 @@ HRESULT dds_Lock(
 
 HRESULT dds_ReleaseDC(IDirectDrawSurfaceImpl* This, HDC hDC)
 {
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref && g_ddraw.render.run)
     {
-        InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
+        InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
 
         DWORD time = timeGetTime();
 
         if (!(This->flags & DDSD_BACKBUFFERCOUNT) ||
             (This->last_flip_tick + FLIP_REDRAW_TIMEOUT < time && This->last_blt_tick + FLIP_REDRAW_TIMEOUT < time))
         {
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         }
     }
 
@@ -1061,16 +1061,16 @@ HRESULT dds_SetPalette(IDirectDrawSurfaceImpl* This, IDirectDrawPaletteImpl* lpD
     if (This->palette)
         IDirectDrawPalette_Release(This->palette);
 
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref)
     {
-        EnterCriticalSection(&g_ddraw->cs);
+        EnterCriticalSection(&g_ddraw.cs);
         This->palette = lpDDPalette;
-        LeaveCriticalSection(&g_ddraw->cs);
+        LeaveCriticalSection(&g_ddraw.cs);
 
-        if (g_ddraw->render.run)
+        if (g_ddraw.render.run)
         {
-            InterlockedExchange(&g_ddraw->render.palette_updated, TRUE);
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            InterlockedExchange(&g_ddraw.render.palette_updated, TRUE);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         }
     }
     else
@@ -1084,7 +1084,7 @@ HRESULT dds_SetPalette(IDirectDrawSurfaceImpl* This, IDirectDrawPaletteImpl* lpD
 HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
 {
     /* Hack for Warcraft II BNE and Diablo */
-    HWND hwnd = g_ddraw && g_ddraw->bnet_active ? FindWindowEx(HWND_DESKTOP, NULL, "SDlgDialog", NULL) : NULL;
+    HWND hwnd = g_ddraw.ref && g_ddraw.bnet_active ? FindWindowEx(HWND_DESKTOP, NULL, "SDlgDialog", NULL) : NULL;
 
     if (hwnd && (This->caps & DDSCAPS_PRIMARYSURFACE))
     {
@@ -1129,17 +1129,17 @@ HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
 
         if (erase)
         {
-            BOOL x = g_ddraw->ticks_limiter.use_blt_or_flip;
+            BOOL x = g_ddraw.ticks_limiter.use_blt_or_flip;
 
             DDBLTFX fx = { .dwFillColor = 0xFE };
             IDirectDrawSurface_Blt(This, NULL, NULL, NULL, DDBLT_COLORFILL, &fx);
 
-            g_ddraw->ticks_limiter.use_blt_or_flip = x;
+            g_ddraw.ticks_limiter.use_blt_or_flip = x;
         }
     }
 
     /* Hack for Star Trek Armada */
-    hwnd = g_ddraw && g_config.armadahack ? FindWindowEx(HWND_DESKTOP, NULL, "#32770", NULL) : NULL;
+    hwnd = g_ddraw.ref && g_config.armadahack ? FindWindowEx(HWND_DESKTOP, NULL, "#32770", NULL) : NULL;
 
     if (hwnd && (This->caps & DDSCAPS_PRIMARYSURFACE))
     {
@@ -1168,27 +1168,27 @@ HRESULT dds_Unlock(IDirectDrawSurfaceImpl* This, LPRECT lpRect)
             ReleaseDC(hwnd, hdc);
         }
 
-        BOOL x = g_ddraw->ticks_limiter.use_blt_or_flip;
+        BOOL x = g_ddraw.ticks_limiter.use_blt_or_flip;
 
         DDBLTFX fx = { .dwFillColor = 0 };
         IDirectDrawSurface_Blt(This, NULL, NULL, NULL, DDBLT_COLORFILL, &fx);
 
-        g_ddraw->ticks_limiter.use_blt_or_flip = x;
+        g_ddraw.ticks_limiter.use_blt_or_flip = x;
     }
 
 
-    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw && g_ddraw->render.run)
+    if ((This->caps & DDSCAPS_PRIMARYSURFACE) && g_ddraw.ref && g_ddraw.render.run)
     {
-        InterlockedExchange(&g_ddraw->render.surface_updated, TRUE);
+        InterlockedExchange(&g_ddraw.render.surface_updated, TRUE);
 
         DWORD time = timeGetTime();
 
         if (!(This->flags & DDSD_BACKBUFFERCOUNT) ||
             (This->last_flip_tick + FLIP_REDRAW_TIMEOUT < time && This->last_blt_tick + FLIP_REDRAW_TIMEOUT < time))
         {
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
 
-            if (g_ddraw->ticks_limiter.tick_length > 0 && !g_ddraw->ticks_limiter.use_blt_or_flip)
+            if (g_ddraw.ticks_limiter.tick_length > 0 && !g_ddraw.ticks_limiter.use_blt_or_flip)
                 util_limit_game_ticks();
         }
     }
@@ -1315,15 +1315,15 @@ HRESULT dd_CreateSurface(
     }
 
     if ((lpDDSurfaceDesc->ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE) &&
-        g_ddraw->primary &&
-        g_ddraw->primary->width == g_ddraw->width &&
-        g_ddraw->primary->height == g_ddraw->height &&
-        g_ddraw->primary->bpp == g_ddraw->bpp)
+        g_ddraw.primary &&
+        g_ddraw.primary->width == g_ddraw.width &&
+        g_ddraw.primary->height == g_ddraw.height &&
+        g_ddraw.primary->bpp == g_ddraw.bpp)
     {
-        g_ddraw->primary->skip_flip = TRUE;
+        g_ddraw.primary->skip_flip = TRUE;
 
-        *lpDDSurface = g_ddraw->primary;
-        IDirectDrawSurface_AddRef(g_ddraw->primary);
+        *lpDDSurface = g_ddraw.primary;
+        IDirectDrawSurface_AddRef(g_ddraw.primary);
 
         return DD_OK;
     }
@@ -1337,7 +1337,7 @@ HRESULT dd_CreateSurface(
 
     InitializeCriticalSection(&dst_surface->cs);
 
-    dst_surface->bpp = g_ddraw->bpp == 0 ? 16 : g_ddraw->bpp;
+    dst_surface->bpp = g_ddraw.bpp == 0 ? 16 : g_ddraw.bpp;
     dst_surface->flags = lpDDSurfaceDesc->dwFlags;
     dst_surface->caps = lpDDSurfaceDesc->ddsCaps.dwCaps;
     dst_surface->ddraw = This;
@@ -1378,8 +1378,8 @@ HRESULT dd_CreateSurface(
             dst_surface->caps |= DDSCAPS_FRONTBUFFER;
         }
 
-        dst_surface->width = g_ddraw->width;
-        dst_surface->height = g_ddraw->height;
+        dst_surface->width = g_ddraw.width;
+        dst_surface->height = g_ddraw.height;
 
         dst_surface->caps |= DDSCAPS_VIDEOMEMORY;
     }
@@ -1462,10 +1462,10 @@ HRESULT dd_CreateSurface(
 
         /* Claw hack: 128x128 surfaces need a DC for custom levels to work properly */
         if (InterlockedExchangeAdd(&g_dds_gdi_handles, 0) < 4000 || 
-            (dst_surface->width == g_ddraw->width && dst_surface->height == g_ddraw->height) ||
+            (dst_surface->width == g_ddraw.width && dst_surface->height == g_ddraw.height) ||
             (dst_surface->width == 128 && dst_surface->height == 128))
         {
-            dst_surface->hdc = CreateCompatibleDC(g_ddraw->render.hdc);
+            dst_surface->hdc = CreateCompatibleDC(g_ddraw.render.hdc);
 
             if (dst_surface->hdc)
                 InterlockedIncrement(&g_dds_gdi_handles);
@@ -1524,7 +1524,7 @@ HRESULT dd_CreateSurface(
 
         if (dst_surface->caps & DDSCAPS_PRIMARYSURFACE)
         {
-            g_ddraw->primary = dst_surface;
+            g_ddraw.primary = dst_surface;
             FakePrimarySurface = dst_surface->surface;
         }
     }

@@ -54,15 +54,15 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         MINMAXINFO* mmi = (MINMAXINFO*)lParam;
 
-        if (g_config.windowed && g_ddraw->width)
+        if (g_config.windowed && g_ddraw.width)
         {
-            RECT rc = { 0, 0, g_ddraw->render.width, g_ddraw->render.height };
+            RECT rc = { 0, 0, g_ddraw.render.width, g_ddraw.render.height };
 
             AdjustWindowRectEx(
                 &rc,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE),
-                GetMenu(g_ddraw->hwnd) != NULL,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
+                real_GetWindowLongA(g_ddraw.hwnd, GWL_STYLE),
+                GetMenu(g_ddraw.hwnd) != NULL,
+                real_GetWindowLongA(g_ddraw.hwnd, GWL_EXSTYLE));
 
             if (mmi->ptMaxTrackSize.x < rc.right - rc.left)
                 mmi->ptMaxTrackSize.x = rc.right - rc.left;
@@ -71,13 +71,13 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 mmi->ptMaxTrackSize.y = rc.bottom - rc.top;
 
             /*
-            RECT rcmin = { 0, 0, g_ddraw->width, g_ddraw->height };
+            RECT rcmin = { 0, 0, g_ddraw.width, g_ddraw.height };
 
             AdjustWindowRectEx(
                 &rcmin,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE),
-                GetMenu(g_ddraw->hwnd) != NULL,
-                real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE));
+                real_GetWindowLongA(g_ddraw.hwnd, GWL_STYLE),
+                GetMenu(g_ddraw.hwnd) != NULL,
+                real_GetWindowLongA(g_ddraw.hwnd, GWL_EXSTYLE));
 
             mmi->ptMinTrackSize.x = rcmin.right - rcmin.left;
             mmi->ptMinTrackSize.y = rcmin.bottom - rcmin.top;
@@ -122,7 +122,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_SETCURSOR:
     {
         /* show resize cursor on window borders */
-        if ((HWND)wParam == g_ddraw->hwnd)
+        if ((HWND)wParam == g_ddraw.hwnd)
         {
             WORD message = HIWORD(lParam);
 
@@ -176,8 +176,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     }
     case WM_D3D9DEVICELOST:
     {
-        if (((!g_config.windowed && !g_config.nonexclusive) || !util_is_minimized(g_ddraw->hwnd)) &&
-            g_ddraw->renderer == d3d9_render_main &&
+        if (((!g_config.windowed && !g_config.nonexclusive) || !util_is_minimized(g_ddraw.hwnd)) &&
+            g_ddraw.renderer == d3d9_render_main &&
             d3d9_on_device_lost())
         {
             if (!g_config.windowed)
@@ -191,24 +191,24 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
         case IDT_TIMER_LEAVE_BNET:
         {
-            KillTimer(g_ddraw->hwnd, IDT_TIMER_LEAVE_BNET);
+            KillTimer(g_ddraw.hwnd, IDT_TIMER_LEAVE_BNET);
 
             if (!g_config.windowed)
-                g_ddraw->bnet_was_fullscreen = FALSE;
+                g_ddraw.bnet_was_fullscreen = FALSE;
 
-            if (!g_ddraw->bnet_active)
+            if (!g_ddraw.bnet_active)
             {
-                if (g_ddraw->bnet_was_fullscreen)
+                if (g_ddraw.bnet_was_fullscreen)
                 {
                     int ws = g_config.window_state;
                     util_toggle_fullscreen();
                     g_config.window_state = ws;
-                    g_ddraw->bnet_was_fullscreen = FALSE;
+                    g_ddraw.bnet_was_fullscreen = FALSE;
                 }
-                else if (g_ddraw->bnet_was_upscaled)
+                else if (g_ddraw.bnet_was_upscaled)
                 {
                     util_set_window_rect(0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-                    g_ddraw->bnet_was_upscaled = FALSE;
+                    g_ddraw.bnet_was_upscaled = FALSE;
                 }
             }
 
@@ -231,9 +231,9 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (g_config.is_wine &&
             !g_config.windowed &&
             (pos->x > 0 || pos->y > 0) &&
-            g_ddraw->last_set_window_pos_tick + 500 < timeGetTime())
+            g_ddraw.last_set_window_pos_tick + 500 < timeGetTime())
         {
-            PostMessage(g_ddraw->hwnd, WM_WINEFULLSCREEN, 0, 0);
+            PostMessage(g_ddraw.hwnd, WM_WINEFULLSCREEN, 0, 0);
         }
 
         break;
@@ -242,24 +242,24 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         if (!g_config.windowed)
         {
-            g_ddraw->last_set_window_pos_tick = timeGetTime();
+            g_ddraw.last_set_window_pos_tick = timeGetTime();
 
             real_SetWindowPos(
-                g_ddraw->hwnd,
+                g_ddraw.hwnd,
                 HWND_TOPMOST,
                 1,
                 1,
-                g_ddraw->render.width,
-                g_ddraw->render.height,
+                g_ddraw.render.width,
+                g_ddraw.render.height,
                 SWP_SHOWWINDOW);
 
             real_SetWindowPos(
-                g_ddraw->hwnd,
+                g_ddraw.hwnd,
                 HWND_TOPMOST,
                 0,
                 0,
-                g_ddraw->render.width,
-                g_ddraw->render.height,
+                g_ddraw.render.width,
+                g_ddraw.render.height,
                 SWP_SHOWWINDOW);
         }
         return 0;
@@ -278,8 +278,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             in_size_move = FALSE;
 
-            if (!g_ddraw->render.thread)
-                dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
+            if (!g_ddraw.render.thread)
+                dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, 0);
         }
         break;
     }
@@ -291,15 +291,15 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (in_size_move)
             {
-                if (g_ddraw->render.thread)
+                if (g_ddraw.render.thread)
                 {
-                    EnterCriticalSection(&g_ddraw->cs);
-                    g_ddraw->render.run = FALSE;
-                    ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
-                    LeaveCriticalSection(&g_ddraw->cs);
+                    EnterCriticalSection(&g_ddraw.cs);
+                    g_ddraw.render.run = FALSE;
+                    ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
+                    LeaveCriticalSection(&g_ddraw.cs);
 
-                    WaitForSingleObject(g_ddraw->render.thread, INFINITE);
-                    g_ddraw->render.thread = NULL;
+                    WaitForSingleObject(g_ddraw.render.thread, INFINITE);
+                    g_ddraw.render.thread = NULL;
                 }
 
                 RECT clientrc = { 0 };
@@ -314,8 +314,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         real_GetWindowLongA(hWnd, GWL_EXSTYLE)) &&
                     SetRect(&clientrc, 0, 0, clientrc.right - clientrc.left, clientrc.bottom - clientrc.top))
                 {
-                    double scaleH = (double)g_ddraw->height / g_ddraw->width;
-                    double scaleW = (double)g_ddraw->width / g_ddraw->height;
+                    double scaleH = (double)g_ddraw.height / g_ddraw.width;
+                    double scaleW = (double)g_ddraw.width / g_ddraw.height;
 
                     switch (wParam)
                     {
@@ -351,7 +351,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         real_GetWindowLongA(hWnd, GWL_EXSTYLE)) &&
                     SetRect(&clientrc, 0, 0, clientrc.right - clientrc.left, clientrc.bottom - clientrc.top))
                 {
-                    if (clientrc.right < g_ddraw->width)
+                    if (clientrc.right < g_ddraw.width)
                     {
                         switch (wParam)
                         {
@@ -361,20 +361,20 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         case WMSZ_BOTTOM:
                         case WMSZ_TOP:
                         {
-                            windowrc->right += g_ddraw->width - clientrc.right;
+                            windowrc->right += g_ddraw.width - clientrc.right;
                             break;
                         }
                         case WMSZ_TOPLEFT:
                         case WMSZ_BOTTOMLEFT:
                         case WMSZ_LEFT:
                         {
-                            windowrc->left -= g_ddraw->width - clientrc.right;
+                            windowrc->left -= g_ddraw.width - clientrc.right;
                             break;
                         }
                         }
                     }
 
-                    if (clientrc.bottom < g_ddraw->height)
+                    if (clientrc.bottom < g_ddraw.height)
                     {
                         switch (wParam)
                         {
@@ -384,14 +384,14 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                         case WMSZ_RIGHT:
                         case WMSZ_LEFT:
                         {
-                            windowrc->bottom += g_ddraw->height - clientrc.bottom;
+                            windowrc->bottom += g_ddraw.height - clientrc.bottom;
                             break;
                         }
                         case WMSZ_TOPLEFT:
                         case WMSZ_TOPRIGHT:
                         case WMSZ_TOP:
                         {
-                            windowrc->top -= g_ddraw->height - clientrc.bottom;
+                            windowrc->top -= g_ddraw.height - clientrc.bottom;
                             break;
                         }
                         }
@@ -423,24 +423,24 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (wParam == SIZE_RESTORED)
             {
-                if (in_size_move && !g_ddraw->render.thread)
+                if (in_size_move && !g_ddraw.render.thread)
                 {
                     g_config.window_rect.right = LOWORD(lParam);
                     g_config.window_rect.bottom = HIWORD(lParam);
                 }
                 /*
-                else if (g_ddraw->wine)
+                else if (g_ddraw.wine)
                 {
                     WindowRect.right = LOWORD(lParam);
                     WindowRect.bottom = HIWORD(lParam);
-                    if (WindowRect.right != g_ddraw->render.width || WindowRect.bottom != g_ddraw->render.height)
-                        dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp);
+                    if (WindowRect.right != g_ddraw.render.width || WindowRect.bottom != g_ddraw.render.height)
+                        dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp);
                 }
                 */
             }
         }
 
-        if (g_ddraw->got_child_windows)
+        if (g_ddraw.got_child_windows)
         {
             redraw_count = 2;
             RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
@@ -460,7 +460,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 util_update_bnet_pos(x, y);
             }
 
-            if (in_size_move || (g_config.is_wine && !g_config.fullscreen && g_ddraw->render.thread))
+            if (in_size_move || (g_config.is_wine && !g_config.fullscreen && g_ddraw.render.thread))
             {
                 if (x != -32000)
                     g_config.window_rect.left = x; /* -32000 = Exit/Minimize */
@@ -470,7 +470,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
-        if (g_ddraw->got_child_windows)
+        if (g_ddraw.got_child_windows)
             RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         return DefWindowProc(hWnd, uMsg, wParam, lParam); /* Carmageddon fix */
@@ -479,11 +479,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         if (!g_config.is_wine) /* hack: disable aero snap */
         {
-            LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
+            LONG style = real_GetWindowLongA(g_ddraw.hwnd, GWL_STYLE);
 
             if (!(style & WS_MAXIMIZEBOX))
             {
-                real_SetWindowLongA(g_ddraw->hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX);
+                real_SetWindowLongA(g_ddraw.hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX);
             }
         }
         break;
@@ -492,11 +492,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         if ((wParam & ~0x0F) == SC_MOVE && !g_config.is_wine) /* hack: disable aero snap */
         {
-            LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
+            LONG style = real_GetWindowLongA(g_ddraw.hwnd, GWL_STYLE);
 
             if ((style & WS_MAXIMIZEBOX))
             {
-                real_SetWindowLongA(g_ddraw->hwnd, GWL_STYLE, style & ~WS_MAXIMIZEBOX);
+                real_SetWindowLongA(g_ddraw.hwnd, GWL_STYLE, style & ~WS_MAXIMIZEBOX);
             }
         }
 
@@ -515,7 +515,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             _exit(0);
         }
 
-        if (wParam == SC_KEYMENU && GetMenu(g_ddraw->hwnd) == NULL)
+        if (wParam == SC_KEYMENU && GetMenu(g_ddraw.hwnd) == NULL)
             return 0;
 
         if (!GameHandlesClose)
@@ -541,7 +541,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             {
                 mouse_unlock();
 
-                if (real_GetForegroundWindow() == g_ddraw->hwnd)
+                if (real_GetForegroundWindow() == g_ddraw.hwnd)
                     mouse_lock();
             }
         }
@@ -556,7 +556,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
         {
-            if (g_ddraw->got_child_windows)
+            if (g_ddraw.got_child_windows)
                 RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
         }
 
@@ -597,7 +597,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
-        //if (g_ddraw->windowed || g_ddraw->noactivateapp)
+        //if (g_ddraw.windowed || g_ddraw.noactivateapp)
 
         if (!g_config.allow_wmactivate)
             return 0;
@@ -610,19 +610,19 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (!g_config.windowed)
             {
-                if (g_ddraw->renderer != d3d9_render_main || g_config.nonexclusive)
+                if (g_ddraw.renderer != d3d9_render_main || g_config.nonexclusive)
                 {
-                    ChangeDisplaySettings(&g_ddraw->render.mode, CDS_FULLSCREEN);
-                    real_ShowWindow(g_ddraw->hwnd, SW_RESTORE);
+                    ChangeDisplaySettings(&g_ddraw.render.mode, CDS_FULLSCREEN);
+                    real_ShowWindow(g_ddraw.hwnd, SW_RESTORE);
                     mouse_lock();
                 }
             }
-            else if (g_config.fullscreen && real_GetForegroundWindow() == g_ddraw->hwnd)
+            else if (g_config.fullscreen && real_GetForegroundWindow() == g_ddraw.hwnd)
             {
                 mouse_lock();
             }
 
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         }
         else
         {
@@ -631,15 +631,15 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
             mouse_unlock();
 
-            if (g_config.is_wine && g_ddraw->last_set_window_pos_tick + 500 > timeGetTime())
+            if (g_config.is_wine && g_ddraw.last_set_window_pos_tick + 500 > timeGetTime())
                 return 0;
 
             if (!g_config.windowed)
             {
-                if (g_ddraw->renderer != d3d9_render_main || g_config.nonexclusive)
+                if (g_ddraw.renderer != d3d9_render_main || g_config.nonexclusive)
                 {
-                    real_ShowWindow(g_ddraw->hwnd, SW_MINIMIZE);
-                    ChangeDisplaySettings(NULL, g_ddraw->bnet_active ? CDS_FULLSCREEN : 0);
+                    real_ShowWindow(g_ddraw.hwnd, SW_MINIMIZE);
+                    ChangeDisplaySettings(NULL, g_ddraw.bnet_active ? CDS_FULLSCREEN : 0);
                 }
             }
         }
@@ -674,8 +674,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                 break;
             }
             
-            if (wParam && g_ddraw->alt_key_down && !g_config.releasealt)
-                PostMessageA(g_ddraw->hwnd, WM_SYSKEYUP, VK_MENU, 0);
+            if (wParam && g_ddraw.alt_key_down && !g_config.releasealt)
+                PostMessageA(g_ddraw.hwnd, WM_SYSKEYUP, VK_MENU, 0);
 
             return 0;
         }
@@ -684,8 +684,8 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_AUTORENDERER:
     {
         mouse_unlock();
-        real_SetWindowPos(g_ddraw->hwnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-        real_SetWindowPos(g_ddraw->hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        real_SetWindowPos(g_ddraw.hwnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        real_SetWindowPos(g_ddraw.hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
         mouse_lock();
         return 0;
     }
@@ -751,7 +751,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         if (wParam == VK_MENU)
         {
-            g_ddraw->alt_key_down = TRUE;
+            g_ddraw.alt_key_down = TRUE;
         }
 
         break;
@@ -760,7 +760,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     {
         if (wParam == VK_MENU)
         {
-            g_ddraw->alt_key_down = FALSE;
+            g_ddraw.alt_key_down = FALSE;
         }
 
         if (wParam == VK_TAB || (g_config.hotkeys.toggle_fullscreen && wParam == g_config.hotkeys.toggle_fullscreen))
@@ -792,7 +792,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
-        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw.video_window_hwnd, 0);
         if (video_hwnd)
         {
             PostMessageA(video_hwnd, uMsg, wParam, lParam);
@@ -804,9 +804,9 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_KEYUP:
     {
         if (g_config.hotkeys.screenshot && wParam == g_config.hotkeys.screenshot)
-            ss_take_screenshot(g_ddraw->primary);
+            ss_take_screenshot(g_ddraw.primary);
 
-        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw.video_window_hwnd, 0);
         if (video_hwnd)
         {
             PostMessageA(video_hwnd, uMsg, wParam, lParam);
@@ -825,22 +825,22 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             int x = GET_X_LPARAM(lParam);
             int y = GET_Y_LPARAM(lParam);
 
-            if (x > g_ddraw->render.viewport.x + g_ddraw->render.viewport.width ||
-                x < g_ddraw->render.viewport.x ||
-                y > g_ddraw->render.viewport.y + g_ddraw->render.viewport.height ||
-                y < g_ddraw->render.viewport.y)
+            if (x > g_ddraw.render.viewport.x + g_ddraw.render.viewport.width ||
+                x < g_ddraw.render.viewport.x ||
+                y > g_ddraw.render.viewport.y + g_ddraw.render.viewport.height ||
+                y < g_ddraw.render.viewport.y)
             {
-                x = g_ddraw->width / 2;
-                y = g_ddraw->height / 2;
+                x = g_ddraw.width / 2;
+                y = g_ddraw.height / 2;
             }
             else
             {
-                x = (DWORD)((x - g_ddraw->render.viewport.x) * g_ddraw->mouse.unscale_x);
-                y = (DWORD)((y - g_ddraw->render.viewport.y) * g_ddraw->mouse.unscale_y);
+                x = (DWORD)((x - g_ddraw.render.viewport.x) * g_ddraw.mouse.unscale_x);
+                y = (DWORD)((y - g_ddraw.render.viewport.y) * g_ddraw.mouse.unscale_y);
             }
 
-            InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
-            InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);
+            InterlockedExchange((LONG*)&g_ddraw.cursor.x, x);
+            InterlockedExchange((LONG*)&g_ddraw.cursor.y, y);
 
             mouse_lock();
             return 0;
@@ -869,12 +869,12 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (uMsg == WM_MOUSEWHEEL)
         {
             POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-            real_ScreenToClient(g_ddraw->hwnd, &pt);
+            real_ScreenToClient(g_ddraw.hwnd, &pt);
             lParam = MAKELPARAM(pt.x, pt.y);
         }
 
-        int x = max(GET_X_LPARAM(lParam) - g_ddraw->mouse.x_adjust, 0);
-        int y = max(GET_Y_LPARAM(lParam) - g_ddraw->mouse.y_adjust, 0);
+        int x = max(GET_X_LPARAM(lParam) - g_ddraw.mouse.x_adjust, 0);
+        int y = max(GET_Y_LPARAM(lParam) - g_ddraw.mouse.y_adjust, 0);
 
         if (g_config.adjmouse)
         {
@@ -888,20 +888,20 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
             else
             {
-                x = (DWORD)(roundf(x * g_ddraw->mouse.unscale_x));
-                y = (DWORD)(roundf(y * g_ddraw->mouse.unscale_y));
+                x = (DWORD)(roundf(x * g_ddraw.mouse.unscale_x));
+                y = (DWORD)(roundf(y * g_ddraw.mouse.unscale_y));
             }
         }
 
-        x = min(x, g_ddraw->width - 1);
-        y = min(y, g_ddraw->height - 1);
+        x = min(x, g_ddraw.width - 1);
+        y = min(y, g_ddraw.height - 1);
 
-        InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
-        InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);
+        InterlockedExchange((LONG*)&g_ddraw.cursor.x, x);
+        InterlockedExchange((LONG*)&g_ddraw.cursor.y, y);
 
         lParam = MAKELPARAM(x, y);
 
-        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw.video_window_hwnd, 0);
         if (video_hwnd)
         {
             PostMessageA(video_hwnd, uMsg, wParam, lParam);
@@ -924,11 +924,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             if (!g_config.devmode && !g_mouse_locked)
             {
-                int x = (DWORD)((GET_X_LPARAM(lParam) - g_ddraw->render.viewport.x) * g_ddraw->mouse.unscale_x);
-                int y = (DWORD)((GET_Y_LPARAM(lParam) - g_ddraw->render.viewport.y) * g_ddraw->mouse.unscale_y);
+                int x = (DWORD)((GET_X_LPARAM(lParam) - g_ddraw.render.viewport.x) * g_ddraw.mouse.unscale_x);
+                int y = (DWORD)((GET_Y_LPARAM(lParam) - g_ddraw.render.viewport.y) * g_ddraw.mouse.unscale_y);
 
-                InterlockedExchange((LONG*)&g_ddraw->cursor.x, x);
-                InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);
+                InterlockedExchange((LONG*)&g_ddraw.cursor.x, x);
+                InterlockedExchange((LONG*)&g_ddraw.cursor.y, y);
 
                 mouse_lock();
             }
@@ -945,19 +945,19 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
         }
 
-        ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+        ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         break;
     }
     case WM_ERASEBKGND:
     {
-        if (g_ddraw->render.viewport.x != 0 || g_ddraw->render.viewport.y != 0)
+        if (g_ddraw.render.viewport.x != 0 || g_ddraw.render.viewport.y != 0)
         {
-            InterlockedExchange(&g_ddraw->render.clear_screen, TRUE);
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+            InterlockedExchange(&g_ddraw.render.clear_screen, TRUE);
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
         }
         break;
     }
     }
 
-    return CallWindowProcA(g_ddraw->wndproc, hWnd, uMsg, wParam, lParam);
+    return CallWindowProcA(g_ddraw.wndproc, hWnd, uMsg, wParam, lParam);
 }
