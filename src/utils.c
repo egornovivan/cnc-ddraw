@@ -423,7 +423,8 @@ void util_toggle_maximize()
 
 void util_toggle_fullscreen()
 {
-    if (g_ddraw.bnet_active)
+    /* Disable ALT+ENTER on battle.net and Infantry Online Zone List Window */
+    if (g_ddraw->bnet_active || (g_config.infantryhack && GetMenu(g_ddraw->hwnd)))
         return;
 
     if (g_config.toggle_borderless && g_config.windowed)
