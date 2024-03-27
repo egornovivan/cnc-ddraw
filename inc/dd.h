@@ -56,11 +56,11 @@ typedef struct SPEEDLIMITER
 
 struct IDirectDrawSurfaceImpl;
 
-extern struct CNCDDRAW* g_ddraw;
+extern struct CNCDDRAW g_ddraw;
 
 typedef struct CNCDDRAW
 {
-    ULONG ref;
+    LONG ref;
 
     DWORD width;
     DWORD height;
@@ -143,8 +143,6 @@ typedef struct CNCDDRAW
     DWORD minfps_tick_len;
     DWORD gui_thread_id;
     BOOL show_driver_warning;
-    BOOL d3d9on12;
-    BOOL opengl_core;
 
 } CNCDDRAW;
 

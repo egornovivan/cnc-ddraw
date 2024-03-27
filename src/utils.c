@@ -100,6 +100,13 @@ BOOL util_is_minimized(HWND hwnd)
     return IsIconic(hwnd) || (real_GetClientRect(hwnd, &rc) && (rc.right - rc.left == 0 || rc.bottom - rc.top == 0));
 }
 
+BOOL util_in_foreground()
+{
+    DWORD process_id = 0;
+
+    return GetWindowThreadProcessId(real_GetForegroundWindow(), &process_id) && process_id == GetCurrentProcessId();
+}
+
 BOOL util_is_avx_supported()
 {
     const DWORD XMM_STATE_BIT = 1 << 1;
@@ -145,25 +152,25 @@ BOOL util_is_avx_supported()
 
 void util_limit_game_ticks()
 {
-    if (GetCurrentThreadId() != g_ddraw->gui_thread_id)
+    if (GetCurrentThreadId() != g_ddraw.gui_thread_id)
         return;
 
-    if (g_ddraw->ticks_limiter.htimer)
+    if (g_ddraw.ticks_limiter.htimer)
     {
         FILETIME ft = { 0 };
         GetSystemTimeAsFileTime(&ft);
 
-        if (CompareFileTime((FILETIME*)&g_ddraw->ticks_limiter.due_time, &ft) == -1)
+        if (CompareFileTime((FILETIME*)&g_ddraw.ticks_limiter.due_time, &ft) == -1)
         {
-            memcpy(&g_ddraw->ticks_limiter.due_time, &ft, sizeof(LARGE_INTEGER));
+            memcpy(&g_ddraw.ticks_limiter.due_time, &ft, sizeof(LARGE_INTEGER));
         }
         else
         {
-            WaitForSingleObject(g_ddraw->ticks_limiter.htimer, g_ddraw->ticks_limiter.tick_length * 2);
+            WaitForSingleObject(g_ddraw.ticks_limiter.htimer, g_ddraw.ticks_limiter.tick_length * 2);
         }
 
-        g_ddraw->ticks_limiter.due_time.QuadPart += g_ddraw->ticks_limiter.tick_length_ns;
-        SetWaitableTimer(g_ddraw->ticks_limiter.htimer, &g_ddraw->ticks_limiter.due_time, 0, NULL, NULL, FALSE);
+        g_ddraw.ticks_limiter.due_time.QuadPart += g_ddraw.ticks_limiter.tick_length_ns;
+        SetWaitableTimer(g_ddraw.ticks_limiter.htimer, &g_ddraw.ticks_limiter.due_time, 0, NULL, NULL, FALSE);
     }
     else
     {
@@ -175,12 +182,12 @@ void util_limit_game_ticks()
             return;
         }
 
-        next_game_tick += g_ddraw->ticks_limiter.tick_length;
+        next_game_tick += g_ddraw.ticks_limiter.tick_length;
         DWORD tick_count = timeGetTime();
 
         int sleep_time = next_game_tick - tick_count;
 
-        if (sleep_time <= 0 || sleep_time > g_ddraw->ticks_limiter.tick_length)
+        if (sleep_time <= 0 || sleep_time > g_ddraw.ticks_limiter.tick_length)
         {
             next_game_tick = tick_count;
         }
@@ -196,7 +203,7 @@ void util_update_bnet_pos(int new_x, int new_y)
     static int old_x = -32000;
     static int old_y = -32000;
 
-    if (old_x == -32000 || old_y == -32000 || !g_ddraw->bnet_active)
+    if (old_x == -32000 || old_y == -32000 || !g_ddraw.bnet_active)
     {
         old_x = new_x;
         old_y = new_y;
@@ -204,10 +211,10 @@ void util_update_bnet_pos(int new_x, int new_y)
     }
 
     POINT pt = { 0, 0 };
-    real_ClientToScreen(g_ddraw->hwnd, &pt);
+    real_ClientToScreen(g_ddraw.hwnd, &pt);
 
     RECT mainrc;
-    SetRect(&mainrc, pt.x, pt.y, pt.x + g_ddraw->width, pt.y + g_ddraw->height);
+    SetRect(&mainrc, pt.x, pt.y, pt.x + g_ddraw.width, pt.y + g_ddraw.height);
 
     int adj_y = 0;
     int adj_x = 0;
@@ -230,7 +237,7 @@ void util_update_bnet_pos(int new_x, int new_y)
             0,
             SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-        if (rc.bottom - rc.top <= g_ddraw->height)
+        if (rc.bottom - rc.top <= g_ddraw.height)
         {
             if (rc.bottom > mainrc.bottom && abs(mainrc.bottom - rc.bottom) > abs(adj_y))
             {
@@ -242,7 +249,7 @@ void util_update_bnet_pos(int new_x, int new_y)
             }
         }
 
-        if (rc.right - rc.left <= g_ddraw->width)
+        if (rc.right - rc.left <= g_ddraw.width)
         {
             if (rc.right > mainrc.right && abs(mainrc.right - rc.right) > abs(adj_x))
             {
@@ -333,23 +340,23 @@ void util_toggle_maximize()
     RECT client_rc;
     RECT dst_rc;
 
-    LONG style = real_GetWindowLongA(g_ddraw->hwnd, GWL_STYLE);
-    LONG exstyle = real_GetWindowLongA(g_ddraw->hwnd, GWL_EXSTYLE);
-    BOOL got_menu = GetMenu(g_ddraw->hwnd) != NULL;
+    LONG style = real_GetWindowLongA(g_ddraw.hwnd, GWL_STYLE);
+    LONG exstyle = real_GetWindowLongA(g_ddraw.hwnd, GWL_EXSTYLE);
+    BOOL got_menu = GetMenu(g_ddraw.hwnd) != NULL;
 
-    if (real_GetClientRect(g_ddraw->hwnd, &client_rc) && SystemParametersInfo(SPI_GETWORKAREA, 0, &dst_rc, 0))
+    if (real_GetClientRect(g_ddraw.hwnd, &client_rc) && SystemParametersInfo(SPI_GETWORKAREA, 0, &dst_rc, 0))
     {
         int width = (dst_rc.right - dst_rc.left);
         int height = (dst_rc.bottom - dst_rc.top);
         int x = dst_rc.left;
         int y = dst_rc.top;
 
-        if (client_rc.right != g_ddraw->width || client_rc.bottom != g_ddraw->height)
+        if (client_rc.right != g_ddraw.width || client_rc.bottom != g_ddraw.height)
         {
             dst_rc.left = 0;
             dst_rc.top = 0;
-            dst_rc.right = g_ddraw->width;
-            dst_rc.bottom = g_ddraw->height;
+            dst_rc.right = g_ddraw.width;
+            dst_rc.bottom = g_ddraw.height;
 
             AdjustWindowRectEx(&dst_rc, style, got_menu, exstyle);
         }
@@ -357,15 +364,15 @@ void util_toggle_maximize()
         {
             dst_rc.left = 0;
             dst_rc.top = 0;
-            dst_rc.right = g_ddraw->width;
-            dst_rc.bottom = g_ddraw->height;
+            dst_rc.right = g_ddraw.width;
+            dst_rc.bottom = g_ddraw.height;
 
             for (int i = 20; i-- > 1;)
             {
-                if (width >= g_ddraw->width * i && height - 20 >= g_ddraw->height * i)
+                if (width >= g_ddraw.width * i && height - 20 >= g_ddraw.height * i)
                 {
-                    dst_rc.right = g_ddraw->width * i;
-                    dst_rc.bottom = g_ddraw->height * i;
+                    dst_rc.right = g_ddraw.width * i;
+                    dst_rc.bottom = g_ddraw.height * i;
                     break;
                 }
             }
@@ -379,7 +386,7 @@ void util_toggle_maximize()
             int w = dst_rc.right - dst_rc.left;
             int h = dst_rc.bottom - dst_rc.top;
 
-            double dst_ar = (double)g_ddraw->height / g_ddraw->width;
+            double dst_ar = (double)g_ddraw.height / g_ddraw.width;
             double src_ar = (double)h / w;
 
             dst_rc.top = 0;
@@ -416,7 +423,8 @@ void util_toggle_maximize()
 
 void util_toggle_fullscreen()
 {
-    if (g_ddraw->bnet_active)
+    /* Disable ALT+ENTER on battle.net and Infantry Online Zone List Window */
+    if (g_ddraw.bnet_active || (g_config.infantryhack && GetMenu(g_ddraw.hwnd)))
         return;
 
     if (g_config.toggle_borderless && g_config.windowed)
@@ -426,7 +434,7 @@ void util_toggle_fullscreen()
             mouse_unlock();
 
             g_config.upscaled_state = g_config.fullscreen = TRUE;
-            dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
+            dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, 0);
 
             mouse_lock();
         }
@@ -435,7 +443,7 @@ void util_toggle_fullscreen()
             mouse_unlock();
 
             g_config.upscaled_state = g_config.fullscreen = FALSE;
-            dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
+            dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, 0);
 
             //mouse_lock();
         }
@@ -452,7 +460,7 @@ void util_toggle_fullscreen()
             }
 
             g_config.window_state = g_config.windowed = FALSE;
-            dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, SDM_LEAVE_WINDOWED);
+            dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, SDM_LEAVE_WINDOWED);
             util_update_bnet_pos(0, 0);
 
             mouse_lock();
@@ -468,27 +476,27 @@ void util_toggle_fullscreen()
 
             g_config.window_state = g_config.windowed = TRUE;
 
-            if (g_ddraw->renderer == d3d9_render_main && !g_config.nonexclusive)
+            if (g_ddraw.renderer == d3d9_render_main && !g_config.nonexclusive)
             {
                 d3d9_reset(g_config.windowed);
             }
             else
             {
-                if (g_ddraw->render.thread)
+                if (g_ddraw.render.thread)
                 {
-                    EnterCriticalSection(&g_ddraw->cs);
-                    g_ddraw->render.run = FALSE;
-                    ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
-                    LeaveCriticalSection(&g_ddraw->cs);
+                    EnterCriticalSection(&g_ddraw.cs);
+                    g_ddraw.render.run = FALSE;
+                    ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
+                    LeaveCriticalSection(&g_ddraw.cs);
 
-                    WaitForSingleObject(g_ddraw->render.thread, INFINITE);
-                    g_ddraw->render.thread = NULL;
+                    WaitForSingleObject(g_ddraw.render.thread, INFINITE);
+                    g_ddraw.render.thread = NULL;
                 }
 
-                ChangeDisplaySettings(NULL, g_ddraw->bnet_active ? CDS_FULLSCREEN : 0);
+                ChangeDisplaySettings(NULL, g_ddraw.bnet_active ? CDS_FULLSCREEN : 0);
             }
 
-            dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, SDM_LEAVE_FULLSCREEN);
+            dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, SDM_LEAVE_FULLSCREEN);
             //mouse_lock();
         }
     }
@@ -516,15 +524,15 @@ void util_set_window_rect(int x, int y, int width, int height, UINT flags)
 {
     if (g_config.windowed)
     {
-        if (g_ddraw->render.thread)
+        if (g_ddraw.render.thread)
         {
-            EnterCriticalSection(&g_ddraw->cs);
-            g_ddraw->render.run = FALSE;
-            ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
-            LeaveCriticalSection(&g_ddraw->cs);
+            EnterCriticalSection(&g_ddraw.cs);
+            g_ddraw.render.run = FALSE;
+            ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
+            LeaveCriticalSection(&g_ddraw.cs);
 
-            WaitForSingleObject(g_ddraw->render.thread, INFINITE);
-            g_ddraw->render.thread = NULL;
+            WaitForSingleObject(g_ddraw.render.thread, INFINITE);
+            g_ddraw.render.thread = NULL;
         }
 
         if ((flags & SWP_NOMOVE) == 0)
@@ -539,7 +547,7 @@ void util_set_window_rect(int x, int y, int width, int height, UINT flags)
             g_config.window_rect.right = width;
         }
 
-        dd_SetDisplayMode(g_ddraw->width, g_ddraw->height, g_ddraw->bpp, 0);
+        dd_SetDisplayMode(g_ddraw.width, g_ddraw.height, g_ddraw.bpp, 0);
     }
 }
 
@@ -574,7 +582,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
         {
             if (g_config.fixchilds != FIX_CHILDS_DETECT_HIDE)
             {
-                InterlockedExchangePointer((void*)&g_ddraw->video_window_hwnd, hwnd);
+                InterlockedExchangePointer((void*)&g_ddraw.video_window_hwnd, hwnd);
             }  
 
             LONG style = real_GetWindowLongA(hwnd, GWL_EXSTYLE);
@@ -596,7 +604,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
         }
         else
         {
-            g_ddraw->got_child_windows = g_ddraw->child_window_exists = TRUE;
+            g_ddraw.got_child_windows = g_ddraw.child_window_exists = TRUE;
 
             if (g_config.fixchilds == FIX_CHILDS_DETECT_PAINT)
             {
@@ -605,7 +613,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
 
                 dds_GetDC(this, &src_dc);
 
-                real_MapWindowPoints(HWND_DESKTOP, g_ddraw->hwnd, (LPPOINT)&pos, 2);
+                real_MapWindowPoints(HWND_DESKTOP, g_ddraw.hwnd, (LPPOINT)&pos, 2);
 
                 BitBlt(dst_dc, 0, 0, size.right, size.bottom, src_dc, pos.left, pos.top, SRCCOPY);
 
@@ -620,7 +628,7 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
 static unsigned char util_get_pixel(int x, int y)
 {
     return ((unsigned char*)dds_GetBuffer(
-        g_ddraw->primary))[y * g_ddraw->primary->pitch + x * g_ddraw->primary->bytes_pp];
+        g_ddraw.primary))[y * g_ddraw.primary->pitch + x * g_ddraw.primary->bytes_pp];
 }
 
 BOOL util_detect_low_res_screen()
@@ -629,12 +637,12 @@ BOOL util_detect_low_res_screen()
     static int* is_vqa_640 = (int*)0x0065D7BC;
     static BYTE* should_stretch = (BYTE*)0x00607D78;
 
-    if (g_ddraw->width <= g_ddraw->upscale_hack_width || g_ddraw->height <= g_ddraw->upscale_hack_height)
+    if (g_ddraw.width <= g_ddraw.upscale_hack_width || g_ddraw.height <= g_ddraw.upscale_hack_height)
     {
         return FALSE;
     }
 
-    if (g_ddraw->isredalert)
+    if (g_ddraw.isredalert)
     {
         if ((*in_movie && !*is_vqa_640) || *should_stretch)
         {
@@ -643,15 +651,15 @@ BOOL util_detect_low_res_screen()
 
         return FALSE;
     }
-    else if (g_ddraw->iscnc1)
+    else if (g_ddraw.iscnc1)
     {
         return
-            util_get_pixel(g_ddraw->upscale_hack_width + 1, 0) == 0 ||
-            util_get_pixel(g_ddraw->upscale_hack_width + 5, 1) == 0;
+            util_get_pixel(g_ddraw.upscale_hack_width + 1, 0) == 0 ||
+            util_get_pixel(g_ddraw.upscale_hack_width + 5, 1) == 0;
     }
-    else if (g_ddraw->iskkndx)
+    else if (g_ddraw.iskkndx)
     {
-        return util_get_pixel(g_ddraw->width - 3, 3) == 0;
+        return util_get_pixel(g_ddraw.width - 3, 3) == 0;
     }
 
     return FALSE;

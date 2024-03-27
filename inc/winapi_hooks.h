@@ -33,6 +33,8 @@ BOOL WINAPI fake_SetForegroundWindow(HWND hWnd);
 HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId);
 BOOL WINAPI fake_PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
 BOOL WINAPI fake_GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax);
+SHORT WINAPI fake_GetKeyState(int nVirtKey);
+SHORT WINAPI fake_GetAsyncKeyState(int vKey);
 int WINAPI fake_GetDeviceCaps(HDC hdc, int index);
 
 BOOL WINAPI fake_StretchBlt(

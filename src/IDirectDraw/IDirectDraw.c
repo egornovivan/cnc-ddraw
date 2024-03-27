@@ -131,20 +131,20 @@ HRESULT __stdcall IDirectDraw__QueryInterface(IDirectDrawImpl* This, REFIID riid
         {
             TRACE("NOT_IMPLEMENTED     GUID = %08X\n", ((GUID*)riid)->Data1);
 
-            if (!g_ddraw->real_dll)
-                g_ddraw->real_dll = real_LoadLibraryA("system32\\ddraw.dll");
+            if (!g_ddraw.real_dll)
+                g_ddraw.real_dll = real_LoadLibraryA("system32\\ddraw.dll");
 
-            if (g_ddraw->real_dll && !g_ddraw->DirectDrawCreate)
-                g_ddraw->DirectDrawCreate = (void*)real_GetProcAddress(g_ddraw->real_dll, "DirectDrawCreate");
+            if (g_ddraw.real_dll && !g_ddraw.DirectDrawCreate)
+                g_ddraw.DirectDrawCreate = (void*)real_GetProcAddress(g_ddraw.real_dll, "DirectDrawCreate");
 
-            if (g_ddraw->DirectDrawCreate == DirectDrawCreate)
-                g_ddraw->DirectDrawCreate = NULL;
+            if (g_ddraw.DirectDrawCreate == DirectDrawCreate)
+                g_ddraw.DirectDrawCreate = NULL;
 
-            if (!g_ddraw->real_dd && g_ddraw->DirectDrawCreate)
-                g_ddraw->DirectDrawCreate(NULL, &g_ddraw->real_dd, NULL);
+            if (!g_ddraw.real_dd && g_ddraw.DirectDrawCreate)
+                g_ddraw.DirectDrawCreate(NULL, &g_ddraw.real_dd, NULL);
 
-            if (g_ddraw->real_dd)
-                ret = IDirectDraw_QueryInterface(g_ddraw->real_dd, riid, ppvObj);
+            if (g_ddraw.real_dd)
+                ret = IDirectDraw_QueryInterface(g_ddraw.real_dd, riid, ppvObj);
             else
                 ret = E_NOINTERFACE;
         }
@@ -355,7 +355,7 @@ HRESULT __stdcall IDirectDraw__GetGDISurface(IDirectDrawImpl* This, LPDIRECTDRAW
 {
     TRACE("NOT_IMPLEMENTED -> %s(This=%p)\n", __FUNCTION__, This);
     HRESULT ret = DD_OK;
-    *lplpGDIDDSurface = (LPDIRECTDRAWSURFACE7)g_ddraw->primary;
+    *lplpGDIDDSurface = (LPDIRECTDRAWSURFACE7)g_ddraw.primary;
     TRACE("NOT_IMPLEMENTED <- %s\n", __FUNCTION__);
     return ret;
 }

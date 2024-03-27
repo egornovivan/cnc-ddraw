@@ -57,10 +57,10 @@ HRESULT ddp_SetEntries(
         This->data_rgb[255].rgbReserved = 0;
     }
 
-    if (g_ddraw && g_ddraw->primary && g_ddraw->primary->palette == This && g_ddraw->render.run)
+    if (g_ddraw.ref && g_ddraw.primary && g_ddraw.primary->palette == This && g_ddraw.render.run)
     {
-        InterlockedExchange(&g_ddraw->render.palette_updated, TRUE);
-        ReleaseSemaphore(g_ddraw->render.sem, 1, NULL);
+        InterlockedExchange(&g_ddraw.render.palette_updated, TRUE);
+        ReleaseSemaphore(g_ddraw.render.sem, 1, NULL);
     }
 
     return DD_OK;

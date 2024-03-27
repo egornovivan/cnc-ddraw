@@ -134,7 +134,7 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
     char str_time[64];
     time_t t = time(NULL);
 
-    strncpy(title, g_ddraw->title, sizeof(g_ddraw->title));
+    strncpy(title, g_ddraw.title, sizeof(g_ddraw.title));
 
     for (int i = 0; i < strlen(title); i++)
     {
@@ -150,8 +150,8 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
 
     CreateDirectoryA(g_config.screenshot_dir, NULL);
 
-    strftime(str_time, sizeof(str_time), "%Y-%m-%d-%H_%M_%S", localtime(&t));
-    _snprintf(filename, sizeof(filename) - 1, "%s%s-%s.png", g_config.screenshot_dir, title, str_time);
+    strftime(str_time, sizeof(str_time), "%Y-%m-%d_%H-%M-%S", localtime(&t));
+    _snprintf(filename, sizeof(filename) - 1, "%s%s_%s.png", g_config.screenshot_dir, title, str_time);
 
     if (src->bpp == 8 && src->palette)
     {

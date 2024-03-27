@@ -252,12 +252,12 @@ void dbg_draw_frame_info_start()
     static DWORD tick_fps = 0;
     static char debug_text[512] = { 0 };
 
-    RECT debugrc = { 0, 0, g_ddraw->width, g_ddraw->height };
+    RECT debugrc = { 0, 0, g_ddraw.width, g_ddraw.height };
 
-    if (g_ddraw->primary)
+    if (g_ddraw.primary)
     {
         HDC primary_dc;
-        dds_GetDC(g_ddraw->primary, &primary_dc);
+        dds_GetDC(g_ddraw.primary, &primary_dc);
 
         DrawText(primary_dc, debug_text, -1, &debugrc, DT_NOCLIP);
     }
